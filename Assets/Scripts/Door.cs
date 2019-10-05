@@ -21,7 +21,7 @@ public class Door : MonoBehaviour
     public void OnMouseDown()
     {
         Debug.Log("yo");
-        GameRules.Get().GoToRoom(scene);
+        PlayerInteraction.Get().GoToRoom(scene);
 
         // load players in room?
         // the main player is always there.

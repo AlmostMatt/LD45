@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameRules : MonoBehaviour
+/**
+ * Contains functions for checking or modifying the state of the game
+ */
+public class GameState : MonoBehaviour
 {
     public string openingScene;
     
-    public static GameRules Get() { return GameObject.FindWithTag("GameRules").GetComponent<GameRules>(); }
+    public static GameState Get() { return GameObject.FindWithTag("GameRules").GetComponent<GameState>(); }
 
     private string[] clueRooms = { "Bedroom1", "Bedroom2", "Bedroom3" }; // todo: better way of specifying this? data-drive?
     Dictionary<string, List<ClueInfo>> mCluesInRooms = new Dictionary<string, List<ClueInfo>>();
@@ -15,7 +18,8 @@ public class GameRules : MonoBehaviour
     string[] mPersonRooms = new string[3]; // A list of room-names corresponding to the current location of each person
     string mCurrentRoom; // The room that is currently visible
 
-    int mPlayerId;
+    [HideInInspector]
+    public int PlayerId;
     
     private Canvas mUICanvas;
 
@@ -41,26 +45,18 @@ public class GameRules : MonoBehaviour
             mCluesInRooms[roomName].Add(clue);
         }
 
-        mUICanvas = GameObject.FindWithTag("UICanvas").GetComponent<Canvas>();
-        mPlayerId = 0; // todo: randomize?
+        PlayerId = 0; // todo: randomize?
 
         mPersonRooms[0] = openingScene;
         mPersonRooms[1] = "Bedroom1"; // TESTING
         mPersonRooms[2] = "Bedroom2"; // TESTING
 
-        GoToRoom(openingScene);
+        PlayerInteraction.Get().GoToRoom(openingScene);
     }
 
-    public void StartDialog(int PersonId)
+    public void MoveToRoom(int personId, string scene)
     {
-        if (UIHasOverlay()) { return; }
-        mUICanvas.transform.Find("dialogView").gameObject.SetActive(true);
-    }
-
-    public void GoToRoom(string scene)
-    {
-        if (UIHasOverlay()) { return; }
-        mPersonRooms[mPlayerId] = scene; // maybe unnecessary, idk
+        mPersonRooms[personId] = scene; // maybe unnecessary, idk
 
         if(mCurrentRoom != null)
             { SceneManager.UnloadScene(mCurrentRoom); } // apparently obsolete, and we should use the async version (TODO)
@@ -86,7 +82,7 @@ public class GameRules : MonoBehaviour
         // special case is that because we're first person,
         // we never show ourselves (maybe we don't even need to update the player's location?)
         
-        return (personId != mPlayerId && mPersonRooms[personId].Equals(mCurrentRoom));
+        return (personId != PlayerId && mPersonRooms[personId].Equals(mCurrentRoom));
     }
 
     private void GenerateSetup()
@@ -96,7 +92,7 @@ public class GameRules : MonoBehaviour
 
     private void GetRoomChoice(PersonObject p)
     {
-
+        
     }
 
     // Update is called once per frame
@@ -105,10 +101,5 @@ public class GameRules : MonoBehaviour
         // scripted flow for where each npc goes
         // GetRoomChoice(mNpc1);
         // GetRoomChoice(mNpc2);
-    }
-
-    private bool UIHasOverlay()
-    {
-        return mUICanvas.transform.Find("dialogView").gameObject.activeInHierarchy;
     }
 }

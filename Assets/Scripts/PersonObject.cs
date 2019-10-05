@@ -10,7 +10,7 @@ public class PersonObject : MonoBehaviour
     void Start()
     {
         // destroy self if not in this room
-        if(!GameRules.Get().IsPersonInCurrentRoom(personId))
+        if(!GameState.Get().IsPersonInCurrentRoom(personId))
         {
             Destroy(gameObject);
         }
@@ -25,6 +25,6 @@ public class PersonObject : MonoBehaviour
     void OnMouseDown()
     {
         Debug.Log("Person " + personId + " selected");
-        GameRules.Get().StartDialog(personId);
+        PlayerInteraction.Get().StartDialog(personId);
     }
 }

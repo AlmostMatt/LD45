@@ -1180,6 +1180,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2111406664}
   - component: {fileID: 2111406663}
+  - component: {fileID: 2111406665}
   m_Layer: 0
   m_Name: GameRules
   m_TagString: GameRules
@@ -1199,7 +1200,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15beaa4bd31ba0141bf75fc97df30881, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  openingScene: CommonRoom
 --- !u!4 &2111406664
 Transform:
   m_ObjectHideFlags: 0
@@ -1214,3 +1214,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2111406665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111406662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f96d536110ae8044b30c0e722aa34ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  openingScene: CommonRoom
+  PlayerId: 0

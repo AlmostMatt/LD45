@@ -13,7 +13,7 @@ public class Clue : MonoBehaviour
 
     void OnMouseDown()
     {
-        // TODO - call a function in GameRules that checks if (UIHasOverlay()) { return; }
+        // TODO - call a function in GameInteraction that checks if (UIHasOverlay()) { return; }
         Debug.Log("Clicked on clue!");
         
         // add clue to "inventory"
