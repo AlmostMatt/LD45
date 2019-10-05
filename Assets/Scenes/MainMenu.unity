@@ -1227,4 +1227,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openingScene: CommonRoom
+  cluePrefab: {fileID: 8682983494658685520, guid: 24d82392b8adf704eb9e82fe816a4c78,
+    type: 3}
   PlayerId: 0

@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class GameState : MonoBehaviour
 {
     public string openingScene;
+    public GameObject cluePrefab; // TEMP. Will probably have full Clues instead of just ClueInfo from the generator (Clue being sprite + info)
     
     public static GameState Get() { return GameObject.FindWithTag("GameRules").GetComponent<GameState>(); }
 
@@ -22,6 +23,8 @@ public class GameState : MonoBehaviour
     public int PlayerId;
     
     private Canvas mUICanvas;
+
+    private AsyncOperation mLoadSceneOperation;
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +48,7 @@ public class GameState : MonoBehaviour
             mCluesInRooms[roomName].Add(clue);
         }
 
+
         PlayerId = 0; // todo: randomize?
 
         mPersonRooms[0] = openingScene;
@@ -52,6 +56,16 @@ public class GameState : MonoBehaviour
         mPersonRooms[2] = "Bedroom2"; // TESTING
 
         PlayerInteraction.Get().GoToRoom(openingScene);
+    }
+
+
+    // Update is called once per frame
+    void Update()
+    {
+        if(mLoadSceneOperation != null && mLoadSceneOperation.isDone)
+        {
+            OnRoomLoaded();
+        }
     }
 
     public void MoveToRoom(int personId, string scene)
@@ -64,14 +78,31 @@ public class GameState : MonoBehaviour
         mCurrentRoom = scene;
 
         // if we want to keep the game rules object around (and UI too?) then we load scenes additively
-        SceneManager.LoadScene(scene, LoadSceneMode.Additive);
+        mLoadSceneOperation = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
+    }
 
-        if(mCluesInRooms.ContainsKey(mCurrentRoom))
+    public void OnRoomLoaded()
+    {
+        mLoadSceneOperation = null;
+
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(mCurrentRoom)); // ensures instantiate objects are added to the current room's scene (so they'll be destroyed when leaving)
+
+        // populate room with clues
+        if (mCluesInRooms.ContainsKey(mCurrentRoom))
         {
-            Debug.Log("You find these clues in the room:");
+            // Debug.Log("You find these clues in the room:");
+            int clueX = -2;
             foreach (ClueInfo c in mCluesInRooms[mCurrentRoom])
             {
-                Debug.Log(c.mConceptA + " <-> " + c.mConceptB);
+                // Debug.Log(c.mConceptA + " <-> " + c.mConceptB);
+
+                // TODO: markup the scene with valid spawn points for clues (maybe further filtered by type of clue)
+                // for now, spawn them wherever
+                GameObject clueObj = GameObject.Instantiate(cluePrefab);
+                clueObj.GetComponent<Clue>().mInfo = c;
+                Vector3 pos = new Vector3(clueX, 0, 0);
+                clueObj.transform.position = pos;
+                clueX += 1;
             }
         }
     }
@@ -93,13 +124,5 @@ public class GameState : MonoBehaviour
     private void GetRoomChoice(PersonObject p)
     {
         
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        // scripted flow for where each npc goes
-        // GetRoomChoice(mNpc1);
-        // GetRoomChoice(mNpc2);
     }
 }
