@@ -17,6 +17,7 @@ public class GameState : MonoBehaviour
     private string[] clueRooms = { "Bedroom1", "Bedroom2", "Bedroom3" }; // todo: better way of specifying this? data-drive?
     Dictionary<string, List<ClueInfo>> mCluesInRooms = new Dictionary<string, List<ClueInfo>>();
 
+    PersonState[] mPeople;
     string[] mPersonRooms = new string[3]; // A list of room-names corresponding to the current location of each person
     string mCurrentRoom; // The room that is currently visible
     private string mPendingRoom;
@@ -48,10 +49,12 @@ public class GameState : MonoBehaviour
     void Start()
     {
         mCurrentStage = GameStage.MENU;
-
+        
+        PlayerId = 0; // todo: randomize?
+        ClueInfo startingClue;
         List<ClueInfo> cluesToScatter;
-        MysteryGenerator.Generate(out mStartingClue, out cluesToScatter);
-
+        MysteryGenerator.Generate(out mPeople, out startingClue, out cluesToScatter);
+        
         // scatter clues
         foreach(ClueInfo clue in cluesToScatter)
         {
@@ -64,8 +67,6 @@ public class GameState : MonoBehaviour
 
             mCluesInRooms[roomName].Add(clue);
         }
-        
-        PlayerId = 0; // todo: randomize?
 
         mPersonRooms[0] = openingScene;
         mPersonRooms[1] = "Bedroom1"; // TESTING
