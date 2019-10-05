@@ -68,8 +68,8 @@ public class GameState : MonoBehaviour
         }
 
         mPersonRooms[0] = openingScene;
-        mPersonRooms[1] = "Bedroom1"; // TESTING
-        mPersonRooms[2] = "Bedroom2"; // TESTING
+        mPersonRooms[1] = openingScene;
+        mPersonRooms[2] = openingScene;
         
         PlayerInteraction.Get().GoToRoom(openingScene);
     }
@@ -93,19 +93,33 @@ public class GameState : MonoBehaviour
                     }
             }
         }
-
-        if(mCurrentStage == GameStage.INTRO)
-        {    
-            Debug.Log("Dead body. The name " + mStartingClue.mConceptB + " is written in blood by the body.");
-            PlayerInteraction.Get().QueueDialogue("Where am I?");
-            PlayerInteraction.Get().QueueDialogue("WHO am I?");
-            PlayerInteraction.Get().QueueDialogue("Look! A body!");
-            PlayerInteraction.Get().QueueDialogue("And a name: " + mStartingClue.mConceptB);
-            PlayerInteraction.Get().ContinueDialogue();
-            mCurrentStage = GameStage.COMMUNAL_0;
-        }
     }
     
+    public void OnDialogueDismissed(int btnIdx)
+    {
+        StartStage(GameStage.SEARCH_1);
+    }
+
+    private void StartStage(GameStage stage)
+    {
+        mCurrentStage = stage;
+        
+        if(stage == GameStage.SEARCH_1)
+        {
+            // assign npcs to rooms (for now, ensure they go to different rooms)
+            int[] roomChoices = Utilities.RandomList(clueRooms.Length, 2);
+            for(int i = 0, j = 0; i < 3; ++i)
+            {
+                if(i != PlayerId)
+                {
+                    MoveToRoom(i, clueRooms[roomChoices[j++]]);
+                }
+            }
+
+            MoveToRoom(PlayerId, mCurrentRoom); // hack to reload room with npcs gone
+        }
+    }
+
     public void MoveToRoom(int personId, string scene)
     {
         mPersonRooms[personId] = scene; // maybe unnecessary, idk
@@ -173,7 +187,17 @@ public class GameState : MonoBehaviour
 
         // is there some better way to defer the stage change until after the room is loaded?
         // this is a special case for the beginning of the game
-        if (mCurrentStage == GameStage.MENU) { mCurrentStage = GameStage.INTRO; }
+        if (mCurrentStage == GameStage.MENU) {
+            mCurrentStage = GameStage.INTRO;
+
+            Debug.Log("Dead body. The name " + mStartingClue.mConceptB + " is written in blood by the body.");
+            PlayerInteraction.Get().QueueDialogue("Where am I?");
+            PlayerInteraction.Get().QueueDialogue("WHO am I?");
+            PlayerInteraction.Get().QueueDialogue("Look! A body!");
+            PlayerInteraction.Get().QueueDialogue("And a name: " + mStartingClue.mConceptB);
+            PlayerInteraction.Get().QueueDialogue("Let's split up and look for clues.");
+            PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
+        }
         
     }
 
