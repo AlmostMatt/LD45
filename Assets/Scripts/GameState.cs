@@ -135,6 +135,8 @@ public class GameState : MonoBehaviour
     {
         mLoadState = LoadState.LOADING_SCENE;
 
+        mCurrentRoom = mPendingRoom; // do this now, because the objects in the room Start during the load (i.e. before we get to OnRoomLoaded)
+
         // if we want to keep the game rules object around (and UI too?) then we load scenes additively
         mLoadSceneOperation = SceneManager.LoadSceneAsync(mPendingRoom, LoadSceneMode.Additive);
     }
@@ -144,8 +146,6 @@ public class GameState : MonoBehaviour
         blackFade.ResetTrigger("FadeOut");
         blackFade.SetTrigger("FadeIn");
         
-        mCurrentRoom = mPendingRoom;
-
         mLoadSceneOperation = null;
         mLoadState = LoadState.NONE;
         mPendingRoom = null;
