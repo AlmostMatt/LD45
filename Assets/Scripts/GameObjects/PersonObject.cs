@@ -14,6 +14,8 @@ public class PersonObject : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        PersonState person = GameState.Get().GetPerson(personId);
+        GetComponent<SpriteRenderer>().sprite = person.PersonSprite;
     }
 
     // Update is called once per frame

@@ -22,6 +22,11 @@ public class PersonState
         // Expects a sprite to exist with a name like HeadRed
         get { return SpriteManager.GetSprite("Head" + AttributeMap[NounType.HairColor].ToString()); }
     }
+    public Sprite PersonSprite
+    {
+        // Expects a sprite to exist with a name like PersonRed
+        get { return SpriteManager.GetSprite("Person" + AttributeMap[NounType.HairColor].ToString()); }
+    }
 
     public PersonState(int personId)
     {
