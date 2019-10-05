@@ -51,9 +51,8 @@ public class GameState : MonoBehaviour
         mCurrentStage = GameStage.MENU;
         
         PlayerId = 0; // todo: randomize?
-        ClueInfo startingClue;
         List<ClueInfo> cluesToScatter;
-        MysteryGenerator.Generate(out mPeople, out startingClue, out cluesToScatter);
+        MysteryGenerator.Generate(out mPeople, out mStartingClue, out cluesToScatter);
         
         // scatter clues
         foreach(ClueInfo clue in cluesToScatter)
