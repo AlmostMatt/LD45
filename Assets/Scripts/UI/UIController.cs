@@ -30,7 +30,9 @@ public class UIController : MonoBehaviour
 
     public void ShowDialog(int personId)
     {
-        ShowUI(null, "Hi there!", new string[] { "Reply", "Dismiss" }, new UIButtonCallback[] { null, null});
+        Sprite head = GameState.Get().GetPerson(personId).HeadSprite;
+
+        ShowUI(head, "Hi there!", new string[] { "Reply", "Dismiss" }, new UIButtonCallback[] { null, null});
         // Button2 text = Dismiss
         // Button1.SetCallback(HideUI);
         // Button2.SetCallback(HideUI);
@@ -48,6 +50,9 @@ public class UIController : MonoBehaviour
 
     private void ShowUI(Sprite sprite,string dialogText, string[] buttonTexts, UIButtonCallback[] callbacks)
     {
+        transform.Find("dialogView/face").GetComponent<Image>().sprite = sprite;
+        transform.Find("dialogView/face").gameObject.SetActive(sprite != null);
+
         if (buttonTexts.Length != callbacks.Length) { Debug.LogWarning("buttonTexts and callbacks have different length."); }
         transform.Find("dialogView").gameObject.SetActive(true);
         transform.Find("dialogView/V/empty/dialogText").GetComponent<Text>().text = dialogText;

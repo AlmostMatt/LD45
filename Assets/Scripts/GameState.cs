@@ -251,6 +251,11 @@ public class GameState : MonoBehaviour
         }
     }
 
+    public PersonState GetPerson(int personId)
+    {
+        return mPeople[personId];
+    }
+
     public bool IsPersonInCurrentRoom(int personId)
     {
         // check if we should display the given person.

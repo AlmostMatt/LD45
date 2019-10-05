@@ -17,6 +17,12 @@ public class PersonState
         get { return PersonId == GameState.Get().PlayerId; }
     }
 
+    public Sprite HeadSprite
+    {
+        // Expects a sprite to exist with a name like HeadRed
+        get { return SpriteManager.GetSprite("Head" + AttributeMap[NounType.HairColor].ToString()); }
+    }
+
     public PersonState(int personId)
     {
         PersonId = personId;
