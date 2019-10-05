@@ -11,6 +11,11 @@ public class ClueInfo
         mConceptB = conceptB;
     }
 
+    public Sentence GetSentence()
+    {
+        return new Sentence(mConceptA, Verb.Is, mConceptB, Adverb.True);
+    }
+
     public Noun mConceptA;
     public Noun mConceptB;
 
