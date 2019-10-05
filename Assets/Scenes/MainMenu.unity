@@ -211,7 +211,7 @@ GameObject:
   m_Component:
   - component: {fileID: 115081145}
   m_Layer: 5
-  m_Name: empty
+  m_Name: dialog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -232,10 +232,10 @@ RectTransform:
   m_Father: {fileID: 131581739}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1028.6597, y: -58.09352}
-  m_SizeDelta: {x: 2057.3193, y: 116.18704}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &131581738
 GameObject:
@@ -250,7 +250,7 @@ GameObject:
   - component: {fileID: 131581740}
   - component: {fileID: 131581742}
   m_Layer: 5
-  m_Name: V
+  m_Name: V overlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -355,7 +355,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &177830782
 RectTransform:
   m_ObjectHideFlags: 0
@@ -491,10 +491,10 @@ RectTransform:
   m_Father: {fileID: 1777277527}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1028.6597, y: -302.37405}
-  m_SizeDelta: {x: 2057.3193, y: 604.7481}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &945787297
 MonoBehaviour:
@@ -697,7 +697,7 @@ GameObject:
   - component: {fileID: 1249117279}
   - component: {fileID: 1249117280}
   m_Layer: 5
-  m_Name: H
+  m_Name: H buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -718,10 +718,10 @@ RectTransform:
   m_Father: {fileID: 131581739}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1028.6597, y: -209.28056}
-  m_SizeDelta: {x: 2057.3193, y: 186.18704}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1249117280
 MonoBehaviour:
@@ -826,7 +826,7 @@ GameObject:
   - component: {fileID: 1777277529}
   - component: {fileID: 1777277528}
   m_Layer: 5
-  m_Name: H
+  m_Name: H images
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1031,10 +1031,10 @@ RectTransform:
   m_Father: {fileID: 1249117279}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1028.6597, y: -93.09352}
-  m_SizeDelta: {x: 1997.3193, y: 126.18704}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1994719944
 MonoBehaviour:
@@ -1141,7 +1141,7 @@ GameObject:
   - component: {fileID: 2002007614}
   - component: {fileID: 2002007613}
   m_Layer: 5
-  m_Name: dialogText
+  m_Name: text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

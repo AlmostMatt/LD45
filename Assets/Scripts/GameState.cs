@@ -73,6 +73,7 @@ public class GameState : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        UIController.Get().HideUI();
         mCurrentStage = GameStage.MENU;
         
         PlayerId = 0; // todo: randomize?
