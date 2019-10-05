@@ -39,7 +39,8 @@ public class GameState : MonoBehaviour
         COMMUNAL_1,
         SEARCH_2,
         COMMUNAL_2,
-        POLICE
+        POLICE,
+        REVEAL
     }
     private GameStage mCurrentStage;
     private ClueInfo mStartingClue;
@@ -94,9 +95,15 @@ public class GameState : MonoBehaviour
         }
 
         // TEMP to advance time
-        if(mCurrentStage == GameStage.SEARCH_1 && Input.GetButton("Submit"))
+        if(Input.GetButton("Submit"))
         {
-            StartStage(mCurrentStage + 1);
+            if(
+                    mCurrentStage == GameStage.SEARCH_1
+                ||  mCurrentStage == GameStage.SEARCH_2
+            )
+            {
+                StartStage(mCurrentStage + 1);
+            }
         }
     }
     
@@ -110,7 +117,7 @@ public class GameState : MonoBehaviour
         Debug.Log("starting stage " + stage);
         mCurrentStage = stage;
         
-        if(stage == GameStage.SEARCH_1)
+        if(stage == GameStage.SEARCH_1 || stage == GameStage.SEARCH_2)
         {
             // assign npcs to rooms (for now, ensure they go to different rooms)
             int[] roomChoices = Utilities.RandomList(clueRooms.Length, 2);
@@ -124,12 +131,16 @@ public class GameState : MonoBehaviour
 
             MoveToRoom(PlayerId, mCurrentRoom); // hack to reload room with npcs gone
         }
-        else if(stage == GameStage.COMMUNAL_1)
+        else if(stage == GameStage.COMMUNAL_1 || stage == GameStage.COMMUNAL_2)
         {
             for (int i = 0; i < 3; ++i)
             {
                 MoveToRoom(i, openingScene);
             }
+        }
+        else if(stage == GameStage.POLICE)
+        {
+            MoveToRoom(PlayerId, "EndScene");
         }
     }
 
@@ -213,12 +224,29 @@ public class GameState : MonoBehaviour
             PlayerInteraction.Get().QueueDialogue("Let's split up and look for clues.");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
-        else if(mCurrentStage == GameStage.COMMUNAL_1)
+        else if (mCurrentStage == GameStage.COMMUNAL_1)
         {
             PlayerInteraction.Get().QueueDialogue("What did everyone find?");
 
             PlayerInteraction.Get().QueueDialogue("I went to " + " BEDROOM 1 " + " and found " + " CLUE");
             PlayerInteraction.Get().QueueDialogue("I went to " + " BEDROOM 2 " + " and found " + " CLUE");
+
+            PlayerInteraction.Get().QueueDialogue("There must be more clues around.");
+            PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
+        }
+        else if (mCurrentStage == GameStage.COMMUNAL_2)
+        {
+            PlayerInteraction.Get().QueueDialogue("What did everyone find?");
+
+            PlayerInteraction.Get().QueueDialogue("I went to " + " BEDROOM 1 " + " and found " + " CLUE");
+            PlayerInteraction.Get().QueueDialogue("I went to " + " BEDROOM 2 " + " and found " + " CLUE");
+
+            PlayerInteraction.Get().QueueDialogue("Well, the police are here now.");
+            PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
+        }
+        else if(mCurrentStage == GameStage.POLICE)
+        {
+            PlayerInteraction.Get().QueueDialogue("What happened? Which one of you killed the guy?");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
     }
