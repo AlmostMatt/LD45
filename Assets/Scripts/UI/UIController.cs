@@ -30,15 +30,17 @@ public class UIController : MonoBehaviour
 
     public void ShowDialog(int personId)
     {
-        ShowUI(null, "Hi there!", new string[] { "Reply", "Dismiss" }, new UIButtonCallback[] { null, null});
+        Sprite head = GameState.Get().GetPerson(personId).HeadSprite;
+
+        ShowUI(new Sprite[] { head }, "Hi there!", new string[] { "Reply", "Dismiss" }, new UIButtonCallback[] { null, null});
         // Button2 text = Dismiss
         // Button1.SetCallback(HideUI);
         // Button2.SetCallback(HideUI);
     }
 
-    public void ShowMessage(string message, string[] buttonTexts, UIButtonCallback[] callbacks)
+    public void ShowMessage(Sprite[] images, string message, string[] buttonTexts, UIButtonCallback[] callbacks)
     {
-        ShowUI(null, message, buttonTexts, callbacks);
+        ShowUI(images, message, buttonTexts, callbacks);
     }
 
     public void HideUI()
@@ -46,8 +48,14 @@ public class UIController : MonoBehaviour
         transform.Find("dialogView").gameObject.SetActive(false);
     }
 
-    private void ShowUI(Sprite sprite,string dialogText, string[] buttonTexts, UIButtonCallback[] callbacks)
+    private void ShowUI(Sprite[] sprites, string dialogText, string[] buttonTexts, UIButtonCallback[] callbacks)
     {
+        if (sprites.Length > 0)
+        {
+            transform.Find("dialogView/face").GetComponent<Image>().sprite = sprites[0];
+        }
+        transform.Find("dialogView/face").gameObject.SetActive(sprites.Length > 0 && sprites[0] != null);
+
         if (buttonTexts.Length != callbacks.Length) { Debug.LogWarning("buttonTexts and callbacks have different length."); }
         transform.Find("dialogView").gameObject.SetActive(true);
         transform.Find("dialogView/V/empty/dialogText").GetComponent<Text>().text = dialogText;
