@@ -76,7 +76,7 @@ public class UIController : MonoBehaviour
 
     public void OnButtonClick(Button button)
     {
-        int i = 0;
+        int i = transform.GetSiblingIndex();
         if (mButtonCallbacks[i] != null)
         {
             mButtonCallbacks[i](i);
