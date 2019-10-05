@@ -23,7 +23,7 @@
     Bastard,
     // ? (special)
     Victim,
-    Murderer
+    Killer
 
     // When adding new values to this enum, also update the switch statement below.
 }

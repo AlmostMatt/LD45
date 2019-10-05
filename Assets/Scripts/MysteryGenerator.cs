@@ -38,7 +38,7 @@ public class MysteryGenerator
 
         // Generate an additional clue for the killer
         Noun killerName = people[killer].AttributeMap[NounType.Name];
-        ClueInfo deathClue = new ClueInfo(Noun.Victim, killerName);
+        ClueInfo deathClue = new ClueInfo(Noun.Killer, killerName);
         startingClue = deathClue;
 
         // Generate clues for everything else
