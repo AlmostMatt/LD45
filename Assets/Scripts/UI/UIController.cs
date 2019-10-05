@@ -38,9 +38,9 @@ public class UIController : MonoBehaviour
         // Button2.SetCallback(HideUI);
     }
 
-    public void ShowMessage(string message, string[] buttonTexts, UIButtonCallback[] callbacks)
+    public void ShowMessage(Sprite imageName, string message, string[] buttonTexts, UIButtonCallback[] callbacks)
     {
-        ShowUI(null, message, buttonTexts, callbacks);
+        ShowUI(imageName, message, buttonTexts, callbacks);
     }
 
     public void HideUI()

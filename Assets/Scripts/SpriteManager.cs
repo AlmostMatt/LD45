@@ -62,7 +62,7 @@ public class SpriteManager : MonoBehaviour
         {
             return stringToSpriteMap[imageName];
         }
-        Debug.Log("WARNING(SpriteManager): No sprite found for name: " + imageName);
+        Debug.LogWarning("WARNING(SpriteManager): No sprite found for name: " + imageName);
         return null;
     }
 }

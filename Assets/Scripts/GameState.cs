@@ -231,62 +231,62 @@ public class GameState : MonoBehaviour
             mCurrentStage = GameStage.INTRO;
 
             Debug.Log("Dead body. The name " + mStartingClue.mConceptB + " is written in blood by the body.");
-            PlayerInteraction.Get().QueueDialogue("Where am I?");
-            PlayerInteraction.Get().QueueDialogue("WHO am I?");
-            PlayerInteraction.Get().QueueDialogue("Look! A body!");
-            PlayerInteraction.Get().QueueDialogue("And a name: " + mStartingClue.mConceptB);
-            PlayerInteraction.Get().QueueDialogue("Let's split up and look for clues.");
+            PlayerInteraction.Get().QueueDialogue(null, "Where am I?");
+            PlayerInteraction.Get().QueueDialogue(null, "WHO am I?");
+            PlayerInteraction.Get().QueueDialogue(SpriteManager.GetSprite("Victim"), "Look! A body!");
+            PlayerInteraction.Get().QueueDialogue(SpriteManager.GetSprite("CrimeScene"), "And a name: " + mStartingClue.mConceptB);
+            PlayerInteraction.Get().QueueDialogue(null, "Let's split up and look for clues.");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
         else if (mCurrentStage == GameStage.COMMUNAL_1)
         {
-            PlayerInteraction.Get().QueueDialogue("What did everyone find?");
+            PlayerInteraction.Get().QueueDialogue(null, "What did everyone find?");
 
             for(int i = 0; i < 3; ++i)
             {
-                if(i != PlayerId)
+                if(!mPeople[i].IsPlayer)
                 {
                     List<Sentence> known = mPeople[i].knowledge.GetKnown();
                     if(known.Count > 0)
                     {
-                        PlayerInteraction.Get().QueueDialogue("I found " + known[0]);
+                        PlayerInteraction.Get().QueueDialogue(mPeople[i].HeadSprite, "I found " + known[0]);
                     }
                     else
                     {
-                        PlayerInteraction.Get().QueueDialogue("I found nothing");
+                        PlayerInteraction.Get().QueueDialogue(mPeople[i].HeadSprite, "I found nothing");
                     }
                 }
             }
             
-            PlayerInteraction.Get().QueueDialogue("There must be more clues around.");
+            PlayerInteraction.Get().QueueDialogue(null, "There must be more clues around.");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
         else if (mCurrentStage == GameStage.COMMUNAL_2)
         {
-            PlayerInteraction.Get().QueueDialogue("What did everyone find?");
+            PlayerInteraction.Get().QueueDialogue(null, "What did everyone find?");
 
             for (int i = 0; i < 3; ++i)
             {
-                if (i != PlayerId)
+                if (!mPeople[i].IsPlayer)
                 {
                     List<Sentence> known = mPeople[i].knowledge.GetKnown();
                     if (known.Count > 1)
                     {
-                        PlayerInteraction.Get().QueueDialogue("I found " + known[0]);
+                        PlayerInteraction.Get().QueueDialogue(mPeople[i].HeadSprite, "I found " + known[0]);
                     }
                     else
                     {
-                        PlayerInteraction.Get().QueueDialogue("I found nothing");
+                        PlayerInteraction.Get().QueueDialogue(mPeople[i].HeadSprite, "I found nothing");
                     }
                 }
             }
 
-            PlayerInteraction.Get().QueueDialogue("Well, the police are here now.");
+            PlayerInteraction.Get().QueueDialogue(null, "Well, the police are here now.");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
         else if(mCurrentStage == GameStage.POLICE)
         {
-            PlayerInteraction.Get().QueueDialogue("What happened? Which one of you killed the guy?");
+            PlayerInteraction.Get().QueueDialogue(null, "What happened? Which one of you killed the guy?");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
     }

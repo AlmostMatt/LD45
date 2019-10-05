@@ -1239,4 +1239,10 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 01a76a60650be1c4eac4439a79e8a035, type: 3}
   - name: HeadBlonde
     sprite: {fileID: 21300000, guid: afd28bd167ef6134ba563dccb46a1d75, type: 3}
-  namedImages2: []
+  namedImages2:
+  - name: Item
+    sprite: {fileID: 21300000, guid: 49972894fa083b94f8a545f149d51a36, type: 3}
+  - name: Victim
+    sprite: {fileID: 21300000, guid: b29eec13b07bf9f4eb0388d5171a356d, type: 3}
+  - name: CrimeScene
+    sprite: {fileID: 21300000, guid: b29eec13b07bf9f4eb0388d5171a356d, type: 3}
