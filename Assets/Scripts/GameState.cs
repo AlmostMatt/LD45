@@ -18,6 +18,30 @@ public class GameState : MonoBehaviour
     Dictionary<string, List<ClueInfo>> mCluesInRooms = new Dictionary<string, List<ClueInfo>>();
 
     PersonState[] mPeople;
+    private Sprite[] mNonPlayerHeads;
+    public Sprite[] NonPlayersHeads
+    {
+        get
+        {
+            if (mNonPlayerHeads == null)
+            {
+                Sprite[] otherSprites = new Sprite[2];
+                int j = 0;
+                for (int i = 0; i < 3; i++)
+                {
+                    if (!mPeople[i].IsPlayer)
+                    {
+                        otherSprites[j] = mPeople[i].HeadSprite;
+                        j++;
+                    }
+                }
+                mNonPlayerHeads = otherSprites;
+            }
+            return mNonPlayerHeads;
+        }
+    }
+
+
     string[] mPersonRooms = new string[3]; // A list of room-names corresponding to the current location of each person
     string mCurrentRoom; // The room that is currently visible
     private string mPendingRoom;
@@ -235,12 +259,13 @@ public class GameState : MonoBehaviour
             PlayerInteraction.Get().QueueDialogue(new Sprite[] { }, "WHO am I?");
             PlayerInteraction.Get().QueueDialogue(new Sprite[] { SpriteManager.GetSprite("Victim") }, "Look! A body!");
             PlayerInteraction.Get().QueueDialogue(new Sprite[] { SpriteManager.GetSprite("CrimeScene") }, "And a name: " + mStartingClue.mConceptB);
-            PlayerInteraction.Get().QueueDialogue(new Sprite[] {}, "Let's split up and look for clues.");
+            PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "And two more people.");
+            PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "Let's split up and look for clues.");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
         else if (mCurrentStage == GameStage.COMMUNAL_1)
         {
-            PlayerInteraction.Get().QueueDialogue(null, "What did everyone find?");
+            PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "What did everyone find?");
 
             for(int i = 0; i < 3; ++i)
             {
@@ -258,12 +283,12 @@ public class GameState : MonoBehaviour
                 }
             }
             
-            PlayerInteraction.Get().QueueDialogue(null, "There must be more clues around.");
+            PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "There must be more clues around.");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
         else if (mCurrentStage == GameStage.COMMUNAL_2)
         {
-            PlayerInteraction.Get().QueueDialogue(null, "What did everyone find?");
+            PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "What did everyone find?");
 
             for (int i = 0; i < 3; ++i)
             {
@@ -281,7 +306,7 @@ public class GameState : MonoBehaviour
                 }
             }
 
-            PlayerInteraction.Get().QueueDialogue(new Sprite[] { }, "Well, the police are here now.");
+            PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "Well, the police are here now.");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
         else if(mCurrentStage == GameStage.POLICE)

@@ -50,16 +50,38 @@ public class UIController : MonoBehaviour
 
     private void ShowUI(Sprite[] sprites, string dialogText, string[] buttonTexts, UIButtonCallback[] callbacks)
     {
-        if (sprites.Length > 0)
-        {
-            transform.Find("dialogView/face").GetComponent<Image>().sprite = sprites[0];
-        }
-        transform.Find("dialogView/face").gameObject.SetActive(sprites.Length > 0 && sprites[0] != null);
-
-        if (buttonTexts.Length != callbacks.Length) { Debug.LogWarning("buttonTexts and callbacks have different length."); }
+        // Make the UI visible
         transform.Find("dialogView").gameObject.SetActive(true);
+
+        // Display sprites
+        // Hide extra sprites and create new sprites as needed
+        Transform spriteContainer = transform.Find("dialogView/H");
+        for (int i = 0; i < Mathf.Max(sprites.Length, spriteContainer.childCount); i++)
+        {
+            Image image;
+            if (i < spriteContainer.childCount)
+            {
+                image = spriteContainer.GetChild(i).GetComponent<Image>();
+            }
+            else
+            {
+                image = Instantiate(spriteContainer.GetChild(0), spriteContainer).GetComponent<Image>();
+            }
+            image.gameObject.SetActive(i < sprites.Length);
+            if (i < sprites.Length)
+            {
+                // A null sprite can take up space
+                image.color = sprites[i] == null ? new Color(0, 0, 0, 0) : Color.white;
+                // Update a visible button
+                image.sprite = sprites[i];
+            }
+        }
+
+        // Display dialog text
         transform.Find("dialogView/V/empty/dialogText").GetComponent<Text>().text = dialogText;
+
         // Update buttons
+        if (buttonTexts.Length != callbacks.Length) { Debug.LogWarning("buttonTexts and callbacks have different length."); }
         mButtonCallbacks = callbacks;
         // Hide extra buttons and create new buttons as needed
         Transform buttonContainer = transform.Find("dialogView/V/H");
