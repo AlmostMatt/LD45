@@ -4,12 +4,16 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+// The callback function type - should take an integer argument that is the button index
+public delegate void UIButtonCallback(int btnIdx);
+
 /**
  * Contains functions related to player interaction
  */
 public class UIController : MonoBehaviour
 {
     public static UIController Get() { return GameObject.FindWithTag("UICanvas").GetComponent<UIController>(); }
+    private UIButtonCallback[] mButtonCallbacks;
 
     void Start()
     {
@@ -26,15 +30,15 @@ public class UIController : MonoBehaviour
 
     public void ShowDialog(int personId)
     {
-        ShowUI(null, "Hi there!", new string[] { "Reply", "Dismiss" });
+        ShowUI(null, "Hi there!", new string[] { "Reply", "Dismiss" }, new UIButtonCallback[] { null, null});
         // Button2 text = Dismiss
         // Button1.SetCallback(HideUI);
         // Button2.SetCallback(HideUI);
     }
 
-    public void ShowMessage(string message)
+    public void ShowMessage(string message, string[] buttonTexts, UIButtonCallback[] callbacks)
     {
-        ShowUI(null, message, new string[] {"Continue"});
+        ShowUI(null, message, buttonTexts, callbacks);
     }
 
     public void HideUI()
@@ -42,11 +46,13 @@ public class UIController : MonoBehaviour
         transform.Find("dialogView").gameObject.SetActive(false);
     }
 
-    private void ShowUI(Sprite sprite,string dialogText, string[] buttonTexts) // TODO: button callbacks
+    private void ShowUI(Sprite sprite,string dialogText, string[] buttonTexts, UIButtonCallback[] callbacks)
     {
+        if (buttonTexts.Length != callbacks.Length) { Debug.LogWarning("buttonTexts and callbacks have different length."); }
         transform.Find("dialogView").gameObject.SetActive(true);
         transform.Find("dialogView/V/empty/dialogText").GetComponent<Text>().text = dialogText;
         // Update buttons
+        mButtonCallbacks = callbacks;
         // Hide extra buttons and create new buttons as needed
         Transform buttonContainer = transform.Find("dialogView/V/H");
         for (int i=0; i < Mathf.Max(buttonTexts.Length, buttonContainer.childCount); i++)
@@ -62,8 +68,22 @@ public class UIController : MonoBehaviour
             button.gameObject.SetActive(i < buttonTexts.Length);
             if (i < buttonTexts.Length)
             {
+                // Update a visible button
                 button.GetChild(0).GetComponent<Text>().text = buttonTexts[i];
             }
+        }
+    }
+
+    public void OnButtonClick(Button button)
+    {
+        int i = 0;
+        if (mButtonCallbacks[i] != null)
+        {
+            mButtonCallbacks[i](i);
+        } else
+        {
+            // a default button response.
+            HideUI();
         }
     }
 }
