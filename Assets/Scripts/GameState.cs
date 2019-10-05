@@ -10,7 +10,8 @@ public class GameState : MonoBehaviour
 {
     public string openingScene;
     public GameObject cluePrefab; // TEMP. Will probably have full Clues instead of just ClueInfo from the generator (Clue being sprite + info)
-    
+    public Animator blackFade;
+
     public static GameState Get() { return GameObject.FindWithTag("GameRules").GetComponent<GameState>(); }
 
     private string[] clueRooms = { "Bedroom1", "Bedroom2", "Bedroom3" }; // todo: better way of specifying this? data-drive?
@@ -18,12 +19,15 @@ public class GameState : MonoBehaviour
 
     string[] mPersonRooms = new string[3]; // A list of room-names corresponding to the current location of each person
     string mCurrentRoom; // The room that is currently visible
+    private string mPendingRoom;
 
     [HideInInspector]
     public int PlayerId;
     
     private Canvas mUICanvas;
 
+    enum LoadState { NONE, UNLOADING_SCENE, LOADING_SCENE }
+    private LoadState mLoadState = LoadState.NONE;
     private AsyncOperation mLoadSceneOperation;
 
     // Start is called before the first frame update
@@ -64,26 +68,65 @@ public class GameState : MonoBehaviour
     {
         if(mLoadSceneOperation != null && mLoadSceneOperation.isDone)
         {
-            OnRoomLoaded();
+            switch (mLoadState)
+            {
+                case LoadState.UNLOADING_SCENE:
+                    {
+                        LoadPendingRoom();
+                        break;
+                    }
+                case LoadState.LOADING_SCENE:
+                    {
+                        OnRoomLoaded();
+                        break;
+                    }
+            }
         }
     }
-
+    
     public void MoveToRoom(int personId, string scene)
     {
         mPersonRooms[personId] = scene; // maybe unnecessary, idk
 
-        if(mCurrentRoom != null)
-            { SceneManager.UnloadScene(mCurrentRoom); } // apparently obsolete, and we should use the async version (TODO)
-        
-        mCurrentRoom = scene;
+        if(personId == PlayerId)
+        {
+            if (mPendingRoom != null) { return; }
+
+            mPendingRoom = scene;
+            blackFade.SetTrigger("FadeOut");
+        }
+    }
+
+    public void OnFadeOutComplete()
+    {
+        if (mCurrentRoom != null)
+        {
+            mLoadSceneOperation = SceneManager.UnloadSceneAsync(mCurrentRoom);
+            mLoadState = LoadState.UNLOADING_SCENE;
+            return;
+        }
+
+        LoadPendingRoom();
+    }
+
+    private void LoadPendingRoom()
+    {
+        mLoadState = LoadState.LOADING_SCENE;
 
         // if we want to keep the game rules object around (and UI too?) then we load scenes additively
-        mLoadSceneOperation = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
+        mLoadSceneOperation = SceneManager.LoadSceneAsync(mPendingRoom, LoadSceneMode.Additive);
     }
 
     public void OnRoomLoaded()
     {
+        blackFade.ResetTrigger("FadeOut");
+        blackFade.SetTrigger("FadeIn");
+        
+        mCurrentRoom = mPendingRoom;
+
         mLoadSceneOperation = null;
+        mLoadState = LoadState.NONE;
+        mPendingRoom = null;
 
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(mCurrentRoom)); // ensures instantiate objects are added to the current room's scene (so they'll be destroyed when leaving)
 
