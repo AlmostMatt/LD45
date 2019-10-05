@@ -32,7 +32,14 @@ public class Sentence
 
     public override string ToString()
     {
-        string[] words = new string[] { Subject.ToString(), Verb.ToString(), DirectObject.ToString(), Adverb.ToString() };
+        string[] words = new string[] {
+            Subject.Type().ToString(),
+            Subject.ToString(),
+            Verb.ToString(),
+            DirectObject.Type().ToString(),
+            DirectObject.ToString(),
+            Adverb.ToString(),
+        };
         return string.Join(" ", words);
     }
 }
