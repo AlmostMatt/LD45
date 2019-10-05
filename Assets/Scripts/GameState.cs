@@ -35,7 +35,6 @@ public class GameState : MonoBehaviour
     {
         MENU,
         INTRO,
-        COMMUNAL_0,
         SEARCH_1,
         COMMUNAL_1,
         SEARCH_2,
@@ -93,15 +92,22 @@ public class GameState : MonoBehaviour
                     }
             }
         }
+
+        // TEMP to advance time
+        if(mCurrentStage == GameStage.SEARCH_1 && Input.GetButton("Submit"))
+        {
+            StartStage(mCurrentStage + 1);
+        }
     }
     
     public void OnDialogueDismissed(int btnIdx)
     {
-        StartStage(GameStage.SEARCH_1);
+        StartStage(mCurrentStage + 1);
     }
 
     private void StartStage(GameStage stage)
     {
+        Debug.Log("starting stage " + stage);
         mCurrentStage = stage;
         
         if(stage == GameStage.SEARCH_1)
@@ -117,6 +123,13 @@ public class GameState : MonoBehaviour
             }
 
             MoveToRoom(PlayerId, mCurrentRoom); // hack to reload room with npcs gone
+        }
+        else if(stage == GameStage.COMMUNAL_1)
+        {
+            for (int i = 0; i < 3; ++i)
+            {
+                MoveToRoom(i, openingScene);
+            }
         }
     }
 
@@ -185,9 +198,11 @@ public class GameState : MonoBehaviour
             }
         }
 
-        // is there some better way to defer the stage change until after the room is loaded?
-        // this is a special case for the beginning of the game
-        if (mCurrentStage == GameStage.MENU) {
+
+        // maybe this is cleaner in its own function, like ContinueGameStage or whatever, idk
+        Debug.Log(mCurrentRoom + " loaded. Current stage: " + mCurrentStage);
+        if (mCurrentStage == GameStage.MENU)
+        {
             mCurrentStage = GameStage.INTRO;
 
             Debug.Log("Dead body. The name " + mStartingClue.mConceptB + " is written in blood by the body.");
@@ -198,7 +213,14 @@ public class GameState : MonoBehaviour
             PlayerInteraction.Get().QueueDialogue("Let's split up and look for clues.");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
-        
+        else if(mCurrentStage == GameStage.COMMUNAL_1)
+        {
+            PlayerInteraction.Get().QueueDialogue("What did everyone find?");
+
+            PlayerInteraction.Get().QueueDialogue("I went to " + " BEDROOM 1 " + " and found " + " CLUE");
+            PlayerInteraction.Get().QueueDialogue("I went to " + " BEDROOM 2 " + " and found " + " CLUE");
+            PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
+        }
     }
 
     public bool IsPersonInCurrentRoom(int personId)
