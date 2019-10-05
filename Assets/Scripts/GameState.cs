@@ -17,6 +17,7 @@ public class GameState : MonoBehaviour
     private string[] clueRooms = { "Bedroom1", "Bedroom2", "Bedroom3" }; // todo: better way of specifying this? data-drive?
     Dictionary<string, List<ClueInfo>> mCluesInRooms = new Dictionary<string, List<ClueInfo>>();
 
+    private ClueInfo[] mRoundClues = new ClueInfo[3]; // the clue that each person found that round
     PersonState[] mPeople;
     private Sprite[] mNonPlayerHeads;
     public Sprite[] NonPlayersHeads
@@ -169,6 +170,7 @@ public class GameState : MonoBehaviour
                             cluesInRoom.RemoveAt(clueIdx);
                             
                             mPeople[i].knowledge.AddKnowledge(info.GetSentence());
+                            mRoundClues[i] = info;
                         }
                     }
                 }
@@ -271,53 +273,45 @@ public class GameState : MonoBehaviour
         }
         else if (mCurrentStage == GameStage.COMMUNAL_1)
         {
-            PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "What did everyone find?");
+            ShareInformation();
 
-            for(int i = 0; i < 3; ++i)
-            {
-                if(!mPeople[i].IsPlayer)
-                {
-                    List<Sentence> known = mPeople[i].knowledge.GetKnown();
-                    if(known.Count > 1)
-                    {
-                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I found " + known[1]);
-                    }
-                    else
-                    {
-                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I found nothing");
-                    }
-                }
-            }
-            
             PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "There must be more clues around.");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
         else if (mCurrentStage == GameStage.COMMUNAL_2)
         {
-            PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "What did everyone find?");
-
-            for (int i = 0; i < 3; ++i)
-            {
-                if (!mPeople[i].IsPlayer)
-                {
-                    List<Sentence> known = mPeople[i].knowledge.GetKnown();
-                    if (known.Count > 2)
-                    {
-                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I found " + known[2]);
-                    }
-                    else
-                    {
-                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I found nothing");
-                    }
-                }
-            }
-
+            ShareInformation();
+            
             PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "Well, the police are here now.");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
         else if(mCurrentStage == GameStage.POLICE)
         {
             PlayerInteraction.Get().QueueDialogue(new Sprite[] { }, "What happened? Which one of you killed the guy?");
+
+            // get npc evaluations
+            Sentence killer0 = new Sentence(Noun.Blonde, Verb.Is, Noun.Killer, Adverb.True);
+            Sentence killer1 = new Sentence(Noun.Brown, Verb.Is, Noun.Killer, Adverb.True);
+            Sentence killer2 = new Sentence(Noun.Red, Verb.Is, Noun.Killer, Adverb.True);
+            for (int i = 0; i < 3; ++i)
+            {
+                if(i != PlayerId)
+                {
+                    Knowledge personKnowledge = mPeople[i].knowledge;
+                    float confidence0 = personKnowledge.VerifySentence(killer0);
+                    float confidence1 = personKnowledge.VerifySentence(killer1);
+                    float confidence2 = personKnowledge.VerifySentence(killer2);
+                    if(confidence0 > 0)
+                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I think BLONDE did it");
+                    else if(confidence1 > 0)
+                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I think BROWN did it");
+                    else if (confidence2 > 0)
+                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I think RED did it");
+                    else
+                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I don't know.");
+                }
+            }
+
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
     }
@@ -336,10 +330,39 @@ public class GameState : MonoBehaviour
         return (personId != PlayerId && mPersonRooms[personId].Equals(mCurrentRoom));
     }
 
-    private void GenerateSetup()
+    private void ShareInformation()
     {
+        PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "What did everyone find?");
 
+        List<Sentence> commonRevealed = new List<Sentence>();
+        for (int i = 0; i < 3; ++i)
+        {
+            if (!mPeople[i].IsPlayer)
+            {
+                if(mRoundClues[i] != null)
+                {
+                    Sentence newInfo = mRoundClues[i].GetSentence();
+                    PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I found " + newInfo);
+                    commonRevealed.Add(newInfo); // TODO: track speaker
+
+                    mRoundClues[i] = null;
+                }
+                else
+                {
+                    PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I found nothing");
+                }
+            }
+        }
+
+        foreach (Sentence s in commonRevealed)
+        {
+            foreach (PersonState p in mPeople)
+            {
+                p.knowledge.AddKnowledge(s);
+            }
+        }
     }
+
 
     private void GetRoomChoice(PersonObject p)
     {

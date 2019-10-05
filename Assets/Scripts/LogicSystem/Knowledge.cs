@@ -27,6 +27,12 @@ public class Knowledge
         sentencesBySpeaker[speaker].Add(sentence);
     }
 
+    public float VerifySentence(Sentence sentence)
+    {
+        if (knownSentences.Contains(sentence)) return 1f;
+        return 0f;
+    }
+
     private bool AddKnowledgeUnique(Sentence sentence)
     {
         if(knownSentences.Contains(sentence)) { return false; }
