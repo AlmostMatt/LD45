@@ -11,7 +11,7 @@
 
     // HairColor,
     Blonde,
-    Black,
+    Brown,
     Red,
     // Name
     Alice,
@@ -21,9 +21,11 @@
     Exwife,
     Daughter,
     Bastard,
-    // ?
+    // ? (special)
     Victim,
     Murderer
+
+    // When adding new values to this enum, also update the switch statement below.
 }
 
 // Extenstion methods can be called with attr.method(). For example, Noun.Blonde.Type()
@@ -34,9 +36,16 @@ public static class NounExtensions
         switch (noun)
         {
             case Noun.Blonde:
-            case Noun.Black:
+            case Noun.Brown:
             case Noun.Red:
                 return NounType.HairColor;
+            case Noun.Exwife:
+            case Noun.Daughter:
+            case Noun.Bastard:
+                return NounType.Identity;
+            case Noun.Alice:
+            case Noun.Beth:
+            case Noun.Carol:
             default:
                 return NounType.Name;
         }

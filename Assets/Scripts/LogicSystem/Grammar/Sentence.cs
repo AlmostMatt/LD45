@@ -18,7 +18,7 @@ using UnityEngine;
 public class Sentence
 {
     public Noun Subject;
-    public Verb Verb;
+    public Verb Verb; // Maybe all verbs are functionally identical
     public Noun DirectObject;
     public Adverb Adverb;
 

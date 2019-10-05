@@ -2,22 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class AIKnowledge : MonoBehaviour
+public class Knowledge
 {
     private List<Sentence> knownSentences = new List<Sentence>();
     private Dictionary<Noun, List<Sentence>> sentencesBySpeaker = new Dictionary<Noun, List<Sentence>>();
 
-    // Use this for initialization
-    void Start()
+    public Knowledge()
     {
         knownSentences.Add(new Sentence(Noun.Alice, Verb.Is, Noun.Blonde, Adverb.False));
         knownSentences.Add(new Sentence(Noun.Alice, Verb.Is, Noun.Red, Adverb.True));
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public Sentence Speak()
