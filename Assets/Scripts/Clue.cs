@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class Clue : MonoBehaviour
 {
-    ClueInfo mInfo = new ClueInfo(); // how do we fill this out?
+    ClueInfo mInfo;
+
+    public Clue(Noun thingA, Noun thingB)
+    {
+        mInfo = new ClueInfo(thingA, thingB);
+    }
 
     void OnMouseDown()
     {

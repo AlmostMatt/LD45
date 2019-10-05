@@ -9,16 +9,38 @@ public class GameRules : MonoBehaviour
     
     public static GameRules Get() { return GameObject.FindWithTag("GameRules").GetComponent<GameRules>(); }
 
+    private string[] clueRooms = { "Bedroom1", "Bedroom2", "Bedroom3" }; // todo: better way of specifying this? data-drive?
+    Dictionary<string, List<ClueInfo>> mCluesInRooms = new Dictionary<string, List<ClueInfo>>();
+
     string[] mPersonRooms = new string[3]; // A list of room-names corresponding to the current location of each person
     string mCurrentRoom; // The room that is currently visible
 
     int mPlayerId;
-
+    
     private Canvas mUICanvas;
 
     // Start is called before the first frame update
     void Start()
     {
+        ClueInfo startingClue;
+        List<ClueInfo> cluesToScatter;
+        MysteryGenerator.Generate(out startingClue, out cluesToScatter);
+
+        Debug.Log("Dead body. The name " + startingClue.mConceptB + " is written in blood by the body.");
+
+        // scatter clues
+        foreach(ClueInfo clue in cluesToScatter)
+        {
+            int room = (int)Random.Range(0, clueRooms.Length);
+            string roomName = clueRooms[room];
+            if(!mCluesInRooms.ContainsKey(roomName))
+            {
+                mCluesInRooms.Add(roomName, new List<ClueInfo>());
+            }
+
+            mCluesInRooms[roomName].Add(clue);
+        }
+
         mUICanvas = GameObject.FindWithTag("UICanvas").GetComponent<Canvas>();
         mPlayerId = 0; // todo: randomize?
 
@@ -45,6 +67,15 @@ public class GameRules : MonoBehaviour
 
         // if we want to keep the game rules object around (and UI too?) then we load scenes additively
         SceneManager.LoadScene(scene, LoadSceneMode.Additive);
+
+        if(mCluesInRooms.ContainsKey(mCurrentRoom))
+        {
+            Debug.Log("You find these clues in the room:");
+            foreach (ClueInfo c in mCluesInRooms[mCurrentRoom])
+            {
+                Debug.Log(c.mConceptA + " <-> " + c.mConceptB);
+            }
+        }
     }
 
     public bool IsPersonInCurrentRoom(int personId)
@@ -54,6 +85,11 @@ public class GameRules : MonoBehaviour
         // we never show ourselves (maybe we don't even need to update the player's location?)
         
         return (personId != mPlayerId && mPersonRooms[personId].Equals(mCurrentRoom));
+    }
+
+    private void GenerateSetup()
+    {
+
     }
 
     private void GetRoomChoice(PersonObject p)

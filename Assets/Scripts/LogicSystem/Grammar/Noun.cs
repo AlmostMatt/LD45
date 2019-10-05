@@ -17,6 +17,13 @@
     Alice,
     Beth,
     Carol,
+    // Identity
+    Exwife,
+    Daughter,
+    Bastard,
+    // ?
+    Victim,
+    Murderer
 }
 
 // Extenstion methods can be called with attr.method(). For example, Noun.Blonde.Type()

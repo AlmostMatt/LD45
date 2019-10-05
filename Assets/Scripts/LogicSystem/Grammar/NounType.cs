@@ -1,5 +1,6 @@
 ﻿public enum NounType
 {
     HairColor,
-    Name
+    Name,
+    Identity
 }
