@@ -30,14 +30,27 @@ public class GameState : MonoBehaviour
     private LoadState mLoadState = LoadState.NONE;
     private AsyncOperation mLoadSceneOperation;
 
+    enum GameStage
+    {
+        MENU,
+        INTRO,
+        COMMUNAL_0,
+        SEARCH_1,
+        COMMUNAL_1,
+        SEARCH_2,
+        COMMUNAL_2,
+        POLICE
+    }
+    private GameStage mCurrentStage;
+    private ClueInfo mStartingClue;
+
     // Start is called before the first frame update
     void Start()
     {
-        ClueInfo startingClue;
-        List<ClueInfo> cluesToScatter;
-        MysteryGenerator.Generate(out startingClue, out cluesToScatter);
+        mCurrentStage = GameStage.MENU;
 
-        Debug.Log("Dead body. The name " + startingClue.mConceptB + " is written in blood by the body.");
+        List<ClueInfo> cluesToScatter;
+        MysteryGenerator.Generate(out mStartingClue, out cluesToScatter);
 
         // scatter clues
         foreach(ClueInfo clue in cluesToScatter)
@@ -51,17 +64,15 @@ public class GameState : MonoBehaviour
 
             mCluesInRooms[roomName].Add(clue);
         }
-
-
+        
         PlayerId = 0; // todo: randomize?
 
         mPersonRooms[0] = openingScene;
         mPersonRooms[1] = "Bedroom1"; // TESTING
         mPersonRooms[2] = "Bedroom2"; // TESTING
-
+        
         PlayerInteraction.Get().GoToRoom(openingScene);
     }
-
 
     // Update is called once per frame
     void Update()
@@ -81,6 +92,17 @@ public class GameState : MonoBehaviour
                         break;
                     }
             }
+        }
+
+        if(mCurrentStage == GameStage.INTRO)
+        {    
+            Debug.Log("Dead body. The name " + mStartingClue.mConceptB + " is written in blood by the body.");
+            PlayerInteraction.Get().QueueDialogue("Where am I?");
+            PlayerInteraction.Get().QueueDialogue("WHO am I?");
+            PlayerInteraction.Get().QueueDialogue("Look! A body!");
+            PlayerInteraction.Get().QueueDialogue("And a name: " + mStartingClue.mConceptB);
+            PlayerInteraction.Get().ContinueDialogue();
+            mCurrentStage = GameStage.COMMUNAL_0;
         }
     }
     
@@ -148,6 +170,11 @@ public class GameState : MonoBehaviour
                 clueX += 1;
             }
         }
+
+        // is there some better way to defer the stage change until after the room is loaded?
+        // this is a special case for the beginning of the game
+        if (mCurrentStage == GameStage.MENU) { mCurrentStage = GameStage.INTRO; }
+        
     }
 
     public bool IsPersonInCurrentRoom(int personId)
