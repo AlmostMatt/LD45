@@ -30,9 +30,39 @@ public class Sentence
         this.Adverb = adv;
     }
 
+    public override bool Equals(System.Object obj)
+    {
+        //Check for null and compare run-time types.
+        if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+        {
+            return false;
+        }
+
+        Sentence other = (Sentence)obj;
+        return(
+               (Verb == other.Verb)
+            && (Adverb == other.Adverb)
+            && (
+                    (Subject == other.Subject && DirectObject == other.DirectObject)
+                || (Subject == other.DirectObject && DirectObject == other.Subject)
+            )
+        );
+    }
+
+    // there's a warning about not overriding GetHashCode?
+
     public override string ToString()
     {
-        string[] words = new string[] {
+        // try to make some more human readable
+        string[] words = new string[]
+        {
+            Subject.ToString(),
+            Verb.ToString().ToLower(),
+            DirectObject.ToString()
+        };
+
+        /*
+         string[] words = new string[] {
             Subject.Type().ToString(),
             Subject.ToString(),
             Verb.ToString(),
@@ -40,6 +70,7 @@ public class Sentence
             DirectObject.ToString(),
             Adverb.ToString(),
         };
+        */
         return string.Join(" ", words);
     }
 }

@@ -77,9 +77,15 @@ public class GameState : MonoBehaviour
         PlayerId = 0; // todo: randomize?
         List<ClueInfo> cluesToScatter;
         MysteryGenerator.Generate(out mPeople, out mStartingClue, out cluesToScatter);
-        
+
+        // give knowledge
+        for(int i = 0; i < 3; ++i)
+        {
+            mPeople[i].knowledge.AddKnowledge(mStartingClue.GetSentence());
+        }
+
         // scatter clues
-        foreach(ClueInfo clue in cluesToScatter)
+        foreach (ClueInfo clue in cluesToScatter)
         {
             int room = (int)Random.Range(0, clueRooms.Length);
             string roomName = clueRooms[room];
@@ -272,9 +278,9 @@ public class GameState : MonoBehaviour
                 if(!mPeople[i].IsPlayer)
                 {
                     List<Sentence> known = mPeople[i].knowledge.GetKnown();
-                    if(known.Count > 0)
+                    if(known.Count > 1)
                     {
-                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I found " + known[0]);
+                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I found " + known[1]);
                     }
                     else
                     {
@@ -295,9 +301,9 @@ public class GameState : MonoBehaviour
                 if (!mPeople[i].IsPlayer)
                 {
                     List<Sentence> known = mPeople[i].knowledge.GetKnown();
-                    if (known.Count > 1)
+                    if (known.Count > 2)
                     {
-                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I found " + known[0]);
+                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I found " + known[2]);
                     }
                     else
                     {
