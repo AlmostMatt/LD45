@@ -125,7 +125,22 @@ public class GameState : MonoBehaviour
             {
                 if(i != PlayerId)
                 {
-                    MoveToRoom(i, clueRooms[roomChoices[j++]]);
+                    string npcRoom = clueRooms[roomChoices[j++]];
+                    MoveToRoom(i, npcRoom);
+
+                    // npcs pick up a clue in the room they move to
+                    if(mCluesInRooms.ContainsKey(npcRoom))
+                    {
+                        List<ClueInfo> cluesInRoom = mCluesInRooms[npcRoom];
+                        if(cluesInRoom.Count > 0)
+                        {
+                            int clueIdx = Random.Range(0, cluesInRoom.Count);
+                            ClueInfo info = cluesInRoom[clueIdx];
+                            cluesInRoom.RemoveAt(clueIdx);
+                            
+                            mPeople[i].knowledge.AddKnowledge(info.GetSentence());
+                        }
+                    }
                 }
             }
 
@@ -209,7 +224,6 @@ public class GameState : MonoBehaviour
             }
         }
 
-
         // maybe this is cleaner in its own function, like ContinueGameStage or whatever, idk
         Debug.Log(mCurrentRoom + " loaded. Current stage: " + mCurrentStage);
         if (mCurrentStage == GameStage.MENU)
@@ -228,9 +242,22 @@ public class GameState : MonoBehaviour
         {
             PlayerInteraction.Get().QueueDialogue("What did everyone find?");
 
-            PlayerInteraction.Get().QueueDialogue("I went to " + " BEDROOM 1 " + " and found " + " CLUE");
-            PlayerInteraction.Get().QueueDialogue("I went to " + " BEDROOM 2 " + " and found " + " CLUE");
-
+            for(int i = 0; i < 3; ++i)
+            {
+                if(i != PlayerId)
+                {
+                    List<Sentence> known = mPeople[i].knowledge.GetKnown();
+                    if(known.Count > 0)
+                    {
+                        PlayerInteraction.Get().QueueDialogue("I found " + known[0]);
+                    }
+                    else
+                    {
+                        PlayerInteraction.Get().QueueDialogue("I found nothing");
+                    }
+                }
+            }
+            
             PlayerInteraction.Get().QueueDialogue("There must be more clues around.");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
@@ -238,8 +265,21 @@ public class GameState : MonoBehaviour
         {
             PlayerInteraction.Get().QueueDialogue("What did everyone find?");
 
-            PlayerInteraction.Get().QueueDialogue("I went to " + " BEDROOM 1 " + " and found " + " CLUE");
-            PlayerInteraction.Get().QueueDialogue("I went to " + " BEDROOM 2 " + " and found " + " CLUE");
+            for (int i = 0; i < 3; ++i)
+            {
+                if (i != PlayerId)
+                {
+                    List<Sentence> known = mPeople[i].knowledge.GetKnown();
+                    if (known.Count > 1)
+                    {
+                        PlayerInteraction.Get().QueueDialogue("I found " + known[0]);
+                    }
+                    else
+                    {
+                        PlayerInteraction.Get().QueueDialogue("I found nothing");
+                    }
+                }
+            }
 
             PlayerInteraction.Get().QueueDialogue("Well, the police are here now.");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);

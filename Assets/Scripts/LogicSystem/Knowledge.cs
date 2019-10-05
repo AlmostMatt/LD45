@@ -8,9 +8,7 @@ public class Knowledge
     private Dictionary<Noun, List<Sentence>> sentencesBySpeaker = new Dictionary<Noun, List<Sentence>>();
 
     public Knowledge()
-    {
-        knownSentences.Add(new Sentence(Noun.Alice, Verb.Is, Noun.Blonde, Adverb.False));
-        knownSentences.Add(new Sentence(Noun.Alice, Verb.Is, Noun.Red, Adverb.True));
+    {        
     }
 
     public Sentence Speak()
@@ -26,4 +24,11 @@ public class Knowledge
         }
         sentencesBySpeaker[speaker].Add(sentence);
     }
+
+    public void AddKnowledge(Sentence sentence) // implied source is yourself
+    {
+        knownSentences.Add(sentence);
+    }
+
+    public List<Sentence> GetKnown() { return knownSentences; }
 }
