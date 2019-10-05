@@ -13,11 +13,11 @@ public class PlayerInteraction : MonoBehaviour
 
     // -- DIALOGUE/TEXT -- (should this move to a separate system?)
     private UIButtonCallback mDismissedCallback;
-    List<Sprite> mDialogueImages = new List<Sprite>();
+    List<Sprite[]> mDialogueImages = new List<Sprite[]>();
     List<string> mDialogueMessages = new List<string>();
-    public void QueueDialogue(Sprite sprite, string msg)
+    public void QueueDialogue(Sprite[] sprites, string msg)
     {
-        mDialogueImages.Add(sprite);
+        mDialogueImages.Add(sprites);
         mDialogueMessages.Add(msg);
     }
     public void ContinueDialogue()
@@ -33,11 +33,11 @@ public class PlayerInteraction : MonoBehaviour
             return;
         }
 
-        Sprite sprite = mDialogueImages[0];
+        Sprite[] sprites = mDialogueImages[0];
         string msg = mDialogueMessages[0];
         mDialogueImages.RemoveAt(0);
         mDialogueMessages.RemoveAt(0);
-        UIController.Get().ShowMessage(sprite, msg, new string[] { "Continue" }, new UIButtonCallback[] { buttonIndex => ContinueDialogue() });
+        UIController.Get().ShowMessage(sprites, msg, new string[] { "Continue" }, new UIButtonCallback[] { buttonIndex => ContinueDialogue() });
     }
     public void OpenDialogue(UIButtonCallback callback = null)
     {

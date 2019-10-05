@@ -231,11 +231,11 @@ public class GameState : MonoBehaviour
             mCurrentStage = GameStage.INTRO;
 
             Debug.Log("Dead body. The name " + mStartingClue.mConceptB + " is written in blood by the body.");
-            PlayerInteraction.Get().QueueDialogue(null, "Where am I?");
-            PlayerInteraction.Get().QueueDialogue(null, "WHO am I?");
-            PlayerInteraction.Get().QueueDialogue(SpriteManager.GetSprite("Victim"), "Look! A body!");
-            PlayerInteraction.Get().QueueDialogue(SpriteManager.GetSprite("CrimeScene"), "And a name: " + mStartingClue.mConceptB);
-            PlayerInteraction.Get().QueueDialogue(null, "Let's split up and look for clues.");
+            PlayerInteraction.Get().QueueDialogue(new Sprite[] { }, "Where am I?");
+            PlayerInteraction.Get().QueueDialogue(new Sprite[] { }, "WHO am I?");
+            PlayerInteraction.Get().QueueDialogue(new Sprite[] { SpriteManager.GetSprite("Victim") }, "Look! A body!");
+            PlayerInteraction.Get().QueueDialogue(new Sprite[] { SpriteManager.GetSprite("CrimeScene") }, "And a name: " + mStartingClue.mConceptB);
+            PlayerInteraction.Get().QueueDialogue(new Sprite[] {}, "Let's split up and look for clues.");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
         else if (mCurrentStage == GameStage.COMMUNAL_1)
@@ -249,11 +249,11 @@ public class GameState : MonoBehaviour
                     List<Sentence> known = mPeople[i].knowledge.GetKnown();
                     if(known.Count > 0)
                     {
-                        PlayerInteraction.Get().QueueDialogue(mPeople[i].HeadSprite, "I found " + known[0]);
+                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I found " + known[0]);
                     }
                     else
                     {
-                        PlayerInteraction.Get().QueueDialogue(mPeople[i].HeadSprite, "I found nothing");
+                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I found nothing");
                     }
                 }
             }
@@ -272,21 +272,21 @@ public class GameState : MonoBehaviour
                     List<Sentence> known = mPeople[i].knowledge.GetKnown();
                     if (known.Count > 1)
                     {
-                        PlayerInteraction.Get().QueueDialogue(mPeople[i].HeadSprite, "I found " + known[0]);
+                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I found " + known[0]);
                     }
                     else
                     {
-                        PlayerInteraction.Get().QueueDialogue(mPeople[i].HeadSprite, "I found nothing");
+                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I found nothing");
                     }
                 }
             }
 
-            PlayerInteraction.Get().QueueDialogue(null, "Well, the police are here now.");
+            PlayerInteraction.Get().QueueDialogue(new Sprite[] { }, "Well, the police are here now.");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
         else if(mCurrentStage == GameStage.POLICE)
         {
-            PlayerInteraction.Get().QueueDialogue(null, "What happened? Which one of you killed the guy?");
+            PlayerInteraction.Get().QueueDialogue(new Sprite[] { }, "What happened? Which one of you killed the guy?");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
     }
