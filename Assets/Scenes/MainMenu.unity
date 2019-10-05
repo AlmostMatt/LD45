@@ -1304,15 +1304,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   namedImages1:
-  - name: HeadRed
-    sprite: {fileID: 21300000, guid: 3501f911a904a354084f0fba7710f7e7, type: 3}
   - name: HeadBrown
     sprite: {fileID: 21300000, guid: 01a76a60650be1c4eac4439a79e8a035, type: 3}
+  - name: HeadRed
+    sprite: {fileID: 21300000, guid: 3501f911a904a354084f0fba7710f7e7, type: 3}
   - name: HeadBlonde
     sprite: {fileID: 21300000, guid: afd28bd167ef6134ba563dccb46a1d75, type: 3}
-  - name: PersonRed
-    sprite: {fileID: 21300000, guid: 4d633e42db4506c418910349b93547dc, type: 3}
   - name: PersonBrown
+    sprite: {fileID: 21300000, guid: 4d633e42db4506c418910349b93547dc, type: 3}
+  - name: PersonRed
     sprite: {fileID: 21300000, guid: 317f5da14639e2948a24f742407991f4, type: 3}
   - name: PersonBlonde
     sprite: {fileID: 21300000, guid: eacb4663441e845459f089612dd6d6ee, type: 3}
