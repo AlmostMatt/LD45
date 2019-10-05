@@ -18,7 +18,7 @@ public class Door : MonoBehaviour
         
     }
 
-    void OnMouseDown()
+    public void OnMouseDown()
     {
         Debug.Log("yo");
         GameRules.Get().GoToRoom(scene);

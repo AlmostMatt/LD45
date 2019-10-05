@@ -53,11 +53,13 @@ public class GameRules : MonoBehaviour
 
     public void StartDialog(int PersonId)
     {
+        if (UIHasOverlay()) { return; }
         mUICanvas.transform.Find("dialogView").gameObject.SetActive(true);
     }
 
     public void GoToRoom(string scene)
     {
+        if (UIHasOverlay()) { return; }
         mPersonRooms[mPlayerId] = scene; // maybe unnecessary, idk
 
         if(mCurrentRoom != null)
@@ -103,5 +105,10 @@ public class GameRules : MonoBehaviour
         // scripted flow for where each npc goes
         // GetRoomChoice(mNpc1);
         // GetRoomChoice(mNpc2);
+    }
+
+    private bool UIHasOverlay()
+    {
+        return mUICanvas.transform.Find("dialogView").gameObject.activeInHierarchy;
     }
 }
