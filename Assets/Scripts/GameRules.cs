@@ -9,8 +9,8 @@ public class GameRules : MonoBehaviour
     
     public static GameRules Get() { return GameObject.FindWithTag("GameRules").GetComponent<GameRules>(); }
 
-    string[] mPersonRooms = new string[3];
-    string mCurrentRoom;
+    string[] mPersonRooms = new string[3]; // A list of room-names corresponding to the current location of each person
+    string mCurrentRoom; // The room that is currently visible
 
     int mPlayerId;
 
@@ -48,7 +48,7 @@ public class GameRules : MonoBehaviour
         return (personId != mPlayerId && mPersonRooms[personId].Equals(mCurrentRoom));
     }
 
-    private void GetRoomChoice(Person p)
+    private void GetRoomChoice(PersonObject p)
     {
 
     }
