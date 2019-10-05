@@ -11,8 +11,6 @@ public class PlayerInteraction : MonoBehaviour
 {
     public static PlayerInteraction Get() { return GameObject.FindWithTag("GameRules").GetComponent<PlayerInteraction>(); }
 
-    private Canvas mUICanvas;
-
     // -- DIALOGUE/TEXT -- (should this move to a separate system?)
     List<string> mDialogueMessages = new List<string>();
     public void QueueDialogue(string msg)
@@ -22,14 +20,13 @@ public class PlayerInteraction : MonoBehaviour
     public void ContinueDialogue()
     {
         if (mDialogueMessages.Count == 0) {
-            mUICanvas.transform.Find("dialogView").gameObject.SetActive(false);
+            UIController.Get().HideUI();
             return;
         }
 
         string msg = mDialogueMessages[0];
         mDialogueMessages.RemoveAt(0);
-        mUICanvas.transform.Find("dialogView").gameObject.SetActive(true);
-        mUICanvas.transform.Find("dialogView/V/empty/dialogText").GetComponent<Text>().text = msg;
+        UIController.Get().ShowMessage(msg);
     }
     // -- DIALOGUE/TEXT --
 
@@ -38,10 +35,10 @@ public class PlayerInteraction : MonoBehaviour
     {
     }
 
-    public void StartDialog(int PersonId)
+    public void StartDialog(int personId)
     {
         if (UIHasOverlay()) { return; }
-        mUICanvas.transform.Find("dialogView").gameObject.SetActive(true);
+        UIController.Get().ShowDialog(personId);
     }
 
     public void GoToRoom(string scene)
@@ -52,10 +49,6 @@ public class PlayerInteraction : MonoBehaviour
 
     private bool UIHasOverlay()
     {
-        if (mUICanvas == null)
-        {
-            mUICanvas = GameObject.FindWithTag("UICanvas").GetComponent<Canvas>();
-        }
-        return mUICanvas.transform.Find("dialogView").gameObject.activeInHierarchy;
+        return UIController.Get().IsVisible();
     }
 }
