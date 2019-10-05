@@ -14,9 +14,12 @@ public class GameRules : MonoBehaviour
 
     int mPlayerId;
 
+    private Canvas mUICanvas;
+
     // Start is called before the first frame update
     void Start()
     {
+        mUICanvas = GameObject.FindWithTag("UICanvas").GetComponent<Canvas>();
         mPlayerId = 0; // todo: randomize?
 
         mPersonRooms[0] = openingScene;
@@ -24,6 +27,11 @@ public class GameRules : MonoBehaviour
         mPersonRooms[2] = "Bedroom2"; // TESTING
 
         GoToRoom(openingScene);
+    }
+
+    public void StartDialog(int PersonId)
+    {
+        mUICanvas.transform.Find("dialogView").gameObject.SetActive(true);
     }
 
     public void GoToRoom(string scene)

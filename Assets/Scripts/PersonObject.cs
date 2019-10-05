@@ -25,5 +25,6 @@ public class PersonObject : MonoBehaviour
     void OnMouseDown()
     {
         Debug.Log("Person " + personId + " selected");
+        GameRules.Get().StartDialog(personId);
     }
 }
