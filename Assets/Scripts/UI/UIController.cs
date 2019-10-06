@@ -58,6 +58,24 @@ public class UIController : MonoBehaviour
     public void HideUI()
     {
         transform.Find("dialogView").gameObject.SetActive(false);
+        transform.Find("journalText").gameObject.SetActive(false);
+    }
+
+    public void ShowJournalButton()
+    {
+        transform.Find("journalButton").gameObject.SetActive(true);
+    }
+
+    public void ToggleJournal()
+    {
+        GameObject journal = transform.root.gameObject.transform.Find("journalText").gameObject;
+        journal.SetActive(!journal.activeSelf);
+
+        if(journal.activeSelf)
+        {
+            List<PlayerJournal.SentenceHistory> strings = PlayerJournal.GetJournal();
+            journal.GetComponent<Text>().text = string.Join("\n", strings);
+        }
     }
 
     private void ShowUIMessage(Sprite[] sprites, string dialogText, string[] buttonTexts, UIButtonCallback[] callbacks)
