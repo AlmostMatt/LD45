@@ -195,7 +195,7 @@ public class Knowledge
         foreach (SentenceBelief b1 in newBeliefs)
         {
             Sentence s1 = b1.mSentence;
-            if (!(s1.Verb == Verb.Is && s1.Adverb == Adverb.True)) return;
+            if (!(s1.Verb == Verb.Is && s1.Adverb == Adverb.True)) continue;
 
             foreach (SentenceBelief b2 in mBeliefs)
             {
