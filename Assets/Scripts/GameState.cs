@@ -260,16 +260,25 @@ public class GameState : MonoBehaviour
         // populate room with clues
         if (mCluesInRooms.ContainsKey(mCurrentRoom))
         {
-            int clueX = -2;
-            foreach (ClueInfo c in mCluesInRooms[mCurrentRoom])
+            // TODO: I don't know what to do if there are more clues in this room than spawn points
+            // maybe we should just make sure that never happens? maybe it's fine that certain clues never spawn?
+            GameObject[] clueSpawns = GameObject.FindGameObjectsWithTag("ClueSpawn");
+            int numClues = Mathf.Min(mCluesInRooms[mCurrentRoom].Count, clueSpawns.Length);
+
+            List<ClueInfo> clues = mCluesInRooms[mCurrentRoom];
+            int[] clueSpots = Utilities.RandomList(clueSpawns.Length, numClues);
+            for(int i = 0; i < numClues; ++i)
             {
-                // TODO: markup the scene with valid spawn points for clues (maybe further filtered by type of clue)
-                // for now, spawn them wherever
+                // TODO: randomize clue image somehow? might need to relate to its description, too
                 GameObject clueObj = GameObject.Instantiate(cluePrefab);
-                clueObj.GetComponent<Clue>().mInfo = c;
-                Vector3 pos = new Vector3(clueX, 0, 0);
-                clueObj.transform.position = pos;
-                clueX += 1;
+                clueObj.GetComponent<Clue>().mInfo = clues[i];
+
+                // check this: it's annoying as hell when adding objects to scenes for some reason defaults their z to be too close to the camera
+                // *but* for spawn points, it's actually convenient to be able to see them in the editor, yet have them be hidden in-game.
+                // so, leave the spawn points in their stupid z-position, and spawn clues at their x,y and a sane z-position.
+                Vector3 spawnPos = clueSpawns[clueSpots[i]].transform.position;
+                clueObj.transform.position = new Vector3(spawnPos.x, spawnPos.y, 0);
+
             }
         }
 
