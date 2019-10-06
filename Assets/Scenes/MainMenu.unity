@@ -338,7 +338,7 @@ GameObject:
   - component: {fileID: 74700630}
   - component: {fileID: 74700629}
   m_Layer: 5
-  m_Name: Button (2)
+  m_Name: Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2610,7 +2610,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1381684651}
   m_Layer: 5
-  m_Name: dialog (1)
+  m_Name: Verb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2715,7 +2715,7 @@ GameObject:
   - component: {fileID: 1502753484}
   - component: {fileID: 1502753483}
   m_Layer: 5
-  m_Name: NounSelection (1)
+  m_Name: DirectObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3015,7 +3015,7 @@ GameObject:
   - component: {fileID: 1675282493}
   - component: {fileID: 1675282492}
   m_Layer: 5
-  m_Name: NounSelection
+  m_Name: Subject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -169,9 +169,23 @@ public class UIController : MonoBehaviour
 
     public void OnSentenceClick(Button button)
     {
-        HideUI();
-        // Get the sentence
-        Sentence sentence = new Sentence(Noun.Alice, Verb.Is, Noun.Alice, Adverb.True);
-        mSentenceCallback(sentence);
+        Transform sentenceBuilder = transform.Find("dialogView/V overlay/H sentenceBuilder");
+        string subject = sentenceBuilder.Find("Subject/Label").GetComponent<Text>().text;
+        string directObject = sentenceBuilder.Find("DirectObject/Label").GetComponent<Text>().text;
+        Debug.Log("subject and directObject are " + subject + " " + directObject);
+        System.Enum.TryParse(subject, out Noun mySubject);
+        System.Enum.TryParse(directObject, out Noun myObject);
+        Debug.Log("Parsed subject and directObject are " + mySubject + " " + myObject);
+        Sentence sentence = new Sentence(mySubject, Verb.Is, myObject, Adverb.True);
+        if (false && sentence.Subject == sentence.DirectObject)
+        {
+            // Invalid sentence!
+            // TODO: make the button dynamically gray out when the sentence is invalid
+            // This should be doable in Update()
+        } else
+        {
+            HideUI();
+            mSentenceCallback(sentence);
+        }
     }
 }
