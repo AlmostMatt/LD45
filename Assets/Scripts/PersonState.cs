@@ -10,7 +10,7 @@ public class PersonState
     public int PersonId;
     public bool IsKiller;
     public Dictionary<NounType, Noun> AttributeMap = new Dictionary<NounType, Noun>();
-    public Knowledge knowledge = new Knowledge();
+    public Knowledge knowledge;
 
     public bool IsPlayer
     {
@@ -31,5 +31,6 @@ public class PersonState
     public PersonState(int personId)
     {
         PersonId = personId;
+        knowledge = new Knowledge(personId);
     }
 }

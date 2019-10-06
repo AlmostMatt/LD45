@@ -298,15 +298,20 @@ public class GameState : MonoBehaviour
                 if(i != PlayerId)
                 {
                     Knowledge personKnowledge = mPeople[i].knowledge;
-                    float confidence0 = personKnowledge.VerifySentence(killer0);
-                    float confidence1 = personKnowledge.VerifySentence(killer1);
-                    float confidence2 = personKnowledge.VerifySentence(killer2);
-                    if(confidence0 > 0)
-                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I think BLONDE did it");
+                    //float confidence0 = personKnowledge.VerifySentence(killer0);
+                    //float confidence1 = personKnowledge.VerifySentence(killer1);
+                    //float confidence2 = personKnowledge.VerifySentence(killer2);
+
+                    float confidence0 = personKnowledge.VerifyBelief(killer0);
+                    float confidence1 = personKnowledge.VerifyBelief(killer1);
+                    float confidence2 = personKnowledge.VerifyBelief(killer2);
+
+                    if (confidence0 > 0)
+                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I think BLONDE did it (confidence " + confidence0 + ")");
                     else if(confidence1 > 0)
-                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I think BROWN did it");
+                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I think BROWN did it (confidence " + confidence1 + ")");
                     else if (confidence2 > 0)
-                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I think RED did it");
+                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I think RED did it (confidence " + confidence2 + ")");
                     else
                         PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I don't know.");
                 }
@@ -334,16 +339,19 @@ public class GameState : MonoBehaviour
     {
         PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "What did everyone find?");
 
-        List<Sentence> commonRevealed = new List<Sentence>();
+        // TODO: have an order to revealing info? maybe an AI decides not to reveal info
+        // if someone else reveals information that would incriminate them
+        Sentence[] revealedSentences = new Sentence[3];
         for (int i = 0; i < 3; ++i)
         {
-            if (!mPeople[i].IsPlayer)
+            if(!mPeople[i].IsPlayer)
             {
                 if(mRoundClues[i] != null)
                 {
                     Sentence newInfo = mRoundClues[i].GetSentence();
                     PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I found " + newInfo);
-                    commonRevealed.Add(newInfo); // TODO: track speaker
+
+                    revealedSentences[i] = newInfo;
 
                     mRoundClues[i] = null;
                 }
@@ -354,11 +362,17 @@ public class GameState : MonoBehaviour
             }
         }
 
-        foreach (Sentence s in commonRevealed)
+        for(int i = 0; i < 3; ++i)
         {
-            foreach (PersonState p in mPeople)
+            if(revealedSentences[i] != null)
             {
-                p.knowledge.AddKnowledge(s);
+                for(int j = 0; j < 3; ++j)
+                {
+                    if(i != j)
+                    {
+                        mPeople[j].knowledge.Listen(i, revealedSentences[i]);
+                    }
+                }
             }
         }
     }
