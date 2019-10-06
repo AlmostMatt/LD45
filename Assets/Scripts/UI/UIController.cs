@@ -175,8 +175,9 @@ public class UIController : MonoBehaviour
 
         // Set the list of options to the list of discovered words.
         // Default to having discovered the hair colors of people other than yourself.
-        HashSet<Noun> knownWords = GameState.Get().Player.knowledge.KnownWords;
-        List<string> knownWordStrings = knownWords.ToList().ConvertAll<string>(noun => noun.ToString());
+        List<Noun> knownWords = GameState.Get().Player.knowledge.KnownWords.ToList();
+        knownWords.Sort();
+        List<string> knownWordStrings = knownWords.ConvertAll<string>(noun => noun.ToString());
         Transform sentenceBuilder = transform.Find("dialogView/V overlay/H sentenceBuilder");
         Dropdown subjectDropdown = sentenceBuilder.Find("Subject").GetComponent<Dropdown>();
         subjectDropdown.ClearOptions();
