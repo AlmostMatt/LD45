@@ -106,7 +106,8 @@ public class UIController : MonoBehaviour
             {
                 // A null sprite can take up space
                 image.color = sprites[i] == null ? new Color(0, 0, 0, 0) : Color.white;
-                // Update a visible button
+                // Update a visible sprite
+                image.sprite = null; // clear sprite to reset size information
                 image.sprite = sprites[i];
             }
         }
@@ -166,7 +167,8 @@ public class UIController : MonoBehaviour
             {
                 // A null sprite can take up space
                 image.color = sprites[i] == null ? new Color(0, 0, 0, 0) : Color.white;
-                // Update a visible button
+                // Update a visible sprite
+                image.sprite = null; // clear sprite to reset size information
                 image.sprite = sprites[i];
             }
         }
