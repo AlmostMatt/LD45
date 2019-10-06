@@ -19,7 +19,7 @@ public static class NounTypeExtensions
             case NounType.Role:
                 return new Noun[] { Noun.Killer };
             case NounType.Name:
-                return new Noun[] { Noun.Alice, Noun.Beth, Noun.Carol };
+                return new Noun[] { Noun.Alice, Noun.Brianna, Noun.Catherine };
             default:
                 return null;
         }
