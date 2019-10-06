@@ -9,18 +9,19 @@
     // Profession?
     // Backstory?
 
-    // HairColor,
-    Blonde,
-    Brown,
-    Red,
     // Name
-    Alice,
-    Beth,
-    Carol,
+    //https://ancestorville.com/blogs/articles/victorian-female-nicknames
+    Alice, // Anna, Amanda, Alex
+    Brianna, // Beth, Belle, 
+    Catherine, // Carol,
     // Identity
     Exwife,
     Daughter,
     Bastard,
+    // HairColor,
+    Blonde,
+    Brown,
+    Red,
     // ? (special)
     Victim,
     Killer
