@@ -410,6 +410,30 @@ public class GameState : MonoBehaviour
         return (personId != PlayerId && mPersonRooms[personId].Equals(mCurrentRoom));
     }
 
+    public void PlayerFoundClue(ClueObject clue)
+    {
+        ClueItem item = clue.mItem;
+
+        // add clue to journal
+        if (item.info != null)
+            PlayerJournal.AddClue(item.info);
+
+        List<ClueItem> clues = mCluesInRooms[mCurrentRoom];
+        clues.Remove(item);
+        Destroy(clue.gameObject);
+        
+        Sprite relevantImage = SpriteManager.GetSprite(item.spriteName);
+        PersonState player = mPeople[0];
+        DialogBlock discussion = new DialogBlock(new PersonState[] { player }, OnClueDismissed);
+        discussion.QueueDialogue(player, new Sprite[] { relevantImage }, item.description);
+        discussion.QueueDialogue(player, new Sprite[] { }, "I'd better get back to the common area now.");
+        discussion.Start();
+    }
+
+    public void OnClueDismissed(int i)
+    {
+        StartStage(mCurrentStage + 1); // go to next stage after reading a clue
+    }
 
     private void GetRoomChoice(PersonObject p)
     {
