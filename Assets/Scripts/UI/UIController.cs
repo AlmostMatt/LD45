@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 // The callback function type - should take an integer argument that is the button index
 public delegate void UIButtonCallback(int btnIdx);
+public delegate void UISentenceCallback(Sentence sentence);
 
 /**
  * Contains functions related to player interaction
@@ -14,6 +15,7 @@ public class UIController : MonoBehaviour
 {
     public static UIController Get() { return GameObject.FindWithTag("UICanvas").GetComponent<UIController>(); }
     private UIButtonCallback[] mButtonCallbacks;
+    private UISentenceCallback mSentenceCallback;
 
     void Start()
     {
@@ -28,6 +30,7 @@ public class UIController : MonoBehaviour
         return transform.Find("dialogView").gameObject.activeInHierarchy;
     }
 
+    // Starts a 1:1 discussion with an information exchange
     public void ShowDialog(int personId)
     {
         PersonState player = GameState.Get().Player;
@@ -35,14 +38,21 @@ public class UIController : MonoBehaviour
         DialogBlock discussion = new DialogBlock(new PersonState[] { player, otherPerson  }, null);
         discussion.QueueDialogue(otherPerson, new Sprite[] { otherPerson.HeadSprite }, "Hi there! Let's share info!");
         // TODO: add buttons for the choice of whether or not to share info.
-        // ShowUI(new Sprite[] { head }, "Hi there!", new string[] { "Reply", "Dismiss" }, new UIButtonCallback[] { null, null });
+        // ShowUIMessage(new Sprite[] { head }, "Hi there!", new string[] { "Reply", "Dismiss" }, new UIButtonCallback[] { null, null });
         discussion.QueueInformationExchange();
         discussion.Start();
     }
 
+    // Displays the sentence-construction UI.
+    public void AskForSentence(Sprite[] images, UISentenceCallback sentenceCallback)
+    {
+        ShowUISentence(images, sentenceCallback);
+    }
+
+    // Displays a message
     public void ShowMessage(Sprite[] images, string message, string[] buttonTexts, UIButtonCallback[] callbacks)
     {
-        ShowUI(images, message, buttonTexts, callbacks);
+        ShowUIMessage(images, message, buttonTexts, callbacks);
     }
 
     public void HideUI()
@@ -50,10 +60,13 @@ public class UIController : MonoBehaviour
         transform.Find("dialogView").gameObject.SetActive(false);
     }
 
-    private void ShowUI(Sprite[] sprites, string dialogText, string[] buttonTexts, UIButtonCallback[] callbacks)
+    private void ShowUIMessage(Sprite[] sprites, string dialogText, string[] buttonTexts, UIButtonCallback[] callbacks)
     {
         // Make the UI visible
         transform.Find("dialogView").gameObject.SetActive(true);
+        transform.Find("dialogView/V overlay/dialog").gameObject.SetActive(true);
+        transform.Find("dialogView/V overlay/H buttons").gameObject.SetActive(true);
+        transform.Find("dialogView/V overlay/H sentenceBuilder").gameObject.SetActive(false);
 
         // Display sprites
         // Hide extra sprites and create new sprites as needed
@@ -87,13 +100,14 @@ public class UIController : MonoBehaviour
         mButtonCallbacks = callbacks;
         // Hide extra buttons and create new buttons as needed
         Transform buttonContainer = transform.Find("dialogView/V overlay/H buttons");
-        for (int i=0; i < Mathf.Max(buttonTexts.Length, buttonContainer.childCount); i++)
+        for (int i = 0; i < Mathf.Max(buttonTexts.Length, buttonContainer.childCount); i++)
         {
             Transform button;
             if (i < buttonContainer.childCount)
             {
                 button = buttonContainer.GetChild(i);
-            } else
+            }
+            else
             {
                 button = Instantiate(buttonContainer.GetChild(0), buttonContainer);
             }
@@ -106,6 +120,41 @@ public class UIController : MonoBehaviour
         }
     }
 
+    private void ShowUISentence(Sprite[] sprites, UISentenceCallback callback)
+    {
+        // Make the UI visible
+        transform.Find("dialogView").gameObject.SetActive(true);
+        transform.Find("dialogView/V overlay/dialog").gameObject.SetActive(false);
+        transform.Find("dialogView/V overlay/H buttons").gameObject.SetActive(false);
+        transform.Find("dialogView/V overlay/H sentenceBuilder").gameObject.SetActive(true);
+
+        // Display sprites
+        // Hide extra sprites and create new sprites as needed
+        Transform spriteContainer = transform.Find("dialogView/H images");
+        for (int i = 0; i < Mathf.Max(sprites.Length, spriteContainer.childCount); i++)
+        {
+            Image image;
+            if (i < spriteContainer.childCount)
+            {
+                image = spriteContainer.GetChild(i).GetComponent<Image>();
+            }
+            else
+            {
+                image = Instantiate(spriteContainer.GetChild(0), spriteContainer).GetComponent<Image>();
+            }
+            image.gameObject.SetActive(i < sprites.Length);
+            if (i < sprites.Length)
+            {
+                // A null sprite can take up space
+                image.color = sprites[i] == null ? new Color(0, 0, 0, 0) : Color.white;
+                // Update a visible button
+                image.sprite = sprites[i];
+            }
+        }
+
+        mSentenceCallback = callback;
+    }
+
     public void OnButtonClick(Button button)
     {
         // Start by hiding the UI even though the callback might cause UI to reappear.
@@ -116,5 +165,13 @@ public class UIController : MonoBehaviour
         {
             mButtonCallbacks[i](i);
         }
+    }
+
+    public void OnSentenceClick(Button button)
+    {
+        HideUI();
+        // Get the sentence
+        Sentence sentence = new Sentence(Noun.Alice, Verb.Is, Noun.Alice, Adverb.True);
+        mSentenceCallback(sentence);
     }
 }

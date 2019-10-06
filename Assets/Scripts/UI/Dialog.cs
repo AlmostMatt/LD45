@@ -79,10 +79,8 @@ public class DialogBlock
         {
             if (entry.speaker.IsPlayer)
             {
-                // TODO: Prompt the player to share information
-                // Give it to everyone who is listening
-                Continue();
-                return;
+                // Show prompt, and share the result with other participants of this dialog
+                UIController.Get().AskForSentence(entry.sprites, sentence => {ShareInfo(GameState.Get().Player, sentence);  Continue(); });
             } else
             {
                 // The GameState round-clues is guaranteed to be a recent clue that is not the result of combining multiple clues
@@ -90,13 +88,7 @@ public class DialogBlock
                 string message;
                 if (newInfo != null) {
                     message = "I found " + newInfo; // TODO: Announce the room where it was found
-                    for (int j = 0; j < Participants.Length; ++j)
-                    {
-                        if (j != entry.speaker.PersonId)
-                        {
-                            Participants[j].knowledge.Listen(entry.speaker, newInfo);
-                        }
-                    }
+                    ShareInfo(entry.speaker, newInfo);
                 }
                 else
                 {
@@ -107,6 +99,16 @@ public class DialogBlock
         } else // Not sharing info, just show the message
         {
             UIController.Get().ShowMessage(entry.sprites, entry.message, new string[] { "Continue" }, new UIButtonCallback[] { buttonIndex => Continue() });
+        }
+    }
+
+    private void ShareInfo(PersonState speaker, Sentence newInfo) {
+        for (int j = 0; j < Participants.Length; ++j)
+        {
+            if (Participants[j].PersonId != speaker.PersonId)
+            {
+                Participants[j].knowledge.Listen(speaker, newInfo);
+            }
         }
     }
 
