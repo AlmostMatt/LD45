@@ -15,6 +15,7 @@ public class PersonObject : MonoBehaviour
             Destroy(gameObject);
         }
         PersonState person = GameState.Get().GetPerson(personId);
+        GetComponent<SpriteRenderer>().sprite = null; // Clear sprite to reset size information
         GetComponent<SpriteRenderer>().sprite = person.PersonSprite;
     }
 
