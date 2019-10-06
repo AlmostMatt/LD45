@@ -4109,11 +4109,11 @@ MonoBehaviour:
   - name: HeadBlonde
     sprite: {fileID: 21300000, guid: afd28bd167ef6134ba563dccb46a1d75, type: 3}
   - name: PersonBrown
-    sprite: {fileID: 21300000, guid: 4d633e42db4506c418910349b93547dc, type: 3}
+    sprite: {fileID: 21300000, guid: de609b93d9d93734c8db253a69c0b30f, type: 3}
   - name: PersonRed
-    sprite: {fileID: 21300000, guid: 317f5da14639e2948a24f742407991f4, type: 3}
+    sprite: {fileID: 21300000, guid: d0486b71872866245a5666866a8065de, type: 3}
   - name: PersonBlonde
-    sprite: {fileID: 21300000, guid: eacb4663441e845459f089612dd6d6ee, type: 3}
+    sprite: {fileID: 21300000, guid: c7513fe53797a5e4fbcf7425331b6e1a, type: 3}
   namedImages2:
   - name: Item
     sprite: {fileID: 21300000, guid: 49972894fa083b94f8a545f149d51a36, type: 3}
