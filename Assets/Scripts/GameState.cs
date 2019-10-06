@@ -53,8 +53,6 @@ public class GameState : MonoBehaviour
         get { return mPeople[PlayerId]; }
     }
 
-    private Canvas mUICanvas;
-
     enum LoadState { NONE, UNLOADING_SCENE, LOADING_SCENE }
     private LoadState mLoadState = LoadState.NONE;
     private AsyncOperation mLoadSceneOperation;
@@ -168,6 +166,8 @@ public class GameState : MonoBehaviour
         
         if(stage == GameStage.SEARCH_1 || stage == GameStage.SEARCH_2 || stage == GameStage.SEARCH_3)
         {
+            UIController.Get().ShowJournalButton();            
+
             // assign npcs to rooms (for now, ensure they go to different rooms)
             int[] roomChoices = Utilities.RandomList(clueRooms.Length, 2);
             for(int i = 0, j = 0; i < 3; ++i)
@@ -260,12 +260,9 @@ public class GameState : MonoBehaviour
         // populate room with clues
         if (mCluesInRooms.ContainsKey(mCurrentRoom))
         {
-            // Debug.Log("You find these clues in the room:");
             int clueX = -2;
             foreach (ClueInfo c in mCluesInRooms[mCurrentRoom])
             {
-                // Debug.Log(c.mConceptA + " <-> " + c.mConceptB);
-
                 // TODO: markup the scene with valid spawn points for clues (maybe further filtered by type of clue)
                 // for now, spawn them wherever
                 GameObject clueObj = GameObject.Instantiate(cluePrefab);

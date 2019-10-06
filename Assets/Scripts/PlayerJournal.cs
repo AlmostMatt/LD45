@@ -45,6 +45,6 @@ public static class PlayerJournal
 
     public static List<SentenceHistory> GetJournal()
     {
-        return (sSentences);
+        return sSentences;
     }
 }
