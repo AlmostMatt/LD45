@@ -15,7 +15,7 @@ public class GameState : MonoBehaviour
     public static GameState Get() { return GameObject.FindWithTag("GameRules").GetComponent<GameState>(); }
 
     private string[] clueRooms = { "Bedroom1", "Bedroom2", "Bedroom3" }; // todo: better way of specifying this? data-drive?
-    Dictionary<string, List<ClueInfo>> mCluesInRooms = new Dictionary<string, List<ClueInfo>>();
+    Dictionary<string, List<ClueItem>> mCluesInRooms = new Dictionary<string, List<ClueItem>>();
 
     public ClueInfo[] mRoundClues = new ClueInfo[3]; // the clue that each person found that round
     public PersonState[] mPeople;
@@ -80,7 +80,7 @@ public class GameState : MonoBehaviour
         mCurrentStage = GameStage.MENU;
         
         PlayerId = 0; // todo: randomize?
-        List<ClueInfo> cluesToScatter;
+        List<ClueItem> cluesToScatter;
         MysteryGenerator.Generate(out mPeople, out mStartingClue, out cluesToScatter);
 
         // give knowledge
@@ -90,13 +90,13 @@ public class GameState : MonoBehaviour
         }
 
         // scatter clues
-        foreach (ClueInfo clue in cluesToScatter)
+        foreach (ClueItem clue in cluesToScatter)
         {
             int room = (int)Random.Range(0, clueRooms.Length);
             string roomName = clueRooms[room];
             if(!mCluesInRooms.ContainsKey(roomName))
             {
-                mCluesInRooms.Add(roomName, new List<ClueInfo>());
+                mCluesInRooms.Add(roomName, new List<ClueItem>());
             }
 
             mCluesInRooms[roomName].Add(clue);
@@ -182,13 +182,14 @@ public class GameState : MonoBehaviour
                     // npcs pick up a clue in the room they move to
                     if(mCluesInRooms.ContainsKey(npcRoom))
                     {
-                        List<ClueInfo> cluesInRoom = mCluesInRooms[npcRoom];
+                        List<ClueItem> cluesInRoom = mCluesInRooms[npcRoom];
                         if(cluesInRoom.Count > 0)
                         {
                             int clueIdx = Random.Range(0, cluesInRoom.Count);
-                            ClueInfo info = cluesInRoom[clueIdx];
+                            ClueItem clue = cluesInRoom[clueIdx];
                             cluesInRoom.RemoveAt(clueIdx);
-                            
+
+                            ClueInfo info = clue.info;
                             mPeople[i].knowledge.AddKnowledge(info.GetSentence());
                             mRoundClues[i] = info;
                         }
@@ -265,20 +266,20 @@ public class GameState : MonoBehaviour
             GameObject[] clueSpawns = GameObject.FindGameObjectsWithTag("ClueSpawn");
             int numClues = Mathf.Min(mCluesInRooms[mCurrentRoom].Count, clueSpawns.Length);
 
-            List<ClueInfo> clues = mCluesInRooms[mCurrentRoom];
+            List<ClueItem> clues = mCluesInRooms[mCurrentRoom];
             int[] clueSpots = Utilities.RandomList(clueSpawns.Length, numClues);
             for(int i = 0; i < numClues; ++i)
             {
-                // TODO: randomize clue image somehow? might need to relate to its description, too
+                ClueItem item = clues[i];
                 GameObject clueObj = GameObject.Instantiate(cluePrefab);
-                clueObj.GetComponent<Clue>().mInfo = clues[i];
+                clueObj.GetComponent<ClueObject>().mItem = item;
+                clueObj.GetComponent<SpriteRenderer>().sprite = SpriteManager.GetSprite(item.spriteName);
 
                 // check this: it's annoying as hell when adding objects to scenes for some reason defaults their z to be too close to the camera
                 // *but* for spawn points, it's actually convenient to be able to see them in the editor, yet have them be hidden in-game.
                 // so, leave the spawn points in their stupid z-position, and spawn clues at their x,y and a sane z-position.
                 Vector3 spawnPos = clueSpawns[clueSpots[i]].transform.position;
                 clueObj.transform.position = new Vector3(spawnPos.x, spawnPos.y, 0);
-
             }
         }
 
@@ -288,13 +289,13 @@ public class GameState : MonoBehaviour
         {
             mCurrentStage = GameStage.INTRO;
 
-            Debug.Log("Dead body. The name " + mStartingClue.mConceptB + " is written in blood by the body.");
+            Debug.Log("Dead body. The name " + mStartingClue.nounB + " is written in blood by the body.");
             DialogBlock discussion = new DialogBlock(mPeople, OnDialogueDismissed);
             discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "What Happened?");
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Where am I?");
             discussion.QueueDialogue(Player, NonPlayersHeads, "Who am I?");
             discussion.QueueDialogue(mPeople[2], new Sprite[] { SpriteManager.GetSprite("Victim") }, "Look! A body!");
-            discussion.QueueDialogue(mPeople[1], new Sprite[] { SpriteManager.GetSprite("CrimeScene") }, "And a name: " + mStartingClue.mConceptB);
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { SpriteManager.GetSprite("CrimeScene") }, "And a name: " + mStartingClue.nounB);
             discussion.QueueDialogue(Player, NonPlayersHeads, "Let's split up and look for clues.");
             discussion.Start();
         }

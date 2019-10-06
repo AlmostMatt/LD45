@@ -4018,6 +4018,7 @@ GameObject:
   - component: {fileID: 2111406665}
   - component: {fileID: 2111406666}
   - component: {fileID: 2111406667}
+  - component: {fileID: 2111406668}
   m_Layer: 0
   m_Name: Singletons
   m_TagString: GameRules
@@ -4120,3 +4121,24 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: b29eec13b07bf9f4eb0388d5171a356d, type: 3}
   - name: CrimeScene
     sprite: {fileID: 21300000, guid: b29eec13b07bf9f4eb0388d5171a356d, type: 3}
+  - name: Photo
+    sprite: {fileID: 21300000, guid: 19fad4b5436f8dd4faf7ed87242adae7, type: 3}
+  - name: Letter
+    sprite: {fileID: 21300000, guid: 0e236cb5b3d214443bd2693e8d118c4a, type: 3}
+  - name: Newspaper
+    sprite: {fileID: 21300000, guid: b4d7caf467a59ab4fa5ffcd793a65f42, type: 3}
+--- !u!114 &2111406668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111406662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ca9abdfbe879584bb1b16aaf57cc0c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clues:
+  - {fileID: 701118681176609745, guid: c78ff1c87cc56dd40838d8796bfe3d17, type: 3}
+  - {fileID: 5421516268993671168, guid: 0ab43725ec9b3324dae7264458d76f9d, type: 3}
