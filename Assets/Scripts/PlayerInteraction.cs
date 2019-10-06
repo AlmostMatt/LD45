@@ -15,6 +15,10 @@ public class PlayerInteraction : MonoBehaviour
     void Start()
     {
     }
+    public bool CanInteractWithScene()
+    {
+        return !UIHasOverlay();
+    }
 
     public void StartDialog(int personId)
     {
