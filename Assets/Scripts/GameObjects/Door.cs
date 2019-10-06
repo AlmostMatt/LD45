@@ -19,7 +19,6 @@ public class Door : MonoBehaviour
 
     public void OnMouseOver() // Called every frame that the mouse is over something
     {
-        // TODO: check if UI is in the way
         transform.Find("doorIcon").gameObject.SetActive(PlayerInteraction.Get().CanInteractWithScene());
     }
 

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7416067398557596707}
   - component: {fileID: 7416067398557596717}
   - component: {fileID: 3725034978647493950}
+  - component: {fileID: 6925709935710806034}
   m_Layer: 0
   m_Name: Person
   m_TagString: Untagged
@@ -111,7 +112,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 6.06, y: 14.76}
+    oldSize: {x: 3.44, y: 14.52}
     newSize: {x: 1.11, y: 1.1133333}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -120,3 +121,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 4, y: 14}
   m_EdgeRadius: 0
+--- !u!114 &6925709935710806034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7416067398557596704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38f23dd570adad140b8dee75eaa75540, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
