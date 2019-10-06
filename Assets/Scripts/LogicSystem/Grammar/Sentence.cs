@@ -56,8 +56,19 @@ public class Sentence
             )
         );
     }
-
+    
     // there's a warning about not overriding GetHashCode?
+
+    public bool SameIdea(Sentence other)
+    {
+        return (
+               (Verb == other.Verb)
+            && (
+                    (Subject == other.Subject && DirectObject == other.DirectObject)
+                 || (Subject == other.DirectObject && DirectObject == other.Subject)
+               )
+        );
+    }
 
     public override string ToString()
     {
@@ -67,13 +78,8 @@ public class Sentence
         // When linking property to property it should be something like "The red-haired person has X"
 
         List<string> words = new List<string>();
-
-        // capitalize beginning
-        string starting = Subject.AsSubject();
-        char[] s = starting.ToCharArray();
-        s[0] = char.ToUpper(s[0]);
-        words.Add(new string(s));
-
+        
+        words.Add(Subject.AsSubject());
         words.Add(DirectObject.AsObject(Adverb == Adverb.True));
         
         return string.Join(" ", words) + ".";

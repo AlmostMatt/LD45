@@ -4,16 +4,18 @@ using System.Collections.Generic;
 
 public class Knowledge
 {
-    private struct SentenceBelief
+    private class SentenceBelief
     {
         public Sentence mSentence;
         public float mConfidence; // maybe we always calculate this on the fly?
 
-        bool mDeduced;
-        Sentence mSourceSentence1;
-        Sentence mSourceSentence2;
+        public int mSourceId; // what person did this come from (if any)?
 
-        int mSourceId; // what person did this come from (if any)?
+        public bool mDeduced;
+        public SentenceBelief mSourceBelief1;
+        public SentenceBelief mSourceBelief2;
+
+        public List<SentenceBelief> mDeductions = new List<SentenceBelief>();
 
         public override bool Equals(object obj)
         {
@@ -41,16 +43,16 @@ public class Knowledge
             mSourceId = sourceId;
             mConfidence = confidence;
 
-            mSourceSentence1 = null;
-            mSourceSentence2 = null;
+            mSourceBelief1 = null;
+            mSourceBelief2 = null;
         }
 
-        public SentenceBelief(Sentence sentence, Sentence source1, Sentence source2, float confidence)
+        public SentenceBelief(Sentence sentence, SentenceBelief source1, SentenceBelief source2, float confidence)
         {
             mDeduced = true;
             mSentence = sentence;
-            mSourceSentence1 = source1;
-            mSourceSentence2 = source2;
+            mSourceBelief1 = source1;
+            mSourceBelief2 = source2;
             mConfidence = confidence;
 
             mSourceId = -1;
@@ -68,12 +70,38 @@ public class Knowledge
 
     private List<SentenceBelief> mBeliefs = new List<SentenceBelief>();
 
-    private List<Sentence> deductions = new List<Sentence>(); // TODO: we might want to track which sentences contributed to a given deduction?
+    private List<List<SentenceBelief>> mSuspiciousBeliefs = new List<List<SentenceBelief>>();
 
     public Knowledge(int personId)
     {
         mPersonId = personId;
         mPersonConfidence[mPersonId] = 1f;
+    }
+    
+    private void RecursiveUpdateConfidence(SentenceBelief b, float amt)
+    {        
+        b.mConfidence *= amt;
+        Debug.Log(mPersonId + " now only believes " + b.mSentence + " " + b.mConfidence);
+        foreach (SentenceBelief deduction in b.mDeductions)
+        {
+            RecursiveUpdateConfidence(deduction, amt);
+        }
+    }
+
+    private void ConfidenceLost(int personId)
+    {
+        float decay = 0.8f;
+        mPersonConfidence[personId] *= decay;
+        float newConfidence = mPersonConfidence[personId];
+        Debug.Log(mPersonId + " now only trusts " + personId + " this much: " + newConfidence);
+        // update all things heard from this person
+        foreach(SentenceBelief b in mBeliefs)
+        {
+            if(b.mSourceId == personId)
+            {
+                RecursiveUpdateConfidence(b, decay);
+            }
+        }
     }
 
     public void Listen(PersonState person, Sentence sentence)
@@ -81,6 +109,17 @@ public class Knowledge
         // Allow the player to use these words for sentences later
         KnownWords.Add(sentence.Subject);
         KnownWords.Add(sentence.DirectObject);
+
+        // preemptively reject sentences that contradict something we are sure of
+        Sentence opposite = new Sentence(sentence.Subject, sentence.Verb, sentence.DirectObject, sentence.Adverb == Adverb.True ? Adverb.False : Adverb.True);
+        float confidenceInOpposite = VerifyBelief(opposite);
+        if(confidenceInOpposite >= 1f)
+        {
+            Debug.Log(person.PersonId + " told a lie: " + sentence);
+            ConfidenceLost(person.PersonId);
+            return;
+        }
+
         // Add this to beliefs with some confidence number
         Debug.Log(mPersonId + " hears " + person.PersonId + " say " + sentence);
         SentenceBelief belief = new SentenceBelief(sentence, person.PersonId, mPersonConfidence[person.PersonId]);
@@ -102,11 +141,12 @@ public class Knowledge
         return maxConfidence;
     }
 
-    public void AddKnowledge(Sentence sentence) // implied source is yourself
+    public void AddKnowledge(Sentence sentence) // implied source is yourself, 100% confidence
     {
         // Allow the player to use these words for sentences later
         KnownWords.Add(sentence.Subject);
         KnownWords.Add(sentence.DirectObject);
+
         // is it ok to have multiple beliefs about the same sentence? maybe it gets resolved later
         SentenceBelief belief = new SentenceBelief(sentence, mPersonId, mPersonConfidence[mPersonId]);
         if(!mBeliefs.Contains(belief))
@@ -132,6 +172,10 @@ public class Knowledge
             {
                 mBeliefs.Add(b);
                 newBeliefs.Add(b);
+
+                // update links for deduction graph
+                if(b.mSourceBelief1 != null) { b.mSourceBelief1.mDeductions.Add(b); }
+                if(b.mSourceBelief2 != null) { b.mSourceBelief2.mDeductions.Add(b); }
 
                 Debug.Log(mPersonId + " now believes " + b.mSentence + " (confidence: " + b.mConfidence + ")");
             }
@@ -191,7 +235,7 @@ public class Knowledge
 
                     if (newSentence != null)
                     {
-                        SentenceBelief newBelief = new SentenceBelief(newSentence, s1, s2, confidence);
+                        SentenceBelief newBelief = new SentenceBelief(newSentence, b1, b2, confidence);
                         beliefDeductions.Add(newBelief);
                         Debug.Log("New belief: " + newBelief.mSentence + " (confidence: " + confidence + ") | Since " + s1 + " (confidence: " + b1.mConfidence + ") and " + s2 + " (confidence: " + b2.mConfidence + ")");
                     }
@@ -228,7 +272,7 @@ public class Knowledge
 
                     if (newSentence != null)
                     {
-                        SentenceBelief newBelief = new SentenceBelief(newSentence, s1, s2, confidence);
+                        SentenceBelief newBelief = new SentenceBelief(newSentence, b1, b2, confidence);
                         beliefDeductions.Add(newBelief);
                         Debug.Log("New belief: " + newBelief.mSentence + " (confidence: " + confidence + ") | Since " + s1 + " (confidence: " + b1.mConfidence + ") and " + s2 + " (confidence: " + b2.mConfidence + ")");
                     }
@@ -252,12 +296,12 @@ public class Knowledge
                     if (s1.DirectObject != n)
                     {
                         Sentence newSentence = new Sentence(s1.Subject, Verb.Is, n, Adverb.False);
-                        SentenceBelief belief = new SentenceBelief(newSentence, b1.mSentence, null, b1.mConfidence);
+                        SentenceBelief belief = new SentenceBelief(newSentence, b1, null, b1.mConfidence);
                         beliefDeductions.Add(belief);
 
                         Debug.Log("New belief: " + belief.mSentence + " (confidence: " + b1.mConfidence + ") | Since " + s1 + " (confidence: " + b1.mConfidence + ")");
                     }
-                }                
+                }
             }
 
             t = s1.Subject.Type();
@@ -269,7 +313,7 @@ public class Knowledge
                     if (s1.Subject != n)
                     {
                         Sentence newSentence = new Sentence(s1.DirectObject, Verb.Is, n, Adverb.False);
-                        SentenceBelief belief = new SentenceBelief(newSentence, b1.mSentence, null, b1.mConfidence);
+                        SentenceBelief belief = new SentenceBelief(newSentence, b1, null, b1.mConfidence);
                         beliefDeductions.Add(belief);
 
                         Debug.Log("New belief: " + belief.mSentence + " (confidence: " + b1.mConfidence + ") | Since " + s1 + " (confidence: " + b1.mConfidence + ")");
@@ -278,6 +322,66 @@ public class Knowledge
             }
         }
 
+        // check for contradictions
+        List<SentenceBelief> refutedBeliefs = new List<SentenceBelief>();
+        foreach (SentenceBelief b1 in newBeliefs)
+        {
+            Sentence s1 = b1.mSentence;
+            
+            foreach(SentenceBelief b2 in mBeliefs)
+            {
+                Sentence s2 = b2.mSentence;
+                if(s1.SameIdea(s2) && s1.Adverb != s2.Adverb)
+                {
+                    if(b2.mConfidence >= 1) {
+                        Debug.Log("BAD: accepting info that contradicts something known");
+                        continue;
+                    }
+
+                    if(b1.mConfidence >= 1)
+                    {
+                        Debug.Log(mPersonId + " found information contradicting previous beliefs: " + s1 + " vs. " + s2);
+                        refutedBeliefs.Add(b2);
+                    }
+                    else
+                    {
+                        // conflicting information, but not sure about which is true... oh well
+                        // TODO: what to do here? set up some kind of contradictory info set that the AI active seeks to resolve?
+                    }
+                }
+            }
+        }
+
+        RemoveBeliefs(refutedBeliefs);
         AddBeliefs(beliefDeductions);
+    }
+    
+    private void RemoveBeliefs(List<SentenceBelief> refutedBeliefs)
+    {
+        foreach(SentenceBelief b in refutedBeliefs)
+        {
+            RemoveBelief(b);
+        }
+    }
+
+    private void GetRootBeliefs(SentenceBelief b, List<SentenceBelief> rootBeliefs, bool filterOutTrue)
+    {
+        if(!b.mDeduced)
+        {
+            if(!filterOutTrue || b.mConfidence < 1) rootBeliefs.Add(b);
+            return;
+        }
+
+        GetRootBeliefs(b.mSourceBelief1, rootBeliefs, filterOutTrue);
+        if (b.mSourceBelief2 != null) GetRootBeliefs(b.mSourceBelief2, rootBeliefs, filterOutTrue);
+    }
+
+    private void RemoveBelief(SentenceBelief b)
+    {
+        // if this belief is false, then at least 1 belief we used to arrive at it must be false
+        List<SentenceBelief> rootBeliefs = new List<SentenceBelief>();
+        GetRootBeliefs(b, rootBeliefs, true);
+
+        mSuspiciousBeliefs.Add(rootBeliefs);
     }
 }

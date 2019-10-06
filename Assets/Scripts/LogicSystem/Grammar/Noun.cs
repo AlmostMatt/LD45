@@ -115,6 +115,8 @@ public static class NounExtensions
             case Noun.Brianna:
             case Noun.Catherine:
                 return isString + "named " + noun.ToString();
+            case Noun.Killer:
+                return isString + "the murderer";
             default:
                 return isString + noun.ToString();
         }
