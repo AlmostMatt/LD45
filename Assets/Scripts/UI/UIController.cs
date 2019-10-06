@@ -181,11 +181,11 @@ public class UIController : MonoBehaviour
         Dropdown subjectDropdown = sentenceBuilder.Find("Subject").GetComponent<Dropdown>();
         subjectDropdown.ClearOptions();
         subjectDropdown.AddOptions(knownWordStrings);
-        //subjectDropdown.RefreshShownValue();
+        subjectDropdown.RefreshShownValue();
         Dropdown objectDropdown = sentenceBuilder.Find("DirectObject").GetComponent<Dropdown>();
         objectDropdown.ClearOptions();
         objectDropdown.AddOptions(knownWordStrings);
-        //objectDropdown.RefreshShownValue();
+        objectDropdown.RefreshShownValue();
 
         mSentenceCallback = callback;
     }
