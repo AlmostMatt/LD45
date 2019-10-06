@@ -152,6 +152,21 @@ public class UIController : MonoBehaviour
             }
         }
 
+        // Set the list of options to the list of discovered words.
+        // Default to having discovered the hair colors of people other than yourself.
+        List<Noun> knownWords = new List<Noun>();
+        knownWords.Add(Noun.Alice);
+        knownWords.Add(Noun.Killer);
+        List<string> knownWordStrings = knownWords.ConvertAll<string>(noun => noun.ToString());
+        // TODO: get known words from knowledge
+        Transform sentenceBuilder = transform.Find("dialogView/V overlay/H sentenceBuilder");
+        Dropdown subjectDropdown = sentenceBuilder.Find("Subject").GetComponent<Dropdown>();
+        subjectDropdown.ClearOptions();
+        subjectDropdown.AddOptions(knownWordStrings);
+        Dropdown objectDropdown = sentenceBuilder.Find("DirectObject").GetComponent<Dropdown>();
+        objectDropdown.ClearOptions();
+        objectDropdown.AddOptions(knownWordStrings);
+
         mSentenceCallback = callback;
     }
 
@@ -172,14 +187,20 @@ public class UIController : MonoBehaviour
         Transform sentenceBuilder = transform.Find("dialogView/V overlay/H sentenceBuilder");
         string subject = sentenceBuilder.Find("Subject/Label").GetComponent<Text>().text;
         string directObject = sentenceBuilder.Find("DirectObject/Label").GetComponent<Text>().text;
-        Debug.Log("subject and directObject are " + subject + " " + directObject);
-        System.Enum.TryParse(subject, out Noun mySubject);
-        System.Enum.TryParse(directObject, out Noun myObject);
-        Debug.Log("Parsed subject and directObject are " + mySubject + " " + myObject);
-        Sentence sentence = new Sentence(mySubject, Verb.Is, myObject, Adverb.True);
-        if (false && sentence.Subject == sentence.DirectObject)
+        bool parsedSubject = System.Enum.TryParse(subject, out Noun mySubject);
+        if (!parsedSubject)
         {
-            // Invalid sentence!
+            Debug.LogWarning("Invalid noun - " + subject);
+        }
+        bool parsedObject = System.Enum.TryParse(directObject, out Noun myObject);
+        if (!parsedObject)
+        {
+            Debug.LogWarning("Invalid noun - " + directObject);
+        }
+        Sentence sentence = new Sentence(mySubject, Verb.Is, myObject, Adverb.True);
+        if (parsedSubject && parsedObject && sentence.Subject == sentence.DirectObject)
+        {
+            // Words parsed correctly and the sentence is Invalid!
             // TODO: make the button dynamically gray out when the sentence is invalid
             // This should be doable in Update()
         } else
