@@ -192,12 +192,11 @@ public class Knowledge
 
         // rule 1: transitivity
         // [A is B] and [B is C] => [A is C] (including valid permutations)
+        // also, the negative version (rule 1.5): [A is B] and [B is not C] => [A is not C]
         foreach (SentenceBelief b1 in newBeliefs)
         {
             Sentence s1 = b1.mSentence;
-            if (!(s1.Verb == Verb.Is && s1.Adverb == Adverb.True)) continue;
-
-            foreach (SentenceBelief b2 in mBeliefs)
+            if (s1.Verb != Verb.Is) continue;
             if (s1.Adverb == Adverb.True)
             {
                 foreach (SentenceBelief b2 in mBeliefs)
