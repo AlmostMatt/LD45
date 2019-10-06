@@ -434,7 +434,7 @@ public class GameState : MonoBehaviour
 
     public void OnClueDismissed(int i)
     {
-        StartStage(mCurrentStage + 1); // go to next stage after reading a clue
+        // StartStage(mCurrentStage + 1); // go to next stage after reading a clue
     }
 
     private void GetRoomChoice(PersonObject p)

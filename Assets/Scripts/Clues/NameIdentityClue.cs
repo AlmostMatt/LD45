@@ -19,8 +19,8 @@ public class NameIdentityClue : ClueGenerator
             n2 = temp;
         }
 
-        string spriteName = "Letter"; 
-        string description = "A letter to the victim about his " + n1 + " named " + n2;
+        string spriteName = "Letter";
+        string description = "A letter to the victim about " + n2 + ", " + n1.WithVictim() + ".";
         ClueItem item = new ClueItem(n1, n2, spriteName, description);
         return (item);
     }

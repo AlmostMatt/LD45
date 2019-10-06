@@ -20,7 +20,7 @@ public class AppearanceIdentityClue : ClueGenerator
         }
 
         string spriteName = "Photo";
-        string description = "A photo of the victim and his " + n2 + ", who has " + n1 + " hair,";
+        string description = "A photo of the victim and " + n2.WithVictim() + ", who " + n1.AsObject() + ".";
         ClueItem item = new ClueItem(n1, n2, spriteName, description);
         return (item);
     }
