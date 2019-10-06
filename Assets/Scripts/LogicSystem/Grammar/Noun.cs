@@ -24,7 +24,17 @@
     Red,
     // Role (special)
     Victim,
-    Killer
+    Killer,
+    // Motive
+    Debt,
+    Inheritance,
+    Grudge,
+    // Backstory
+    Philanthropist,
+    Writer,
+    Scientist,
+    Artist
+
 
     // When adding new values to this enum, also update the switch statement below.
 }
@@ -47,6 +57,15 @@ public static class NounExtensions
             case Noun.Killer:
             case Noun.Victim:
                 return NounType.Role;
+            case Noun.Debt:
+            case Noun.Inheritance:
+            case Noun.Grudge:
+                return NounType.Motive;
+            case Noun.Philanthropist:
+            case Noun.Writer:
+            case Noun.Scientist:
+            case Noun.Artist:
+                return NounType.Backstory;
             case Noun.Alice:
             case Noun.Brianna:
             case Noun.Catherine:

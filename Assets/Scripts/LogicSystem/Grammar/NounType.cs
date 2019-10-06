@@ -3,12 +3,14 @@
     HairColor,
     Name,
     Identity,
-    Role
+    Role,
+    Backstory,
+    Motive
 }
 
 public static class NounTypeExtensions
 {
-    public static Noun[] GetNouns(this NounType nounType)
+    public static Noun[] GetMutuallyExclusiveNouns(this NounType nounType) // this is for the AI to make deductions based on mutual exclusion
     {
         switch (nounType)
         {

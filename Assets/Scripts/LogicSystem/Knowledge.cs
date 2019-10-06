@@ -244,7 +244,7 @@ public class Knowledge
             if (!(s1.Verb == Verb.Is && s1.Adverb == Adverb.True)) return;
 
             NounType t = s1.DirectObject.Type();
-            Noun[] nouns = t.GetNouns();
+            Noun[] nouns = t.GetMutuallyExclusiveNouns();
             if(nouns != null)
             {
                 foreach(Noun n in nouns)
@@ -261,7 +261,7 @@ public class Knowledge
             }
 
             t = s1.Subject.Type();
-            nouns = t.GetNouns();
+            nouns = t.GetMutuallyExclusiveNouns();
             if (nouns != null)
             {
                 foreach (Noun n in nouns)

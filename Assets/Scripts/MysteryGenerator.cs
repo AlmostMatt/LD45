@@ -7,8 +7,8 @@ public class MysteryGenerator
     static Noun[] appearances = { Noun.Blonde, Noun.Brown, Noun.Red };
     static Noun[] identities = { Noun.Exwife, Noun.Daughter, Noun.Bastard };
     static Noun[] names = { Noun.Alice, Noun.Brianna, Noun.Catherine };
-    
-    
+    static Noun[] backstories = { Noun.Philanthropist, Noun.Writer, Noun.Scientist, Noun.Artist };
+    static Noun[] motives = { Noun.Debt, Noun.Inheritance, Noun.Grudge };
 
     public static void Generate(out PersonState[] people, out ClueInfo startingClue, out List<ClueItem> cluesToScatter)
     {
@@ -28,10 +28,12 @@ public class MysteryGenerator
         // what's the story? what events led to where we are now?
 
         // Generate people by shuffling a list of indexes for each attribute type.
-        Noun[][] attributeLists = { appearances, identities, names };
+        Noun[][] attributeLists = { appearances, identities, names, backstories, motives };
         int[][] shuffledLists = {
             Utilities.RandomList(3, 3),
             Utilities.RandomList(3, 3),
+            Utilities.RandomList(3, 3),
+            Utilities.RandomList(backstories.Length, 3),
             Utilities.RandomList(3, 3),
         };
         people = new PersonState[3];
@@ -74,24 +76,41 @@ public class MysteryGenerator
             Noun hair = people[i].AttributeMap[NounType.HairColor];
             Noun identity = people[i].AttributeMap[NounType.Identity];
             Noun name = people[i].AttributeMap[NounType.Name];
+            Noun motive = people[i].AttributeMap[NounType.Motive];
+            Noun backstory = people[i].AttributeMap[NounType.Backstory];
+
             ClueItem appearanceToIdentity = ClueManifest.GetClue(hair, identity);
-            if(appearanceToIdentity == null)
+            if(appearanceToIdentity != null)
             {
-                Debug.Log("No clue for " + hair + " <-> " + identity + "!");
+                cluesToScatter.Add(appearanceToIdentity);                
             }
             else
             {
-                cluesToScatter.Add(appearanceToIdentity);
+                Debug.Log("No clue for " + hair + " <-> " + identity + "!");
             }
 
             ClueItem identityToName = ClueManifest.GetClue(identity, name);
-            if(identityToName == null)
+            if(identityToName != null)
             {
-                Debug.Log("No clue for " + hair + " <-> " + identity + "!");
+                cluesToScatter.Add(identityToName);
             }
             else
             {
-                cluesToScatter.Add(identityToName);
+                Debug.Log("No clue for " + hair + " <-> " + identity + "!");
+            }
+
+            // mix and match name/identity to motive/backstory
+            Noun identityOrName = Random.Range(0, 1) == 0 ? identity : name;
+            Noun motiveOrBackstory = Random.Range(0, 1) == 0 ? motive : backstory;
+
+            ClueItem backstoryClue = ClueManifest.GetClue(motive, identity);
+            if(backstoryClue != null)
+            {
+                cluesToScatter.Add(backstoryClue);
+            }
+            else
+            {
+                Debug.Log("No clue for " + hair + " <-> " + identity + "!");
             }
         }
     }
