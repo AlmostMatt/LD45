@@ -15,9 +15,12 @@ public class Clue : MonoBehaviour
         // just want to open a dialogue box
         // param is unused by function
         Sprite relevantImage = SpriteManager.GetSprite("Item");
-        PlayerInteraction.Get().QueueDialogue(new Sprite[] { relevantImage }, "A clue!");
-        PlayerInteraction.Get().QueueDialogue(new Sprite[] { relevantImage }, mInfo.mConceptA + "<->" + mInfo.mConceptB);
-        PlayerInteraction.Get().ContinueDialogue();
+
+        PersonState player = GameState.Get().Player;
+        DialogBlock discussion = new DialogBlock(new PersonState[] { GameState.Get().Player }, null);
+        discussion.QueueDialogue(player, new Sprite[] { relevantImage }, "A clue!");
+        discussion.QueueDialogue(player, new Sprite[] { relevantImage }, mInfo.mConceptA + "<->" + mInfo.mConceptB);
+        discussion.Start();
 
         // add clue to "inventory"
         if (mInfo != null)

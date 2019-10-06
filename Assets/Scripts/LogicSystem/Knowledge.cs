@@ -64,7 +64,9 @@ public class Knowledge
     private float[] mPersonConfidence = { 0.5f, 0.5f, 0.5f };
     private int mPersonId;
 
+    // DEPRECATED
     private List<Sentence> knownSentences = new List<Sentence>();
+    // DEPRECATED
     private Dictionary<Noun, List<Sentence>> sentencesBySpeaker = new Dictionary<Noun, List<Sentence>>();
 
     private List<SentenceBelief> mBeliefs = new List<SentenceBelief>();
@@ -79,9 +81,16 @@ public class Knowledge
 
     public Sentence Speak()
     {
-        return knownSentences[0];
+        if (knownSentences.Count > 0)
+        {
+            return knownSentences[knownSentences.Count - 1];
+        } else
+        {
+            return null;
+        }
     }
 
+    // DEPRECATED
     public void Listen(int personId, Noun speaker, Sentence sentence)
     {
         if (!sentencesBySpeaker.ContainsKey(speaker))
@@ -91,10 +100,10 @@ public class Knowledge
         sentencesBySpeaker[speaker].Add(sentence);
     }
 
-    public void Listen(int personId, Sentence sentence)
+    public void Listen(PersonState person, Sentence sentence)
     {
-        Debug.Log(mPersonId + " hears " + personId + " say " + sentence);
-        SentenceBelief belief = new SentenceBelief(sentence, personId, mPersonConfidence[personId]);
+        Debug.Log(mPersonId + " hears " + person.PersonId + " say " + sentence);
+        SentenceBelief belief = new SentenceBelief(sentence, person.PersonId, mPersonConfidence[person.PersonId]);
         List<SentenceBelief> beliefs = new List<SentenceBelief>();
         beliefs.Add(belief);
         AddBeliefs(beliefs);

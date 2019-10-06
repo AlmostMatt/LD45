@@ -17,7 +17,7 @@ public class GameState : MonoBehaviour
     private string[] clueRooms = { "Bedroom1", "Bedroom2", "Bedroom3" }; // todo: better way of specifying this? data-drive?
     Dictionary<string, List<ClueInfo>> mCluesInRooms = new Dictionary<string, List<ClueInfo>>();
 
-    private ClueInfo[] mRoundClues = new ClueInfo[3]; // the clue that each person found that round
+    public ClueInfo[] mRoundClues = new ClueInfo[3]; // the clue that each person found that round
     PersonState[] mPeople;
     private Sprite[] mNonPlayerHeads;
     public Sprite[] NonPlayersHeads
@@ -49,7 +49,10 @@ public class GameState : MonoBehaviour
 
     [HideInInspector]
     public int PlayerId;
-    
+    public PersonState Player {
+        get { return mPeople[PlayerId]; }
+    }
+
     private Canvas mUICanvas;
 
     enum LoadState { NONE, UNLOADING_SCENE, LOADING_SCENE }
@@ -267,31 +270,36 @@ public class GameState : MonoBehaviour
             mCurrentStage = GameStage.INTRO;
 
             Debug.Log("Dead body. The name " + mStartingClue.mConceptB + " is written in blood by the body.");
-            PlayerInteraction.Get().QueueDialogue(new Sprite[] { }, "Where am I?");
-            PlayerInteraction.Get().QueueDialogue(new Sprite[] { }, "WHO am I?");
-            PlayerInteraction.Get().QueueDialogue(new Sprite[] { SpriteManager.GetSprite("Victim") }, "Look! A body!");
-            PlayerInteraction.Get().QueueDialogue(new Sprite[] { SpriteManager.GetSprite("CrimeScene") }, "And a name: " + mStartingClue.mConceptB);
-            PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "And two more people.");
-            PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "Let's split up and look for clues.");
-            PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
+            DialogBlock discussion = new DialogBlock(mPeople, OnDialogueDismissed);
+            discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "What Happened?");
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Where am I?");
+            discussion.QueueDialogue(Player, NonPlayersHeads, "Who am I?");
+            discussion.QueueDialogue(mPeople[2], new Sprite[] { SpriteManager.GetSprite("Victim") }, "Look! A body!");
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { SpriteManager.GetSprite("CrimeScene") }, "And a name: " + mStartingClue.mConceptB);
+            discussion.QueueDialogue(Player, NonPlayersHeads, "Let's split up and look for clues.");
+            discussion.Start();
         }
         else if (mCurrentStage == GameStage.COMMUNAL_1 || mCurrentStage == GameStage.COMMUNAL_2)
         {
-            ShareInformation();
-
-            PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "There must be more clues around.");
-            PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
+            DialogBlock discussion = new DialogBlock(mPeople, OnDialogueDismissed);
+            discussion.QueueDialogue(mPeople[1], NonPlayersHeads, "What did everyone find?");
+            discussion.QueueInformationExchange();
+            discussion.QueueDialogue(Player, NonPlayersHeads, "There must be more clues around.");
+            discussion.Start();
         }
         else if (mCurrentStage == GameStage.COMMUNAL_3)
         {
-            ShareInformation();
-            
-            PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "Well, the police are here now.");
-            PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
+            DialogBlock discussion = new DialogBlock(mPeople, OnDialogueDismissed);
+            discussion.QueueDialogue(mPeople[1], NonPlayersHeads, "The police are almost here. Lets do a final round of information exchange.");
+            discussion.QueueInformationExchange();
+            discussion.QueueDialogue(mPeople[2], NonPlayersHeads, "Well, the police are here now.");
+            discussion.Start();
         }
         else if(mCurrentStage == GameStage.POLICE)
         {
-            PlayerInteraction.Get().QueueDialogue(new Sprite[] { }, "What happened? Which one of you killed the guy?");
+            DialogBlock discussion = new DialogBlock(mPeople, OnDialogueDismissed);
+            discussion.QueueDialogue(null, new Sprite[] { }, "What happened? Which one of you killed the guy?");
+            // TODO: ask the player for their opinion, either first or last
 
             // get npc evaluations
             Sentence killer0 = new Sentence(Noun.Blonde, Verb.Is, Noun.Killer, Adverb.True);
@@ -311,17 +319,16 @@ public class GameState : MonoBehaviour
                     float confidence2 = personKnowledge.VerifyBelief(killer2);
 
                     if (confidence0 > 0)
-                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I think BLONDE did it (confidence " + confidence0 + ")");
+                        discussion.QueueDialogue(mPeople[i], new Sprite[] { mPeople[i].HeadSprite }, "I think BLONDE did it (confidence " + confidence0 + ")");
                     else if(confidence1 > 0)
-                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I think BROWN did it (confidence " + confidence1 + ")");
+                        discussion.QueueDialogue(mPeople[i], new Sprite[] { mPeople[i].HeadSprite }, "I think BROWN did it (confidence " + confidence1 + ")");
                     else if (confidence2 > 0)
-                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I think RED did it (confidence " + confidence2 + ")");
+                        discussion.QueueDialogue(mPeople[i], new Sprite[] { mPeople[i].HeadSprite }, "I think RED did it (confidence " + confidence2 + ")");
                     else
-                        PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I don't know.");
+                        discussion.QueueDialogue(mPeople[i], new Sprite[] { mPeople[i].HeadSprite }, "I don't know.");
                 }
             }
-
-            PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
+            discussion.Start();
         }
     }
 
@@ -337,48 +344,6 @@ public class GameState : MonoBehaviour
         // we never show ourselves (maybe we don't even need to update the player's location?)
         
         return (personId != PlayerId && mPersonRooms[personId].Equals(mCurrentRoom));
-    }
-
-    private void ShareInformation()
-    {
-        PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "What did everyone find?");
-
-        // TODO: have an order to revealing info? maybe an AI decides not to reveal info
-        // if someone else reveals information that would incriminate them
-        Sentence[] revealedSentences = new Sentence[3];
-        for (int i = 0; i < 3; ++i)
-        {
-            if(!mPeople[i].IsPlayer)
-            {
-                if(mRoundClues[i] != null)
-                {
-                    Sentence newInfo = mRoundClues[i].GetSentence();
-                    PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I found " + newInfo);
-
-                    revealedSentences[i] = newInfo;
-
-                    mRoundClues[i] = null;
-                }
-                else
-                {
-                    PlayerInteraction.Get().QueueDialogue(new Sprite[] { mPeople[i].HeadSprite }, "I found nothing");
-                }
-            }
-        }
-
-        for(int i = 0; i < 3; ++i)
-        {
-            if(revealedSentences[i] != null)
-            {
-                for(int j = 0; j < 3; ++j)
-                {
-                    if(i != j)
-                    {
-                        mPeople[j].knowledge.Listen(i, revealedSentences[i]);
-                    }
-                }
-            }
-        }
     }
 
 

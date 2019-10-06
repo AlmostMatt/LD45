@@ -30,12 +30,14 @@ public class UIController : MonoBehaviour
 
     public void ShowDialog(int personId)
     {
-        Sprite head = GameState.Get().GetPerson(personId).HeadSprite;
-
-        ShowUI(new Sprite[] { head }, "Hi there!", new string[] { "Reply", "Dismiss" }, new UIButtonCallback[] { null, null});
-        // Button2 text = Dismiss
-        // Button1.SetCallback(HideUI);
-        // Button2.SetCallback(HideUI);
+        PersonState player = GameState.Get().Player;
+        PersonState otherPerson = GameState.Get().GetPerson(personId);
+        DialogBlock discussion = new DialogBlock(new PersonState[] { player, otherPerson  }, null);
+        discussion.QueueDialogue(otherPerson, new Sprite[] { otherPerson.HeadSprite }, "Hi there! Let's share info!");
+        // TODO: add buttons for the choice of whether or not to share info.
+        // ShowUI(new Sprite[] { head }, "Hi there!", new string[] { "Reply", "Dismiss" }, new UIButtonCallback[] { null, null });
+        discussion.QueueInformationExchange();
+        discussion.Start();
     }
 
     public void ShowMessage(Sprite[] images, string message, string[] buttonTexts, UIButtonCallback[] callbacks)
