@@ -62,6 +62,11 @@ public class Sentence
 
         words.Add(DirectObject.ToString());
         
+        // To be human-readable, Name should come before identity before property.
+        // Some words should be preceeded by "a" or "the"
+        // For properties, it is often preceeded by "Has" not "Is"
+        // When linking property to property it should be something like "The red-haired person has X"
+
         /*
          string[] words = new string[] {
             Subject.Type().ToString(),

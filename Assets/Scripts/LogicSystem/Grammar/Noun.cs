@@ -9,18 +9,19 @@
     // Profession?
     // Backstory?
 
-    // HairColor,
-    Blonde,
-    Brown,
-    Red,
     // Name
-    Alice,
-    Beth,
-    Carol,
+    //https://ancestorville.com/blogs/articles/victorian-female-nicknames
+    Alice, // Anna, Amanda, Alex
+    Brianna, // Beth, Belle, 
+    Catherine, // Carol,
     // Identity
     Exwife,
     Daughter,
     Bastard,
+    // HairColor,
+    Blonde,
+    Brown,
+    Red,
     // Role (special)
     Victim,
     Killer
@@ -47,8 +48,8 @@ public static class NounExtensions
             case Noun.Victim:
                 return NounType.Role;
             case Noun.Alice:
-            case Noun.Beth:
-            case Noun.Carol:
+            case Noun.Brianna:
+            case Noun.Catherine:
             default:
                 return NounType.Name;
         }

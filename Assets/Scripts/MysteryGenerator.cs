@@ -6,7 +6,7 @@ public class MysteryGenerator
 {
     static Noun[] appearances = { Noun.Blonde, Noun.Brown, Noun.Red };
     static Noun[] identities = { Noun.Exwife, Noun.Daughter, Noun.Bastard };
-    static Noun[] names = { Noun.Alice, Noun.Beth, Noun.Carol };
+    static Noun[] names = { Noun.Alice, Noun.Brianna, Noun.Catherine };
 
     public static void Generate(out PersonState[] people, out ClueInfo startingClue, out List<ClueInfo> cluesToScatter)
     {
