@@ -23,8 +23,6 @@ public class PlayerInteraction : MonoBehaviour
     public void ContinueDialogue()
     {
         if (mDialogueMessages.Count == 0) {
-            UIController.Get().HideUI();
-
             if(mDismissedCallback != null)
             {
                 mDismissedCallback(0);
@@ -39,6 +37,7 @@ public class PlayerInteraction : MonoBehaviour
         mDialogueMessages.RemoveAt(0);
         UIController.Get().ShowMessage(sprites, msg, new string[] { "Continue" }, new UIButtonCallback[] { buttonIndex => ContinueDialogue() });
     }
+
     public void OpenDialogue(UIButtonCallback callback = null)
     {
         if (callback != null) { mDismissedCallback = callback; }

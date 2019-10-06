@@ -106,14 +106,13 @@ public class UIController : MonoBehaviour
 
     public void OnButtonClick(Button button)
     {
+        // Start by hiding the UI even though the callback might cause UI to reappear.
+        HideUI();
+        // Run any custom callback function with the button index as an argument.
         int i = button.transform.GetSiblingIndex();
         if (mButtonCallbacks[i] != null)
         {
             mButtonCallbacks[i](i);
-        } else
-        {
-            // a default button response.
-            HideUI();
         }
     }
 }
