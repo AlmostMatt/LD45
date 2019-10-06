@@ -45,8 +45,8 @@ public static class NounExtensions
             case Noun.Bastard:
                 return NounType.Identity;
             case Noun.Alice:
-            case Noun.Beth:
-            case Noun.Carol:
+            case Noun.Brianna:
+            case Noun.Catherine:
             default:
                 return NounType.Name;
         }
