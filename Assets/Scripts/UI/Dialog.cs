@@ -86,9 +86,10 @@ public class DialogBlock
             } else
             {
                 // The GameState round-clues is guaranteed to be a recent clue that is not the result of combining multiple clues
-                Sentence newInfo = GameState.Get().mRoundClues[entry.speaker.PersonId].GetSentence();
+                ClueInfo clueInfo = GameState.Get().mRoundClues[entry.speaker.PersonId];
                 string message;
-                if (newInfo != null) {
+                if (clueInfo != null) {
+                    Sentence newInfo = clueInfo.GetSentence();
                     message = "I found " + newInfo; // TODO: Announce the room where it was found
                     for (int j = 0; j < Participants.Length; ++j)
                     {
