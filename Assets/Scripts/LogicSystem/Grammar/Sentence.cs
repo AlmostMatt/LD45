@@ -24,6 +24,14 @@ public class Sentence
 
     public Sentence(Noun subj, Verb verb, Noun obj, Adverb adv)
     {
+        if(subj.Type() > obj.Type())
+        {
+            Debug.Log("Swapping order of nouns " + subj + " and " + obj);
+            Noun tmp = subj;
+            subj = obj;
+            obj = tmp;
+        }
+
         this.Subject = subj;
         this.Verb = verb;
         this.DirectObject = obj;
@@ -53,30 +61,21 @@ public class Sentence
 
     public override string ToString()
     {
-        List<string> words = new List<string>();
-
-        words.Add(Subject.ToString());
-        words.Add(Verb.ToString().ToLower());
-
-        if(Adverb == Adverb.False) { words.Add("not");  }
-
-        words.Add(DirectObject.ToString());
-        
         // To be human-readable, Name should come before identity before property.
         // Some words should be preceeded by "a" or "the"
         // For properties, it is often preceeded by "Has" not "Is"
         // When linking property to property it should be something like "The red-haired person has X"
 
-        /*
-         string[] words = new string[] {
-            Subject.Type().ToString(),
-            Subject.ToString(),
-            Verb.ToString(),
-            DirectObject.Type().ToString(),
-            DirectObject.ToString(),
-            Adverb.ToString(),
-        };
-        */
-        return string.Join(" ", words);
+        List<string> words = new List<string>();
+
+        // capitalize beginning
+        string starting = Subject.AsSubject();
+        char[] s = starting.ToCharArray();
+        s[0] = char.ToUpper(s[0]);
+        words.Add(new string(s));
+
+        words.Add(DirectObject.AsObject(Adverb == Adverb.True));
+        
+        return string.Join(" ", words) + ".";
     }
 }

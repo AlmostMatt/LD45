@@ -73,4 +73,65 @@ public static class NounExtensions
                 return NounType.Name;
         }
     }
+
+    public static string AsSubject(this Noun noun)
+    {
+        switch(noun)
+        {
+            case Noun.Exwife:
+                return "the victim's ex-wife";
+            case Noun.Daughter:
+                return "the victim's daughter";
+            case Noun.Bastard:
+                return "the victim's friend";           
+            default:
+                return noun.ToString();
+        }
+    }
+
+    public static string AsObject(this Noun noun, bool positive = true)
+    {
+        string isString = (positive ? "is " : "is not ");
+        string hasString = (positive ? "has " : "does not have ");
+        switch(noun)
+        {
+            case Noun.Exwife:
+                return isString + "the victim's ex-wife";
+            case Noun.Daughter:
+                return isString + "the victim's daughter";
+            case Noun.Bastard:
+                return isString + "the victim's friend";
+            case Noun.Debt:
+                return (positive ? "owes " : "does not owe ") + "the victim money";
+            case Noun.Inheritance:
+                return (positive ? "will " : "will not ") + "receive an inheritance from the victim";
+            case Noun.Grudge:
+                return (positive ? "held " : "did not hold ") + "a grudge against the victim";
+            case Noun.Red:
+            case Noun.Brown:
+            case Noun.Blonde:
+                return hasString + noun.ToString().ToLower() + " hair";
+            case Noun.Alice:
+            case Noun.Brianna:
+            case Noun.Catherine:
+                return isString + "named " + noun.ToString();
+            default:
+                return isString + noun.ToString();
+        }
+    }
+
+    public static string WithVictim(this Noun noun)
+    {
+        switch(noun)
+        {
+            case Noun.Exwife:
+                return "his ex-wife";
+            case Noun.Daughter:
+                return "his daughter";
+            case Noun.Bastard:
+                return "his friend";
+            default:
+                return noun.ToString();
+        }
+    }
 }

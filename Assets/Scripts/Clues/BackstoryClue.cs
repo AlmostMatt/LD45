@@ -21,24 +21,23 @@ public class BackstoryClue : ClueGenerator
         string desc = "";
         if (n1.Type() == NounType.Identity)
         {
-            desc = "A newspaper article about the victim's " + n1 + ", who is " + n2;
+            desc = "A newspaper article about " + n1.AsSubject() + ", who " + n2.AsObject() + ".";
         }
-        else if(n2.Type() == NounType.Identity)
+        else if (n2.Type() == NounType.Identity)
         {
-            desc = "A newspaper article about the victim's " + n2 + ", who is " + n1;
+            desc = "A newspaper article about " + n2.AsSubject() + ", who " + n1.AsObject() + ".";
         }
-        else if(n1.Type() == NounType.Name)
+        else if (n1.Type() == NounType.Name)
         {
-            desc = "A newspaper article about " + n1 + ", who is " + n2;
+            desc = "A newspaper article about " + n1.AsSubject() + ", who " + n2.AsObject() + ".";
         }
-        else if(n2.Type() == NounType.Name)
+        else if (n2.Type() == NounType.Name)
         {
-            desc = "A newspaper article about " + n2 + ", who is " + n1;
+            desc = "A newspaper article about " + n2.AsSubject() + ", who " + n1.AsObject() + ".";
         }
 
         ClueItem item = new ClueItem(n1, n2, sprite, desc);
         return item;
     }
-
 
 }

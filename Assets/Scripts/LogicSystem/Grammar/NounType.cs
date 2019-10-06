@@ -1,8 +1,8 @@
 ﻿public enum NounType
 {
-    HairColor,
-    Name,
     Identity,
+    HairColor,
+    Name,    
     Role,
     Backstory,
     Motive
