@@ -90,6 +90,7 @@ public class DialogBlock
                     Sentence newInfo = clueInfo.GetSentence();
                     message = "I found " + newInfo; // TODO: Announce the room where it was found
                     ShareInfo(entry.speaker, newInfo);
+                    PlayerJournal.AddListen(entry.speaker.PersonId, newInfo);
                 }
                 else
                 {

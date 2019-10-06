@@ -18,7 +18,7 @@ public class GameState : MonoBehaviour
     Dictionary<string, List<ClueInfo>> mCluesInRooms = new Dictionary<string, List<ClueInfo>>();
 
     public ClueInfo[] mRoundClues = new ClueInfo[3]; // the clue that each person found that round
-    PersonState[] mPeople;
+    public PersonState[] mPeople;
     private Sprite[] mNonPlayerHeads;
     public Sprite[] NonPlayersHeads
     {
@@ -130,7 +130,8 @@ public class GameState : MonoBehaviour
                     }
             }
         }
-
+        
+    
         // TEMP to advance time
         if(Input.GetButton("Submit"))
         {
@@ -141,6 +142,16 @@ public class GameState : MonoBehaviour
             )
             {
                 StartStage(mCurrentStage + 1);
+            }
+        }
+
+        // TEMP to dump journal
+        if(Input.GetButton("Jump"))
+        {
+            List<PlayerJournal.SentenceHistory> sentences = PlayerJournal.GetJournal();
+            foreach(PlayerJournal.SentenceHistory s in sentences)
+            {
+                Debug.Log(s);
             }
         }
     }

@@ -24,7 +24,7 @@ public class Clue : MonoBehaviour
 
         // add clue to "inventory"
         if (mInfo != null)
-            PlayerInventory.AddClue(mInfo);
+            PlayerJournal.AddClue(mInfo);
 
         Destroy(gameObject);
     }
