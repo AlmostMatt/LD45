@@ -201,43 +201,86 @@ public class Knowledge
 
         // rule 1: transitivity
         // [A is B] and [B is C] => [A is C] (including valid permutations)
+        // also, the negative version (rule 1.5): [A is B] and [B is not C] => [A is not C]
         foreach (SentenceBelief b1 in newBeliefs)
         {
             Sentence s1 = b1.mSentence;
-            if (!(s1.Verb == Verb.Is && s1.Adverb == Adverb.True)) return;
-
-            foreach (SentenceBelief b2 in mBeliefs)
+            if (s1.Verb != Verb.Is) continue;
+            if (s1.Adverb == Adverb.True)
             {
-                if (b1.Equals(b2)) continue;
-                
-                Sentence s2 = b2.mSentence;                
-                if (!(s2.Verb == Verb.Is && s2.Adverb == Adverb.True)) continue;
+                foreach (SentenceBelief b2 in mBeliefs)
+                {
+                    if (b1.Equals(b2)) continue;
 
-                float confidence = b1.mConfidence * b2.mConfidence;
-                Sentence newSentence = null;
-                if (s1.DirectObject == s2.Subject)
-                {
-                    newSentence = new Sentence(s1.Subject, Verb.Is, s2.DirectObject, Adverb.True);
-                }
-                else if (s1.Subject == s2.Subject)
-                {
-                    newSentence = new Sentence(s1.DirectObject, Verb.Is, s2.DirectObject, Adverb.True);
-                }
-                else if (s1.DirectObject == s2.DirectObject)
-                {
-                    newSentence = new Sentence(s1.Subject, Verb.Is, s2.Subject, Adverb.True);
-                }
-                else if (s1.Subject == s2.DirectObject)
-                {
-                    newSentence = new Sentence(s1.DirectObject, Verb.Is, s2.Subject, Adverb.True);
-                }
+                    Sentence s2 = b2.mSentence;
+                    if (s2.Verb != Verb.Is) continue;
 
-                if (newSentence != null)
+                    Sentence newSentence = null;
+                    float confidence = b1.mConfidence * b2.mConfidence;
+
+                    if (s2.Adverb == Adverb.True || s2.Adverb == Adverb.False)
+                    {
+                        if (s1.DirectObject == s2.Subject)
+                        {
+                            newSentence = new Sentence(s1.Subject, Verb.Is, s2.DirectObject, s2.Adverb);
+                        }
+                        else if (s1.Subject == s2.Subject)
+                        {
+                            newSentence = new Sentence(s1.DirectObject, Verb.Is, s2.DirectObject, s2.Adverb);
+                        }
+                        else if (s1.DirectObject == s2.DirectObject)
+                        {
+                            newSentence = new Sentence(s1.Subject, Verb.Is, s2.Subject, s2.Adverb);
+                        }
+                        else if (s1.Subject == s2.DirectObject)
+                        {
+                            newSentence = new Sentence(s1.DirectObject, Verb.Is, s2.Subject, s2.Adverb);
+                        }
+                    }
+
+                    if (newSentence != null)
+                    {
+                        SentenceBelief newBelief = new SentenceBelief(newSentence, s1, s2, confidence);
+                        beliefDeductions.Add(newBelief);
+                        Debug.Log("New belief: " + newBelief.mSentence + " (confidence: " + confidence + ") | Since " + s1 + " (confidence: " + b1.mConfidence + ") and " + s2 + " (confidence: " + b2.mConfidence + ")");
+                    }
+                }
+            }
+            else if (s1.Adverb == Adverb.False)
+            {
+                foreach (SentenceBelief b2 in mBeliefs)
                 {
-                    SentenceBelief newBelief = new SentenceBelief(newSentence, s1, s2, confidence);
-                    beliefDeductions.Add(newBelief);
-                    Debug.Log("New belief: " + newBelief.mSentence + " (confidence: " + confidence + ")");
-                    Debug.Log("Since " + s1 + " (confidence: " + b1.mConfidence + ") and " + s2 + " (confidence: " + b2.mConfidence + ")");
+                    if (b1.Equals(b2)) continue;
+
+                    Sentence s2 = b2.mSentence;
+                    if(!(s2.Verb == Verb.Is && s2.Adverb == Adverb.True)) continue;
+
+                    Sentence newSentence = null;
+                    float confidence = b1.mConfidence * b2.mConfidence;
+
+                    if (s1.DirectObject == s2.Subject)
+                    {
+                        newSentence = new Sentence(s1.Subject, Verb.Is, s2.DirectObject, Adverb.False);
+                    }
+                    else if (s1.Subject == s2.Subject)
+                    {
+                        newSentence = new Sentence(s1.DirectObject, Verb.Is, s2.DirectObject, Adverb.False);
+                    }
+                    else if (s1.DirectObject == s2.DirectObject)
+                    {
+                        newSentence = new Sentence(s1.Subject, Verb.Is, s2.Subject, Adverb.False);
+                    }
+                    else if (s1.Subject == s2.DirectObject)
+                    {
+                        newSentence = new Sentence(s1.DirectObject, Verb.Is, s2.Subject, Adverb.False);
+                    }
+
+                    if (newSentence != null)
+                    {
+                        SentenceBelief newBelief = new SentenceBelief(newSentence, s1, s2, confidence);
+                        beliefDeductions.Add(newBelief);
+                        Debug.Log("New belief: " + newBelief.mSentence + " (confidence: " + confidence + ") | Since " + s1 + " (confidence: " + b1.mConfidence + ") and " + s2 + " (confidence: " + b2.mConfidence + ")");
+                    }
                 }
             }
         }
@@ -261,8 +304,7 @@ public class Knowledge
                         SentenceBelief belief = new SentenceBelief(newSentence, b1.mSentence, null, b1.mConfidence);
                         beliefDeductions.Add(belief);
 
-                        Debug.Log("Testing belief: " + belief.mSentence + " (confidence: " + b1.mConfidence + ")");
-                        Debug.Log("Since " + s1 + " (confidence: " + b1.mConfidence + ")");
+                        Debug.Log("New belief: " + belief.mSentence + " (confidence: " + b1.mConfidence + ") | Since " + s1 + " (confidence: " + b1.mConfidence + ")");
                     }
                 }                
             }
@@ -279,13 +321,11 @@ public class Knowledge
                         SentenceBelief belief = new SentenceBelief(newSentence, b1.mSentence, null, b1.mConfidence);
                         beliefDeductions.Add(belief);
 
-                        Debug.Log("Testing belief: " + belief.mSentence + " (confidence: " + b1.mConfidence + ")");
-                        Debug.Log("Since " + s1 + " (confidence: " + b1.mConfidence + ")");
+                        Debug.Log("New belief: " + belief.mSentence + " (confidence: " + b1.mConfidence + ") | Since " + s1 + " (confidence: " + b1.mConfidence + ")");
                     }
                 }
             }
         }
-
 
         AddBeliefs(beliefDeductions);
     }

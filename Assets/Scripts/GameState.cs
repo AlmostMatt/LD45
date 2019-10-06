@@ -310,22 +310,66 @@ public class GameState : MonoBehaviour
                 if(i != PlayerId)
                 {
                     Knowledge personKnowledge = mPeople[i].knowledge;
-                    //float confidence0 = personKnowledge.VerifySentence(killer0);
-                    //float confidence1 = personKnowledge.VerifySentence(killer1);
-                    //float confidence2 = personKnowledge.VerifySentence(killer2);
+                    Noun myHair = mPeople[i].AttributeMap[NounType.HairColor];
+                    Sprite[] sprite = { mPeople[i].HeadSprite };
 
                     float confidence0 = personKnowledge.VerifyBelief(killer0);
                     float confidence1 = personKnowledge.VerifyBelief(killer1);
                     float confidence2 = personKnowledge.VerifyBelief(killer2);
 
-                    if (confidence0 > 0)
-                        discussion.QueueDialogue(mPeople[i], new Sprite[] { mPeople[i].HeadSprite }, "I think BLONDE did it (confidence " + confidence0 + ")");
-                    else if(confidence1 > 0)
-                        discussion.QueueDialogue(mPeople[i], new Sprite[] { mPeople[i].HeadSprite }, "I think BROWN did it (confidence " + confidence1 + ")");
-                    else if (confidence2 > 0)
-                        discussion.QueueDialogue(mPeople[i], new Sprite[] { mPeople[i].HeadSprite }, "I think RED did it (confidence " + confidence2 + ")");
+                    if (confidence0 > 0 && myHair != Noun.Blonde)
+                        discussion.QueueDialogue(mPeople[i], sprite, "I think BLONDE did it (confidence " + confidence0 + ")");
+                    else if (confidence1 > 0 && myHair != Noun.Brown)
+                        discussion.QueueDialogue(mPeople[i], sprite, "I think BROWN did it (confidence " + confidence1 + ")");
+                    else if (confidence2 > 0 && myHair != Noun.Red)
+                        discussion.QueueDialogue(mPeople[i], sprite, "I think RED did it (confidence " + confidence2 + ")");
                     else
-                        discussion.QueueDialogue(mPeople[i], new Sprite[] { mPeople[i].HeadSprite }, "I don't know.");
+                    {
+                        float innocenceBlonde = personKnowledge.VerifyBelief(new Sentence(Noun.Blonde, Verb.Is, Noun.Killer, Adverb.False));
+                        float innocenceBrown = personKnowledge.VerifyBelief(new Sentence(Noun.Brown, Verb.Is, Noun.Killer, Adverb.False));
+                        float innocenceRed = personKnowledge.VerifyBelief(new Sentence(Noun.Red, Verb.Is, Noun.Killer, Adverb.False));
+
+                        if (myHair == Noun.Blonde)
+                        {
+                            if (innocenceBrown > 0f || innocenceRed > 0f)
+                            {
+                                string innocentName = innocenceBrown > innocenceRed ? "BROWN" : "RED";
+                                string guiltyName = innocenceBrown > innocenceRed ? "RED" : "BROWN";
+                                discussion.QueueDialogue(mPeople[i], sprite, "Well I didn't do it, and " + innocentName + " didn't do it, so " + guiltyName + " did.");
+                            }
+                            else
+                            {
+                                discussion.QueueDialogue(mPeople[i], sprite, "I have no idea.");
+                            }
+                        }
+                        else if (myHair == Noun.Brown)
+                        {
+                            if (innocenceBlonde > 0f || innocenceRed > 0f)
+                            {
+                                string innocentName = innocenceBlonde > innocenceRed ? "BLONDE" : "RED";
+                                string guiltyName = innocenceBlonde > innocenceRed ? "RED" : "BLONDE";
+                                discussion.QueueDialogue(mPeople[i], sprite, "Well I didn't do it, and " + innocentName + " didn't do it, so " + guiltyName + " did.");
+                            }
+                            else
+                            {
+                                discussion.QueueDialogue(mPeople[i], sprite, "I have no idea.");
+                            }
+
+                        }
+                        else if (myHair == Noun.Red)
+                        {
+                            if (innocenceBrown > 0f || innocenceBlonde > 0f)
+                            {
+                                string innocentName = innocenceBrown > innocenceBlonde ? "BROWN" : "BLONDE";
+                                string guiltyName = innocenceBrown > innocenceBlonde ? "BLONDE" : "BROWN";
+                                discussion.QueueDialogue(mPeople[i], sprite, "Well I didn't do it, and " + innocentName + " didn't do it, so " + guiltyName + " did.");
+                            }
+                            else
+                            {
+                                discussion.QueueDialogue(mPeople[i], sprite, "I have no idea.");
+                            }
+                        }
+                    }
                 }
             }
             discussion.Start();
