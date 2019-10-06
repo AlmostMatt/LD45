@@ -413,17 +413,19 @@ public class GameState : MonoBehaviour
     public void PlayerFoundClue(ClueObject clue)
     {
         ClueItem item = clue.mItem;
+        PersonState player = mPeople[0];
 
         // add clue to journal
         if (item.info != null)
             PlayerJournal.AddClue(item.info);
+
+        player.knowledge.AddKnowledge(item.info.GetSentence());
 
         List<ClueItem> clues = mCluesInRooms[mCurrentRoom];
         clues.Remove(item);
         Destroy(clue.gameObject);
         
         Sprite relevantImage = SpriteManager.GetSprite(item.spriteName);
-        PersonState player = mPeople[0];
         DialogBlock discussion = new DialogBlock(new PersonState[] { player }, OnClueDismissed);
         discussion.QueueDialogue(player, new Sprite[] { relevantImage }, item.description);
         discussion.QueueDialogue(player, new Sprite[] { }, "I'd better get back to the common area now.");
