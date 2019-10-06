@@ -55,7 +55,7 @@ public class UIController : MonoBehaviour
 
         // Display sprites
         // Hide extra sprites and create new sprites as needed
-        Transform spriteContainer = transform.Find("dialogView/H");
+        Transform spriteContainer = transform.Find("dialogView/H images");
         for (int i = 0; i < Mathf.Max(sprites.Length, spriteContainer.childCount); i++)
         {
             Image image;
@@ -78,13 +78,13 @@ public class UIController : MonoBehaviour
         }
 
         // Display dialog text
-        transform.Find("dialogView/V/empty/dialogText").GetComponent<Text>().text = dialogText;
+        transform.Find("dialogView/V overlay/dialog/text").GetComponent<Text>().text = dialogText;
 
         // Update buttons
         if (buttonTexts.Length != callbacks.Length) { Debug.LogWarning("buttonTexts and callbacks have different length."); }
         mButtonCallbacks = callbacks;
         // Hide extra buttons and create new buttons as needed
-        Transform buttonContainer = transform.Find("dialogView/V/H");
+        Transform buttonContainer = transform.Find("dialogView/V overlay/H buttons");
         for (int i=0; i < Mathf.Max(buttonTexts.Length, buttonContainer.childCount); i++)
         {
             Transform button;
