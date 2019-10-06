@@ -158,8 +158,11 @@ public class Knowledge
             {
                 mBeliefs.Add(b);
                 newBeliefs.Add(b);
+
+                Debug.Log(mPersonId + " now believes " + b.mSentence + " (confidence: " + b.mConfidence + ")");
             }
         }
+
         if(newBeliefs.Count > 0)
         {
             UpdateBeliefs(newBeliefs);
@@ -182,57 +185,13 @@ public class Knowledge
 
     private void UpdateBeliefs(List<SentenceBelief> newBeliefs)
     {
-        List<SentenceBelief> beliefDeductions = new List<SentenceBelief>(); // defer adding new knowledge until the end, so we aren't modifying knowledge while we read it
-
+        // go through all knowledge, and see if we can synthesize anything new from the new beliefs
         Debug.Log(mPersonId + " updating beliefs ");
 
-        /*
-        // rule 1: transitivity
-        // [A is B] and [B is C] => [A is C] (including valid permutations)
-        // go through all knowledge, and see if we can synthesize anything new
-        foreach(Sentence s1 in knownSentences)
-        {
-            if (!(s1.Verb == Verb.Is && s1.Adverb == Adverb.True)) continue;
-            
-            foreach(Sentence s2 in knownSentences)
-            {
-                if (s1 == s2) continue;
-                if (!(s2.Verb == Verb.Is && s2.Adverb == Adverb.True)) continue;
-                
-                if(s1.DirectObject == s2.Subject)
-                {
-                    Debug.Log("Deduced sentence! ");
-                    Debug.Log("Given " + s1);
-                    Debug.Log("And " + s2);
-                    Sentence newSentence = new Sentence(s1.Subject, Verb.Is, s2.DirectObject, Adverb.True);
-                    Debug.Log("Implies " + newSentence);
-                    deductions.Add(newSentence);
-                }
-                else if(s1.Subject == s2.Subject)
-                {
-                    Debug.Log("Deduced sentence! ");
-                    Debug.Log("Given " + s1);
-                    Debug.Log("And " + s2);
-                    Sentence newSentence = new Sentence(s1.DirectObject, Verb.Is, s2.DirectObject, Adverb.True);
-                    Debug.Log("Implies " + newSentence);
-                    deductions.Add(newSentence);
-                }
-                else if(s1.DirectObject == s2.DirectObject)
-                {
-                    Debug.Log("Deduced sentence! ");
-                    Debug.Log("Given " + s1);
-                    Debug.Log("And " + s2);
-                    Sentence newSentence = new Sentence(s1.Subject, Verb.Is, s2.Subject, Adverb.True);
-                    Debug.Log("Implies " + newSentence);
-                    deductions.Add(newSentence);
-                }
-            }
-        }
-        */
+        List<SentenceBelief> beliefDeductions = new List<SentenceBelief>(); // defer adding new knowledge until the end, so we aren't modifying knowledge while we read it
 
         // rule 1: transitivity
         // [A is B] and [B is C] => [A is C] (including valid permutations)
-        // go through all knowledge, and see if we can synthesize anything new
         foreach (SentenceBelief b1 in newBeliefs)
         {
             Sentence s1 = b1.mSentence;
@@ -269,13 +228,56 @@ public class Knowledge
                     SentenceBelief newBelief = new SentenceBelief(newSentence, s1, s2, confidence);
                     beliefDeductions.Add(newBelief);
                     Debug.Log("New belief: " + newBelief.mSentence + " (confidence: " + confidence + ")");
-                    Debug.Log("Given " + s1 + " (confidence: " + b1.mConfidence + ") and " + s2 + " (confidence: " + b2.mConfidence + ")");
+                    Debug.Log("Since " + s1 + " (confidence: " + b1.mConfidence + ") and " + s2 + " (confidence: " + b2.mConfidence + ")");
                 }
             }
         }
 
-        AddBeliefs(beliefDeductions);        
+        // rule 2: mutual exclusion
+        // if [A is X] and [X, Y] are mutually exclusive, then [A is not Y]
+        foreach (SentenceBelief b1 in newBeliefs)
+        {
+            Sentence s1 = b1.mSentence;
+            if (!(s1.Verb == Verb.Is && s1.Adverb == Adverb.True)) return;
 
-        // AddKnowledge(deductions);
+            NounType t = s1.DirectObject.Type();
+            Noun[] nouns = t.GetNouns();
+            if(nouns != null)
+            {
+                foreach(Noun n in nouns)
+                {
+                    if (s1.DirectObject != n)
+                    {
+                        Sentence newSentence = new Sentence(s1.Subject, Verb.Is, n, Adverb.False);
+                        SentenceBelief belief = new SentenceBelief(newSentence, b1.mSentence, null, b1.mConfidence);
+                        beliefDeductions.Add(belief);
+
+                        Debug.Log("Testing belief: " + belief.mSentence + " (confidence: " + b1.mConfidence + ")");
+                        Debug.Log("Since " + s1 + " (confidence: " + b1.mConfidence + ")");
+                    }
+                }                
+            }
+
+            t = s1.Subject.Type();
+            nouns = t.GetNouns();
+            if (nouns != null)
+            {
+                foreach (Noun n in nouns)
+                {
+                    if (s1.Subject != n)
+                    {
+                        Sentence newSentence = new Sentence(s1.DirectObject, Verb.Is, n, Adverb.False);
+                        SentenceBelief belief = new SentenceBelief(newSentence, b1.mSentence, null, b1.mConfidence);
+                        beliefDeductions.Add(belief);
+
+                        Debug.Log("Testing belief: " + belief.mSentence + " (confidence: " + b1.mConfidence + ")");
+                        Debug.Log("Since " + s1 + " (confidence: " + b1.mConfidence + ")");
+                    }
+                }
+            }
+        }
+
+
+        AddBeliefs(beliefDeductions);
     }
 }

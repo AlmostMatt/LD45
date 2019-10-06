@@ -53,14 +53,15 @@ public class Sentence
 
     public override string ToString()
     {
-        // try to make some more human readable
-        string[] words = new string[]
-        {
-            Subject.ToString(),
-            Verb.ToString().ToLower(),
-            DirectObject.ToString()
-        };
+        List<string> words = new List<string>();
 
+        words.Add(Subject.ToString());
+        words.Add(Verb.ToString().ToLower());
+
+        if(Adverb == Adverb.False) { words.Add("not");  }
+
+        words.Add(DirectObject.ToString());
+        
         /*
          string[] words = new string[] {
             Subject.Type().ToString(),

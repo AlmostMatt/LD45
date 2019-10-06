@@ -21,7 +21,7 @@
     Exwife,
     Daughter,
     Bastard,
-    // ? (special)
+    // Role (special)
     Victim,
     Killer
 
@@ -43,6 +43,9 @@ public static class NounExtensions
             case Noun.Daughter:
             case Noun.Bastard:
                 return NounType.Identity;
+            case Noun.Killer:
+            case Noun.Victim:
+                return NounType.Role;
             case Noun.Alice:
             case Noun.Beth:
             case Noun.Carol:

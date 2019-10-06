@@ -64,6 +64,8 @@ public class GameState : MonoBehaviour
         COMMUNAL_1,
         SEARCH_2,
         COMMUNAL_2,
+        SEARCH_3,
+        COMMUNAL_3,
         POLICE,
         REVEAL
     }
@@ -132,6 +134,7 @@ public class GameState : MonoBehaviour
             if(
                     mCurrentStage == GameStage.SEARCH_1
                 ||  mCurrentStage == GameStage.SEARCH_2
+                ||  mCurrentStage == GameStage.SEARCH_3
             )
             {
                 StartStage(mCurrentStage + 1);
@@ -149,7 +152,7 @@ public class GameState : MonoBehaviour
         Debug.Log("starting stage " + stage);
         mCurrentStage = stage;
         
-        if(stage == GameStage.SEARCH_1 || stage == GameStage.SEARCH_2)
+        if(stage == GameStage.SEARCH_1 || stage == GameStage.SEARCH_2 || stage == GameStage.SEARCH_3)
         {
             // assign npcs to rooms (for now, ensure they go to different rooms)
             int[] roomChoices = Utilities.RandomList(clueRooms.Length, 2);
@@ -179,7 +182,7 @@ public class GameState : MonoBehaviour
 
             MoveToRoom(PlayerId, mCurrentRoom); // hack to reload room with npcs gone
         }
-        else if(stage == GameStage.COMMUNAL_1 || stage == GameStage.COMMUNAL_2)
+        else if(stage == GameStage.COMMUNAL_1 || stage == GameStage.COMMUNAL_2 || stage == GameStage.COMMUNAL_3)
         {
             for (int i = 0; i < 3; ++i)
             {
@@ -272,14 +275,14 @@ public class GameState : MonoBehaviour
             PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "Let's split up and look for clues.");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
-        else if (mCurrentStage == GameStage.COMMUNAL_1)
+        else if (mCurrentStage == GameStage.COMMUNAL_1 || mCurrentStage == GameStage.COMMUNAL_2)
         {
             ShareInformation();
 
             PlayerInteraction.Get().QueueDialogue(NonPlayersHeads, "There must be more clues around.");
             PlayerInteraction.Get().OpenDialogue(OnDialogueDismissed);
         }
-        else if (mCurrentStage == GameStage.COMMUNAL_2)
+        else if (mCurrentStage == GameStage.COMMUNAL_3)
         {
             ShareInformation();
             
