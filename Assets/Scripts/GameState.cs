@@ -161,7 +161,9 @@ public class GameState : MonoBehaviour
             int[] roomChoices = Utilities.RandomList(clueRooms.Length, 2);
             for(int i = 0, j = 0; i < 3; ++i)
             {
-                if(i != PlayerId)
+                mRoundClues[i] = null;
+
+                if (i != PlayerId)
                 {
                     string npcRoom = clueRooms[roomChoices[j++]];
                     MoveToRoom(i, npcRoom);
