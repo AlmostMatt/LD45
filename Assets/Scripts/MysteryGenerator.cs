@@ -32,6 +32,18 @@ public class MysteryGenerator
                 attributes.Add(playerAttr.Type(), playerAttr);
             }
         }
+        // Each player knows the existence of the hair-colors of the other players
+        for (int i = 0; i < names.Length; i++)
+        {
+            for (int j = 0; j < names.Length; j++)
+            {
+                if (i != j)
+                {
+                    people[i].knowledge.KnownWords.Add(people[j].AttributeMap[NounType.HairColor]);
+                }
+            }
+        }
+
         // Pick a killer
         int killer = Random.Range(0,3);
         people[killer].IsKiller = true;

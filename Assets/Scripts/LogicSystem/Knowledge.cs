@@ -13,7 +13,7 @@ public class Knowledge
         Sentence mSourceSentence1;
         Sentence mSourceSentence2;
 
-        int mSourceId; // what person did this come from (if any)?        
+        int mSourceId; // what person did this come from (if any)?
 
         public override bool Equals(object obj)
         {
@@ -64,10 +64,7 @@ public class Knowledge
     private float[] mPersonConfidence = { 0.5f, 0.5f, 0.5f };
     private int mPersonId;
 
-    // DEPRECATED
-    private List<Sentence> knownSentences = new List<Sentence>();
-    // DEPRECATED
-    private Dictionary<Noun, List<Sentence>> sentencesBySpeaker = new Dictionary<Noun, List<Sentence>>();
+    public HashSet<Noun> KnownWords = new HashSet<Noun>();
 
     private List<SentenceBelief> mBeliefs = new List<SentenceBelief>();
 
@@ -79,43 +76,17 @@ public class Knowledge
         mPersonConfidence[mPersonId] = 1f;
     }
 
-    public Sentence Speak()
-    {
-        if (knownSentences.Count > 0)
-        {
-            return knownSentences[knownSentences.Count - 1];
-        } else
-        {
-            return null;
-        }
-    }
-
-    // DEPRECATED
-    public void Listen(int personId, Noun speaker, Sentence sentence)
-    {
-        if (!sentencesBySpeaker.ContainsKey(speaker))
-        {
-            sentencesBySpeaker[speaker] = new List<Sentence>();
-        }
-        sentencesBySpeaker[speaker].Add(sentence);
-    }
-
     public void Listen(PersonState person, Sentence sentence)
     {
+        // Allow the player to use these words for sentences later
+        KnownWords.Add(sentence.Subject);
+        KnownWords.Add(sentence.DirectObject);
+        // Add this to beliefs with some confidence number
         Debug.Log(mPersonId + " hears " + person.PersonId + " say " + sentence);
         SentenceBelief belief = new SentenceBelief(sentence, person.PersonId, mPersonConfidence[person.PersonId]);
         List<SentenceBelief> beliefs = new List<SentenceBelief>();
         beliefs.Add(belief);
         AddBeliefs(beliefs);
-    }
-
-    public float VerifySentence(Sentence sentence)
-    {
-        // find all beliefs matching this sentence,
-        // return confidence?
-
-        if (knownSentences.Contains(sentence)) return 1f;
-        return 0f;
     }
 
     public float VerifyBelief(Sentence sentence)
@@ -131,17 +102,11 @@ public class Knowledge
         return maxConfidence;
     }
 
-    private bool AddKnowledgeUnique(Sentence sentence)
-    {
-        if(knownSentences.Contains(sentence)) { return false; }
-
-        knownSentences.Add(sentence);
-        Debug.Log(mPersonId + " learned " + sentence);
-        return true;
-    }
-
     public void AddKnowledge(Sentence sentence) // implied source is yourself
     {
+        // Allow the player to use these words for sentences later
+        KnownWords.Add(sentence.Subject);
+        KnownWords.Add(sentence.DirectObject);
         // is it ok to have multiple beliefs about the same sentence? maybe it gets resolved later
         SentenceBelief belief = new SentenceBelief(sentence, mPersonId, mPersonConfidence[mPersonId]);
         if(!mBeliefs.Contains(belief))
@@ -177,20 +142,6 @@ public class Knowledge
             UpdateBeliefs(newBeliefs);
         }
     }
-
-    public void AddKnowledge(List<Sentence> sentences)
-    {
-        bool somethingNew = false;
-        foreach(Sentence s in sentences)
-        {
-            somethingNew = AddKnowledgeUnique(s) || somethingNew; // order matters! don't short-circuit
-        }
-
-        if (somethingNew) { }
-            // UpdateBeliefs();
-    }
-
-    public List<Sentence> GetKnown() { return knownSentences; }
 
     private void UpdateBeliefs(List<SentenceBelief> newBeliefs)
     {

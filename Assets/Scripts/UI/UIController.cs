@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Linq;
 
 // The callback function type - should take an integer argument that is the button index
 public delegate void UIButtonCallback(int btnIdx);
@@ -154,18 +155,17 @@ public class UIController : MonoBehaviour
 
         // Set the list of options to the list of discovered words.
         // Default to having discovered the hair colors of people other than yourself.
-        List<Noun> knownWords = new List<Noun>();
-        knownWords.Add(Noun.Alice);
-        knownWords.Add(Noun.Killer);
-        List<string> knownWordStrings = knownWords.ConvertAll<string>(noun => noun.ToString());
-        // TODO: get known words from knowledge
+        HashSet<Noun> knownWords = GameState.Get().Player.knowledge.KnownWords;
+        List<string> knownWordStrings = knownWords.ToList().ConvertAll<string>(noun => noun.ToString());
         Transform sentenceBuilder = transform.Find("dialogView/V overlay/H sentenceBuilder");
         Dropdown subjectDropdown = sentenceBuilder.Find("Subject").GetComponent<Dropdown>();
         subjectDropdown.ClearOptions();
         subjectDropdown.AddOptions(knownWordStrings);
+        //subjectDropdown.RefreshShownValue();
         Dropdown objectDropdown = sentenceBuilder.Find("DirectObject").GetComponent<Dropdown>();
         objectDropdown.ClearOptions();
         objectDropdown.AddOptions(knownWordStrings);
+        //objectDropdown.RefreshShownValue();
 
         mSentenceCallback = callback;
     }
