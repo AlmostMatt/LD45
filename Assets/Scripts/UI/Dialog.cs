@@ -98,6 +98,8 @@ public class DialogBlock
                             Participants[j].knowledge.Listen(entry.speaker, newInfo);
                         }
                     }
+
+                    PlayerJournal.AddListen(entry.speaker.PersonId, newInfo);
                 }
                 else
                 {
