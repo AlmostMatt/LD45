@@ -36,7 +36,7 @@ public class BackstoryClue : ClueGenerator
             desc = "A newspaper article about " + n2.AsSubject() + ", who " + n1.AsObject() + ".";
         }
 
-        ClueItem item = new ClueItem(n1, n2, sprite, desc);
+        ClueItem item = new ClueItem(n1, n2, Verb.Has, sprite, desc);
         return item;
     }
 

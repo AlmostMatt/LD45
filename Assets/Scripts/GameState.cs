@@ -358,9 +358,9 @@ public class GameState : MonoBehaviour
 
             Sentence[] motive = new Sentence[]
             {
-                new Sentence(hairColors[0], Verb.Is, Noun.Motivated, Adverb.True),
-                new Sentence(hairColors[1], Verb.Is, Noun.Motivated, Adverb.True),
-                new Sentence(hairColors[2], Verb.Is, Noun.Motivated, Adverb.True)
+                new Sentence(hairColors[0], Verb.Has, Noun.Motive, Adverb.True),
+                new Sentence(hairColors[1], Verb.Has, Noun.Motive, Adverb.True),
+                new Sentence(hairColors[2], Verb.Has, Noun.Motive, Adverb.True)
             };
 
             for (int i = 1; i < 3; ++i)
