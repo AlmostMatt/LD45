@@ -158,13 +158,15 @@ public class DialogBlock
         {
             if (Participants[j].PersonId != speaker.PersonId)
             {
-                string[] response = Participants[j].knowledge.Listen(speaker, newInfo);
+                string[] spokenResponse;
+                AudioClipIndex[] audioResponse;
+                Participants[j].knowledge.Listen(speaker, newInfo, out spokenResponse, out audioResponse);
 
-                if(j != 0)
+                if (j != 0)
                 {
-                    for(int responseIdx = response.Length-1; responseIdx >= 0; --responseIdx)
+                    for(int responseIdx = spokenResponse.Length-1; responseIdx >= 0; --responseIdx)
                     {
-                        InsertDialogue(0, Participants[j], new Sprite[] { Participants[j].HeadSprite }, response[responseIdx]);
+                        InsertDialogue(0, Participants[j], new Sprite[] { Participants[j].HeadSprite }, spokenResponse[responseIdx], audioResponse[responseIdx]);
                     }
                 }
             }

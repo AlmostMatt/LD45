@@ -111,7 +111,7 @@ public class Knowledge
         }
     }
 
-    public string[] Listen(PersonState person, Sentence sentence)
+    public void Listen(PersonState person, Sentence sentence, out string[] spokenResponse, out AudioClipIndex[] audioResponse)
     {
         // Allow the player to use these words for sentences later
         KnownWords.Add(sentence.Subject);
@@ -124,7 +124,9 @@ public class Knowledge
         {
             Debug.Log(person.PersonId + " told a lie: " + sentence);
             ConfidenceLost(person.PersonId);
-            return new string[] { "What? I know that's not true." };
+            spokenResponse = new string[] { "What? I know that's not true." };
+            audioResponse = new AudioClipIndex[] { AudioClipIndex.SURPRISE_EH };
+            return;
         }
 
         float confidence = VerifyBelief(sentence);
@@ -132,12 +134,16 @@ public class Knowledge
         {
             if (confidence >= 1)
             {
-                return new string[] { "Sure, I already knew that." };
+                spokenResponse = new string[] { "Sure, I already knew that." };
+                audioResponse = new AudioClipIndex[] { AudioClipIndex.AGREE };
+                return;
             }
 
             if(confidence >= 0.5)
             {
-                return new string[] { "I suspected as much." }; // should this actually early return?
+                spokenResponse = new string[] { "I suspected as much." }; // should this actually early return?
+                audioResponse = new AudioClipIndex[] { AudioClipIndex.AGREE };
+                return;
             }
 
             // increase confidence? maybe this is a way to "hack the system" to gain AI trust: tell them things they already believe
@@ -154,20 +160,29 @@ public class Knowledge
         if(sentence.Subject == myHairColor)
         {
 
-            return new string[] {
+            spokenResponse = new string[] {
                 "So I'm " + sentence.DirectObject.AsSubject() + "?",
                 sentence.DirectObject.PersonalReaction()
             };
+            audioResponse = new AudioClipIndex[] { AudioClipIndex.SURPRISE_EH, AudioClipIndex.NONE };
+            return;
         }
         else if(sentence.DirectObject == myHairColor)
         {
-            return new string[] {
+            spokenResponse = new string[] {
                 "So I'm " + sentence.Subject.AsSubject() + "...?",
                 sentence.Subject.PersonalReaction()
             };
+            audioResponse = new AudioClipIndex[] { AudioClipIndex.SURPRISE_EH, AudioClipIndex.NONE };
+            return;
         }
 
-        return new string[] { "Interesting..." };
+        int randomReaction = Random.Range(0, 2);
+        string[] possibleSpokenReact = new string[] { "Interesting...", "Hmm...", "Oh." };
+        AudioClipIndex[] possibleAudio = new AudioClipIndex[] { AudioClipIndex.HMM, AudioClipIndex.HMM, AudioClipIndex.OH};
+        spokenResponse = new string[] { possibleSpokenReact[randomReaction] };
+        audioResponse = new AudioClipIndex[] { possibleAudio[randomReaction] };
+        return;
     }
 
     public float VerifyBelief(Sentence sentence)
