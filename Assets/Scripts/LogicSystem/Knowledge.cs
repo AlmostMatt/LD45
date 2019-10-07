@@ -117,7 +117,7 @@ public class Knowledge
         {
             Debug.Log(person.PersonId + " told a lie: " + sentence);
             ConfidenceLost(person.PersonId);
-            return "What? That's not true.";
+            return "What? I know that's not true.";
         }
 
         float confidence = VerifyBelief(sentence);
