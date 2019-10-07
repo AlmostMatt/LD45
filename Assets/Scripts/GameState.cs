@@ -338,6 +338,133 @@ public class GameState : MonoBehaviour
             // TODO: ask the player for their opinion, either first or last
 
             // get npc evaluations
+
+            // multiple beliefs contribute to an AI thinking that someone is the killer:
+            // 1) did the victim write their name in blood?
+            // 2) did the killer have a motive?
+
+            Noun[] hairColors = new Noun[] {
+                mPeople[0].AttributeMap[NounType.HairColor],
+                mPeople[1].AttributeMap[NounType.HairColor],
+                mPeople[2].AttributeMap[NounType.HairColor]
+            };
+
+            Sentence[] named = new Sentence[]
+            {
+                new Sentence(hairColors[0], Verb.Is, Noun.SuspectedName, Adverb.True),
+                new Sentence(hairColors[1], Verb.Is, Noun.SuspectedName, Adverb.True),
+                new Sentence(hairColors[2], Verb.Is, Noun.SuspectedName, Adverb.True),
+            };
+
+            Sentence[] motive = new Sentence[]
+            {
+                new Sentence(hairColors[0], Verb.Is, Noun.Motivated, Adverb.True),
+                new Sentence(hairColors[1], Verb.Is, Noun.Motivated, Adverb.True),
+                new Sentence(hairColors[2], Verb.Is, Noun.Motivated, Adverb.True)
+            };
+
+            for (int i = 1; i < 3; ++i)
+            {
+                float[] namedScores = new float[3];
+                float[] motiveScores = new float[3];
+                float[] innocenceScores = new float[3];
+                float[] killerScores = new float[3];
+
+                PersonState p = mPeople[i];
+                Knowledge personKnowledge = p.knowledge;
+                Sprite[] sprite = { mPeople[i].HeadSprite };
+
+                int bestSuspect = -1;
+                float bestScore = 0f;
+                for (int j = 0; j < 3; ++j)
+                {
+                    namedScores[j] = personKnowledge.VerifyBelief(named[j]);
+                    motiveScores[j] = personKnowledge.VerifyBelief(motive[j]);
+                    killerScores[j] = (namedScores[j] + motiveScores[j]) / 2;
+                    if(killerScores[j] > bestScore)
+                    {
+                        bestScore = killerScores[j];
+                        bestSuspect = j;
+                    }
+                }
+                
+                if(bestScore == 0f)
+                {
+                    // TODO: check innocence
+                    discussion.QueueDialogue(mPeople[i], sprite, "I have no idea.");
+                }
+                else
+                {
+                    if(bestSuspect == i)
+                    {
+                        // this is me! Don't accuse myself.
+                        if(Random.Range(0, 100) == 0)
+                        {
+                            discussion.QueueDialogue(p, sprite, "Well I think I did it, but I'm not going to say that out loud.");
+                            discussion.QueueDialogue(p, sprite, "...Oh wait.");
+                            continue;
+                        }
+                        else
+                        {
+                            // look for another person to pin the blame on
+                            bestScore = 0;
+                            bestSuspect = -1;
+                            for(int j = 0; j < 3; ++j)
+                            {
+                                if (j == i) continue;
+                                if(killerScores[j] > bestScore)
+                                {
+                                    bestScore = killerScores[j];
+                                    bestSuspect = j;
+                                }
+                            }
+
+                            if(bestSuspect < 0)
+                            {
+                                // randomly accuse someone else
+                                int randomAccusation = Random.Range(0, 3);
+                                if (randomAccusation == i) randomAccusation = (randomAccusation + 1) % 3;
+                                discussion.QueueDialogue(p, sprite, hairColors[randomAccusation] + " did it!");
+                                continue;
+                            }
+                        }
+                    }
+
+                    // explain the accusation
+                    string confidenceQualifier = "";
+                    if (bestScore >= 1)
+                    {
+                        confidenceQualifier = "I'm certain ";
+                    }
+                    else if (bestScore >= 0.5)
+                    {
+                        confidenceQualifier = "I'm pretty sure ";
+                    }
+                    else
+                    {
+                        confidenceQualifier = "I think ";
+                    }
+                    discussion.QueueDialogue(p, sprite, confidenceQualifier + hairColors[bestSuspect] + " did it.");
+                    List<string> namedExplanation = p.knowledge.ExplainBelief(named[bestSuspect]);
+                    foreach(string s in namedExplanation)
+                    {
+                        discussion.QueueDialogue(p, sprite, s);
+                    }
+
+                    List<string> motiveExplanation = p.knowledge.ExplainBelief(motive[bestSuspect]);
+                    if (motiveExplanation.Count > 0)
+                    {
+                        discussion.QueueDialogue(p, sprite, "Also...");
+                        foreach (string s in motiveExplanation)
+                        {
+                            discussion.QueueDialogue(p, sprite, s);
+                        }
+                    }
+                    
+                }
+            }
+
+            /*
             Sentence killer0 = new Sentence(Noun.Blonde, Verb.Is, Noun.Killer, Adverb.True);
             Sentence killer1 = new Sentence(Noun.Brunette, Verb.Is, Noun.Killer, Adverb.True);
             Sentence killer2 = new Sentence(Noun.Redhead, Verb.Is, Noun.Killer, Adverb.True);
@@ -408,6 +535,7 @@ public class GameState : MonoBehaviour
                     }
                 }
             }
+            */
             discussion.Start();
         }
     }
@@ -451,10 +579,5 @@ public class GameState : MonoBehaviour
     public void OnClueDismissed(int i)
     {
         // StartStage(mCurrentStage + 1); // go to next stage after reading a clue
-    }
-
-    private void GetRoomChoice(PersonObject p)
-    {
-        
     }
 }

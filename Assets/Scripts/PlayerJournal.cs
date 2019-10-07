@@ -14,7 +14,7 @@ public static class PlayerJournal
             mSentence = s;
             mSource = source;
         }
-
+        
         public override string ToString()
         {
             if (mSource == -1)

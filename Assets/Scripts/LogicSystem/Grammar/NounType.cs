@@ -5,7 +5,9 @@
     Name,    
     Role,
     Backstory,
-    Motive
+    Motive,
+    SuspectedName,
+    HasMotive
 }
 
 public static class NounTypeExtensions

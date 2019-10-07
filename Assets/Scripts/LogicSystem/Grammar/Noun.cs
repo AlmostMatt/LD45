@@ -26,6 +26,8 @@
     // Role (special)
     Victim,
     Killer,
+    // Name in blood
+    SuspectedName,
     // Motive
     OwesDebt,
     Inheritance,
@@ -35,7 +37,9 @@
     Philanthropist,
     Writer,
     Scientist,
-    Artist
+    Artist,
+    // Special flag for generalizing motive
+    Motivated
 
 
     // When adding new values to this enum, also update the switch statement below.
@@ -69,6 +73,10 @@ public static class NounExtensions
             case Noun.Scientist:
             case Noun.Artist:
                 return NounType.Backstory;
+            case Noun.Motivated:
+                return NounType.HasMotive;
+            case Noun.SuspectedName:
+                return NounType.SuspectedName;
             case Noun.Alice:
             case Noun.Brianna:
             case Noun.Catherine:
