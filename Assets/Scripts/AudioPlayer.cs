@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Probably remove or dont use PFFT
-public enum AudioClipIndex { NONE=-1, IMPACT=0, PAPER = 1, PICKUP = 2, HI=3, HMM=4, DISAGREE=5, SURPRISE_EH=6, REALIZATION=7, SURPRISE_AH=8, HMM2=9, AGREE=10, OH=11};
+public enum AudioClipIndex { NONE=-1, IMPACT=0, PAPER = 1, PICKUP = 2, HI=3, HMM=4, DISAGREE=5, SURPRISE_EH=6, REALIZATION=7, SURPRISE_AH=8, HMM2=9, AGREE=10, OH=11, PIANO=12};
 
 public class AudioPlayer : MonoBehaviour
 {
@@ -36,4 +36,10 @@ public class AudioPlayer : MonoBehaviour
         }
         instance.GetComponent<AudioSource>().PlayOneShot(instance.audioClips[(int)index]);
     }
+
+    public static bool IsPlaying()
+    {
+        return instance.GetComponent<AudioSource>().isPlaying;
+    }
+
 }
