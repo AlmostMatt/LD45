@@ -573,7 +573,7 @@ public class GameState : MonoBehaviour
 
     public void PlayerFoundClue(ClueObject clue)
     {
-        // TODO: if isPaper
+        // TODO: check if the object is the not-paper photo. If so, play PICKUP
         AudioPlayer.PlaySound(AudioClipIndex.PAPER);
         ClueItem item = clue.mItem;
         PersonState player = mPeople[0];
