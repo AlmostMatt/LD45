@@ -157,6 +157,10 @@ public class GameState : MonoBehaviour
         Debug.Log("starting stage " + stage);
         mCurrentStage = stage;
         
+        if (stage == GameStage.SEARCH_1)
+        {
+            stage = GameStage.CLOSURE;
+        }
         if(stage == GameStage.SEARCH_1 || stage == GameStage.SEARCH_2 || stage == GameStage.SEARCH_3)
         {
             if(stage == GameStage.SEARCH_1)
@@ -268,7 +272,7 @@ public class GameState : MonoBehaviour
                 // Debug.Log(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Name]);
                 // Debug.Log(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Identity]);
             }
-            Text epilogueText = blackFade.transform.GetComponentInChildren<Text>();
+            Text epilogueText = transform.Find("Canvas/BlackFade/Text").GetComponent<Text>();
             epilogueText.gameObject.SetActive(true);
             epilogueText.text = string.Join("\n", epilogue);
         }
