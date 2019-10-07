@@ -16,20 +16,21 @@
     Catherine, // Carol,
     Victor, // The victim!
     // Identity
-    Exwife,
+    ExWife,
     Daughter,
-    Bastard,
+    OrphanageWorker,
     // HairColor,
     Blonde,
-    Brown,
-    Red,
+    Brunette,
+    Redhead,
     // Role (special)
     Victim,
     Killer,
     // Motive
-    Debt,
+    OwesDebt,
     Inheritance,
-    Grudge,
+    HasGrudge,
+    Abused, // Currently unused, effectively the same as grudge
     // Backstory
     Philanthropist,
     Writer,
@@ -48,19 +49,20 @@ public static class NounExtensions
         switch (noun)
         {
             case Noun.Blonde:
-            case Noun.Brown:
-            case Noun.Red:
+            case Noun.Brunette:
+            case Noun.Redhead:
                 return NounType.HairColor;
-            case Noun.Exwife:
+            case Noun.ExWife:
             case Noun.Daughter:
-            case Noun.Bastard:
+            case Noun.OrphanageWorker:
                 return NounType.Identity;
             case Noun.Killer:
             case Noun.Victim:
                 return NounType.Role;
-            case Noun.Debt:
+            case Noun.OwesDebt:
             case Noun.Inheritance:
-            case Noun.Grudge:
+            case Noun.HasGrudge:
+            case Noun.Abused:
                 return NounType.Motive;
             case Noun.Philanthropist:
             case Noun.Writer:
@@ -80,12 +82,12 @@ public static class NounExtensions
     {
         switch(noun)
         {
-            case Noun.Exwife:
+            case Noun.ExWife:
                 return "the victim's ex-wife";
             case Noun.Daughter:
                 return "the victim's daughter";
-            case Noun.Bastard:
-                return "the victim's friend";           
+            case Noun.OrphanageWorker:
+                return "the orphanage worker";           
             default:
                 return noun.ToString();
         }
@@ -97,20 +99,22 @@ public static class NounExtensions
         string hasString = (positive ? "has " : "does not have ");
         switch(noun)
         {
-            case Noun.Exwife:
+            case Noun.ExWife:
                 return isString + "the victim's ex-wife";
             case Noun.Daughter:
                 return isString + "the victim's daughter";
-            case Noun.Bastard:
-                return isString + "the victim's friend";
-            case Noun.Debt:
+            case Noun.OrphanageWorker:
+                return isString + "the orphanage worker";
+            case Noun.OwesDebt:
                 return (positive ? "owes " : "does not owe ") + "the victim money";
             case Noun.Inheritance:
                 return (positive ? "will " : "will not ") + "receive an inheritance from the victim";
-            case Noun.Grudge:
+            case Noun.HasGrudge:
                 return (positive ? "held " : "did not hold ") + "a grudge against the victim";
-            case Noun.Red:
-            case Noun.Brown:
+            case Noun.Abused:
+                return (positive ? "was  " : "was not ") + "abused by the victim";
+            case Noun.Redhead:
+            case Noun.Brunette:
             case Noun.Blonde:
                 return hasString + noun.ToString().ToLower() + " hair";
             case Noun.Alice:
@@ -128,12 +132,12 @@ public static class NounExtensions
     {
         switch(noun)
         {
-            case Noun.Exwife:
+            case Noun.ExWife:
                 return "his ex-wife";
             case Noun.Daughter:
                 return "his daughter";
-            case Noun.Bastard:
-                return "his friend";
+            case Noun.OrphanageWorker:
+                return "an orphanage worker";
             default:
                 return noun.ToString();
         }
@@ -143,12 +147,12 @@ public static class NounExtensions
     {
         switch(noun)
         {
-            case Noun.Exwife:
+            case Noun.ExWife:
                 return "...is that supposed to make me feel better about all this?";
             case Noun.Daughter:
                 return "Dad...";
-            case Noun.Bastard:
-                return "Oh no...";
+            case Noun.OrphanageWorker:
+                return "Oh...";
             default:
                 return "...";
         }
