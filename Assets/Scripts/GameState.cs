@@ -140,7 +140,7 @@ public class GameState : MonoBehaviour
         
     
         // TEMP to advance time
-        if(Input.GetButton("Submit"))
+        if(Input.GetButton("Submit")) // TODO - remove before launch. Otherwise people will click this when using Submit to continue dialog.
         {
             if(
                     mCurrentStage == GameStage.SEARCH_1

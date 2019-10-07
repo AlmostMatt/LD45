@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.EventSystems;
 
 // The callback function type - should take an integer argument that is the button index
 public delegate void UIButtonCallback(int btnIdx);
@@ -150,6 +151,13 @@ public class UIController : MonoBehaviour
                 button.GetChild(0).GetComponent<Text>().text = buttonTexts[i];
             }
         }
+        if (buttonTexts.Length == 1)
+        {
+            EventSystem.current.GetComponent<EventSystem>().SetSelectedGameObject(buttonContainer.GetChild(0).gameObject);
+        } else
+        {
+            EventSystem.current.GetComponent<EventSystem>().SetSelectedGameObject(null);
+        }
     }
 
     private void ShowUISentence(Sprite[] sprites, UISentenceCallback callback)
@@ -204,6 +212,7 @@ public class UIController : MonoBehaviour
         objectDropdown.RefreshShownValue();
 
         mSentenceCallback = callback;
+        EventSystem.current.GetComponent<EventSystem>().SetSelectedGameObject(subjectDropdown.gameObject);
     }
 
     public void OnButtonClick(Button button)
