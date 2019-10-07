@@ -85,6 +85,10 @@ public class GameState : MonoBehaviour
     }
     private GameStage mCurrentStage;
     private ClueInfo mStartingClue;
+    private PersonState mArrestedPerson;
+    private bool mWasAllArrested;
+    private List<string> mEpilogueLines = new List<string>();
+    private int mEpilogueNumLinesDisplayed = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -246,6 +250,8 @@ public class GameState : MonoBehaviour
                 discussion.QueueDialogue(Police, new Sprite[] { }, "So it was the " + mPeople[majority].AttributeMap[NounType.HairColor] + "?");
                 discussion.QueueDialogue(Police, new Sprite[] { mPeople[majority].HeadSprite }, "You're under arrest, ma'am.");
                 discussion.QueueDialogue(Police, new Sprite[] { mPeople[(majority+1)%3].HeadSprite, mPeople[(majority+2)%3].HeadSprite }, "You two, come along and we'll get official statements.");
+                mWasAllArrested = false;
+                mArrestedPerson = mPeople[majority];
             }
             else
             {
@@ -253,6 +259,7 @@ public class GameState : MonoBehaviour
                 Sprite[] allThree = new Sprite[] { mPeople[0].HeadSprite, mPeople[1].HeadSprite, mPeople[2].HeadSprite };
                 discussion.QueueDialogue(Police, allThree, "You can't agree on what happened?");
                 discussion.QueueDialogue(Police, allThree, "I'm going to have to take you all in to the station.");
+                mWasAllArrested = true;
             }
 
             discussion.Start();
@@ -261,22 +268,54 @@ public class GameState : MonoBehaviour
         {
             blackFade.SetTrigger("FadeOut");
             // Give me closure please!
-            List<string> epilogue = new List<string>();
             // TODO - tell more of the story.
             // TODO - typing sound
-            epilogue.Add("The police arrested the Redhead"); // TODO - store the arrested person.
-            epilogue.Add("The actual killer was " + mPeople[KillerId].AttributeMap[NounType.HairColor]);
+            if (mWasAllArrested)
+            {
+
+            } else
+            {
+                if (mArrestedPerson.IsKiller && mArrestedPerson.IsPlayer)
+                {
+
+                } else if (!mArrestedPerson.IsKiller && mArrestedPerson.IsPlayer)
+                {
+
+                }
+                else if (mArrestedPerson.IsKiller && !mArrestedPerson.IsPlayer)
+                {
+
+                }
+                else if (!mArrestedPerson.IsKiller && !mArrestedPerson.IsPlayer)
+                {
+
+                }
+            }
+            mEpilogueLines.Add("The police arrested the Redhead"); // TODO - store the arrested person.
+            mEpilogueLines.Add("The actual killer was " + mPeople[KillerId].AttributeMap[NounType.HairColor]);
             for (int j = 0; j < 3; j++)
             {
-                epilogue.Add(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Name]);
-                epilogue.Add(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Identity]);
+                mEpilogueLines.Add(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Name]);
+                mEpilogueLines.Add(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Identity]);
                 // Debug.Log(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Name]);
                 // Debug.Log(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Identity]);
             }
-            Text epilogueText = transform.Find("Canvas/BlackFade/Text").GetComponent<Text>();
-            epilogueText.gameObject.SetActive(true);
-            epilogueText.text = string.Join("\n", epilogue);
+
+            InvokeRepeating("UpdateEpilogueText", 1.0f, 0.3f); // after 1 seconds start the epilogue text, and do a new line every 0.3 seconds
         }
+    }
+
+    private void UpdateEpilogueText()
+    {
+        mEpilogueNumLinesDisplayed++;
+        List<string> Nlines = new List<string>();
+        for (int i=0; i< mEpilogueLines.Count && i<mEpilogueNumLinesDisplayed; i++)
+        {
+            Nlines.Add(mEpilogueLines[i]);
+        }
+        Text epilogueText = transform.Find("Canvas/BlackFade/Text").GetComponent<Text>();
+        epilogueText.gameObject.SetActive(true);
+        epilogueText.text = string.Join("\n", Nlines);
     }
 
     public void MoveToRoom(int personId, string scene)
