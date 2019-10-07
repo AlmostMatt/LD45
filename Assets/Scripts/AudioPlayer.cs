@@ -9,6 +9,7 @@ public class AudioPlayer : MonoBehaviour
 {
     public AudioClip[] audioClips;
     private static AudioPlayer instance;
+    private static AudioClipIndex prevClip;
 
     void Start()
     {
@@ -18,8 +19,17 @@ public class AudioPlayer : MonoBehaviour
     // call anywhere with code like AudioPlayer.PlaySound(AudioClipIndex.IMPACT);
     public static void PlaySound(AudioClipIndex index)
     {
-        // TODO - dont play the same clip consecutively
-        // TODO - special case for HMM and HMM2
+        // Don't play the same clip twice in a row. instead, be silent.
+        if (index == prevClip)
+        {
+            return;
+        }
+        prevClip = index;
+        // special case to randomize HMM and HMM2 sounds
+        if (index == AudioClipIndex.HMM || index == AudioClipIndex.HMM2)
+        {
+            index = new AudioClipIndex[] { AudioClipIndex.HMM, AudioClipIndex.HMM2 }[Random.Range(0, 2)];
+        }
         if (index == AudioClipIndex.NONE)
         {
             return;
