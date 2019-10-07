@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum AudioClipIndex { IMPACT=0, PAPER = 1, PICKUP = 2};
+public enum AudioClipIndex { NONE=-1, IMPACT=0, PAPER = 1, PICKUP = 2, HI=3, HMM=4, PFFT=5, SURPRISE=6};
 
 public class AudioPlayer : MonoBehaviour
 {
@@ -17,6 +17,10 @@ public class AudioPlayer : MonoBehaviour
     // call anywhere with code like AudioPlayer.PlaySound(AudioClipIndex.IMPACT);
     public static void PlaySound(AudioClipIndex index)
     {
+        if (index == AudioClipIndex.NONE)
+        {
+            return;
+        }
         instance.GetComponent<AudioSource>().PlayOneShot(instance.audioClips[(int)index]);
     }
 }
