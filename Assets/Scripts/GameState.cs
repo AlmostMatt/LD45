@@ -98,7 +98,6 @@ public class GameState : MonoBehaviour
         MysteryGenerator.Generate(out mPeople, out mStartingClue, out cluesToScatter);
 
         // Give everyone knowledge of the name of the killer
-        PlayerJournal.AddListen(VictimId, mStartingClue.GetSentence());
         for (int i = 0; i < 3; ++i)
         {
             mPeople[i].knowledge.AddKnowledge(mStartingClue.GetSentence());
@@ -183,6 +182,11 @@ public class GameState : MonoBehaviour
         
         if(stage == GameStage.SEARCH_1 || stage == GameStage.SEARCH_2 || stage == GameStage.SEARCH_3)
         {
+            if(stage == GameStage.SEARCH_1)
+            {
+                PlayerJournal.AddListen(VictimId, mStartingClue.GetSentence()); // wait until after the dialogue is over to add this to the player journal
+            }
+
             UIController.Get().ShowJournalButton();            
 
             // assign npcs to rooms (for now, ensure they go to different rooms)
