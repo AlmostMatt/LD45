@@ -178,6 +178,51 @@ public class Knowledge
         return maxConfidence;
     }
 
+    public List<string> ExplainBelief(Sentence sentence)
+    {
+        List<string> explanation = new List<string>();
+
+        float maxConfidence = 0f;
+        SentenceBelief bestBelief = null;
+        foreach (SentenceBelief b in mBeliefs)
+        {
+            if (b.mSentence.Equals(sentence))
+            {
+                maxConfidence = Mathf.Max(maxConfidence, b.mConfidence);
+                bestBelief = b;
+            }
+        }
+
+        if(bestBelief == null)
+        {
+            return explanation;
+        }
+
+        ExplainBeliefRecursive(bestBelief, explanation);
+        return explanation;
+    }
+
+    private void ExplainBeliefRecursive(SentenceBelief b, List<string> explanation)
+    {
+        if (!b.mDeduced)
+        {
+            if (b.mSourceId == mPersonId)
+            {
+                explanation.Add("I found out that " + b.mSentence);
+            }
+            else
+            {
+                explanation.Add(GameState.Get().mPeople[b.mSourceId].AttributeMap[NounType.HairColor] + " said that " + b.mSentence);
+            }
+
+            return;
+        }
+
+        ExplainBeliefRecursive(b.mSourceBelief1, explanation);
+        if (b.mSourceBelief2 != null)
+            ExplainBeliefRecursive(b.mSourceBelief2, explanation);
+    }
+
     public void AddKnowledge(Sentence sentence) // implied source is yourself, 100% confidence
     {
         // Allow the player to use these words for sentences later
@@ -356,6 +401,26 @@ public class Knowledge
                         Debug.Log("New belief: " + belief.mSentence + " (confidence: " + b1.mConfidence + ") | Since " + s1 + " (confidence: " + b1.mConfidence + ")");
                     }
                 }
+            }
+        }
+
+        // special rule: determining motive
+        foreach (SentenceBelief b1 in newBeliefs)
+        {
+            Sentence s1 = b1.mSentence;
+            NounType subjectType = s1.Subject.Type();
+            NounType objectType = s1.DirectObject.Type();
+            if(subjectType == NounType.Motive)
+            {
+                Sentence newSentence = new Sentence(s1.DirectObject, Verb.Is, Noun.Motivated, Adverb.True);
+                SentenceBelief belief = new SentenceBelief(newSentence, b1, null, b1.mConfidence);
+                beliefDeductions.Add(belief);
+            }
+            else if(objectType == NounType.Motive)
+            {
+                Sentence newSentence = new Sentence(s1.Subject, Verb.Is, Noun.Motivated, Adverb.True);
+                SentenceBelief belief = new SentenceBelief(newSentence, b1, null, b1.mConfidence);
+                beliefDeductions.Add(belief);
             }
         }
 
