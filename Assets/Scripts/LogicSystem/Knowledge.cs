@@ -65,6 +65,7 @@ public class Knowledge
     // verify the sentence "I am the killer". If they verify it, then we choose to withhold the information.
     private float[] mPersonConfidence = { 0.5f, 0.5f, 0.5f };
     private int mPersonId;
+    private PersonState mPerson;
 
     public HashSet<Noun> KnownWords = new HashSet<Noun>();
 
@@ -72,10 +73,11 @@ public class Knowledge
 
     private List<List<SentenceBelief>> mSuspiciousBeliefs = new List<List<SentenceBelief>>();
 
-    public Knowledge(int personId)
+    public Knowledge(PersonState person)
     {
-        mPersonId = personId;
+        mPersonId = person.PersonId;
         mPersonConfidence[mPersonId] = 1f;
+        mPerson = person;
     }
     
     private void RecursiveUpdateConfidence(SentenceBelief b, float amt)
@@ -104,7 +106,7 @@ public class Knowledge
         }
     }
 
-    public string Listen(PersonState person, Sentence sentence)
+    public string[] Listen(PersonState person, Sentence sentence)
     {
         // Allow the player to use these words for sentences later
         KnownWords.Add(sentence.Subject);
@@ -117,13 +119,23 @@ public class Knowledge
         {
             Debug.Log(person.PersonId + " told a lie: " + sentence);
             ConfidenceLost(person.PersonId);
-            return "What? I know that's not true.";
+            return new string[] { "What? I know that's not true." };
         }
 
         float confidence = VerifyBelief(sentence);
-        if(confidence >= 1f)
+        if(confidence > 0)
         {
-            return "Sure, I already knew that.";
+            if (confidence >= 1)
+            {
+                return new string[] { "Sure, I already knew that." };
+            }
+
+            if(confidence >= 0.5)
+            {
+                return new string[] { "I suspected as much." }; // should this actually early return?
+            }
+
+            // increase confidence? maybe this is a way to "hack the system" to gain AI trust: tell them things they already believe
         }
 
         // Add this to beliefs with some confidence number
@@ -133,7 +145,24 @@ public class Knowledge
         beliefs.Add(belief);
         AddBeliefs(beliefs);
 
-        return "Interesting...";
+        Noun myHairColor = mPerson.AttributeMap[NounType.HairColor];
+        if(sentence.Subject == myHairColor)
+        {
+
+            return new string[] {
+                "So I'm " + sentence.DirectObject.AsSubject() + "?",
+                sentence.DirectObject.PersonalReaction()
+            };
+        }
+        else if(sentence.DirectObject == myHairColor)
+        {
+            return new string[] {
+                "So I'm " + sentence.Subject.AsSubject() + "...?",
+                sentence.Subject.PersonalReaction()
+            };
+        }
+
+        return new string[] { "Interesting..." };
     }
 
     public float VerifyBelief(Sentence sentence)

@@ -81,7 +81,8 @@ public class UIController : MonoBehaviour
         if(journal.activeSelf)
         {
             List<PlayerJournal.SentenceHistory> strings = PlayerJournal.GetJournal();
-            journal.GetComponentInChildren<Text>().text = string.Join("\n", strings);
+            if(strings.Count > 0)
+                journal.GetComponentInChildren<Text>().text = string.Join("\n", strings);
         }
     }
 

@@ -88,7 +88,7 @@ public class DialogBlock
                 string message;
                 if (clueInfo != null) {
                     Sentence newInfo = clueInfo.GetSentence();
-                    message = "I found " + newInfo; // TODO: Announce the room where it was found
+                    message = "I found out " + entry.speaker.Speak(newInfo); // TODO: Announce the room where it was found
                     ShareInfo(entry.speaker, newInfo);
                     PlayerJournal.AddListen(entry.speaker.PersonId, newInfo);
                 }
@@ -109,11 +109,14 @@ public class DialogBlock
         {
             if (Participants[j].PersonId != speaker.PersonId)
             {
-                string response = Participants[j].knowledge.Listen(speaker, newInfo);
+                string[] response = Participants[j].knowledge.Listen(speaker, newInfo);
 
                 if(j != 0)
                 {
-                    mDialogEntries.Insert(0, new DialogEntry(speaker, new Sprite[] { Participants[j].HeadSprite }, response, false));
+                    for(int responseIdx = response.Length-1; responseIdx >= 0; --responseIdx)
+                    {
+                        mDialogEntries.Insert(0, new DialogEntry(speaker, new Sprite[] { Participants[j].HeadSprite }, response[responseIdx], false));
+                    }
                 }
             }
         }

@@ -294,14 +294,23 @@ public class GameState : MonoBehaviour
         {
             mCurrentStage = GameStage.INTRO;
 
-            Debug.Log("Dead body. The name " + mStartingClue.nounB + " is written in blood by the body.");
             DialogBlock discussion = new DialogBlock(mPeople, OnDialogueDismissed);
-            discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "What Happened?");
-            discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Where am I?");
-            discussion.QueueDialogue(Player, NonPlayersHeads, "Who am I?");
-            discussion.QueueDialogue(mPeople[2], new Sprite[] { SpriteManager.GetSprite("Victim") }, "Look! A body!");
-            discussion.QueueDialogue(mPeople[1], new Sprite[] { SpriteManager.GetSprite("CrimeScene") }, "And a name: " + mStartingClue.nounB);
-            discussion.QueueDialogue(Player, NonPlayersHeads, "Let's split up and look for clues.");
+            discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "Ow...");
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Ugh... where am I?");
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Who are you two?");
+            discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "Me? I'm...");
+            discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "I don't know... I can't remember.");
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { SpriteManager.GetSprite("Victim") }, "Ahhh! A body!!");
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { SpriteManager.GetSprite("CrimeScene") }, "And there's a name written by it: " + mStartingClue.nounB + "!");
+            discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "Oh my gosh! Which one of you is " + mStartingClue.nounB + "?!");
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Not me! I'm...");
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "I can't remember my name either!");
+            discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "Oh sure! You're probably " + mStartingClue.nounB + ", and you killed this guy!");
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Calm down, " + mPeople[2].AttributeMap[NounType.HairColor] + "-hair!");
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "We don't know anything for sure.");
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Let's look around and see if we can figure out what happened here.");
+            discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "Ok, ok... sorry. We can search the place, but let's not stay separated for long.");
+            discussion.QueueDialogue(Player, NonPlayersHeads, "Ok, let's meet back here soon.");
             discussion.Start();
         }
         else if (mCurrentStage == GameStage.COMMUNAL_1 || mCurrentStage == GameStage.COMMUNAL_2)
