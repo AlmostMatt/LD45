@@ -126,6 +126,20 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 5974442667039163534}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &637657035 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6304819559597068994, guid: 3f9dc0606f21e244ca5dc81ad253cb17,
+    type: 3}
+  m_PrefabInstance: {fileID: 1387701243}
+  m_PrefabAsset: {fileID: 0}
+--- !u!81 &637657036
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 637657035}
+  m_Enabled: 1
 --- !u!224 &1382632133 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3022728796044332548, guid: b69c05599dacb71498b1589d78f2f5a2,
@@ -709,49 +723,6 @@ PrefabInstance:
     - target: {fileID: 3147824153748512598, guid: ccf3a6bac9daac447bdabdaa961eae76,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3147824153748512597, guid: ccf3a6bac9daac447bdabdaa961eae76,
-        type: 3}
-      propertyPath: namedImages1.Array.size
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 3147824153748512597, guid: ccf3a6bac9daac447bdabdaa961eae76,
-        type: 3}
-      propertyPath: namedImages1.Array.data[6].name
-      value: FacelessBrunette
-      objectReference: {fileID: 0}
-    - target: {fileID: 3147824153748512597, guid: ccf3a6bac9daac447bdabdaa961eae76,
-        type: 3}
-      propertyPath: namedImages1.Array.data[6].sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 7dd1d4e1cf28bd84684936cda3149a80,
-        type: 3}
-    - target: {fileID: 3147824153748512597, guid: ccf3a6bac9daac447bdabdaa961eae76,
-        type: 3}
-      propertyPath: namedImages1.Array.data[7].name
-      value: FacelessRedhead
-      objectReference: {fileID: 0}
-    - target: {fileID: 3147824153748512597, guid: ccf3a6bac9daac447bdabdaa961eae76,
-        type: 3}
-      propertyPath: namedImages1.Array.data[7].sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: c97b2b2514ac08544a6777b51f3f7b26,
-        type: 3}
-    - target: {fileID: 3147824153748512597, guid: ccf3a6bac9daac447bdabdaa961eae76,
-        type: 3}
-      propertyPath: namedImages1.Array.data[8].name
-      value: FacelessBlonde
-      objectReference: {fileID: 0}
-    - target: {fileID: 3147824153748512597, guid: ccf3a6bac9daac447bdabdaa961eae76,
-        type: 3}
-      propertyPath: namedImages1.Array.data[8].sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: bae3b1a782511bb429699366c43bf349,
-        type: 3}
-    - target: {fileID: 3147824153032234258, guid: ccf3a6bac9daac447bdabdaa961eae76,
-        type: 3}
-      propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
