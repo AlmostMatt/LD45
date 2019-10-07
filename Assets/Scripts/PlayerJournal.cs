@@ -17,9 +17,11 @@ public static class PlayerJournal
 
         public override string ToString()
         {
-            if(mSource == -1)
+            if (mSource == -1)
             {
                 return "I found out " + mSentence;
+            } else if (mSource == GameState.Get().VictimId) {
+                return "The name " + mSentence.Subject + " was written in blood next to the victim.";
             }
             else
             {

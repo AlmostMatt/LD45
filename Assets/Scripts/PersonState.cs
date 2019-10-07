@@ -31,7 +31,11 @@ public class PersonState
     public PersonState(int personId)
     {
         PersonId = personId;
-        knowledge = new Knowledge(this);
+        // Dont give the victim any knowledge
+        if (personId != 3)
+        {
+            knowledge = new Knowledge(this);
+        }
     }
     
     public string Speak(Sentence s)

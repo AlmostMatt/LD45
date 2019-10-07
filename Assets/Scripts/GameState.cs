@@ -85,11 +85,13 @@ public class GameState : MonoBehaviour
         
         PlayerId = 0; // todo: randomize?
         Victim.AttributeMap[NounType.Name] = Noun.Victor;
+        Victim.AttributeMap[NounType.HairColor] = Noun.Victim; // This is relevant for spritemanager lookup of his head
         List<ClueItem> cluesToScatter;
         MysteryGenerator.Generate(out mPeople, out mStartingClue, out cluesToScatter);
 
-        // give knowledge
-        for(int i = 0; i < 3; ++i)
+        // Give everyone knowledge of the name of the killer
+        PlayerJournal.AddListen(VictimId, mStartingClue.GetSentence());
+        for (int i = 0; i < 3; ++i)
         {
             mPeople[i].knowledge.AddKnowledge(mStartingClue.GetSentence());
         }
