@@ -23,4 +23,9 @@ public class Utilities
         return (chosenIndices);
     }
 
+    public static string bold(string str)
+    {
+        // This could also use other tags - color, italics, size
+        return "<b>" + str + "</b>";
+    }
 }

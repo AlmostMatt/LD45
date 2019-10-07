@@ -135,11 +135,11 @@ public static class NounExtensions
         switch(noun)
         {
             case Noun.ExWife:
-                return "his ex-wife";
+                return "his " + bold("ex-wife");
             case Noun.Daughter:
-                return "his daughter";
+                return "his " + bold("daughter");
             case Noun.OrphanageWorker:
-                return "an orphanage worker";
+                return "an " + bold("orphanage worker");
             default:
                 return noun.ToString();
         }
@@ -162,6 +162,6 @@ public static class NounExtensions
 
     private static string bold(string str)
     {
-        return "<b>" + str + "</b>";
+        return Utilities.bold(str);
     }
 }

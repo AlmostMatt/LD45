@@ -303,7 +303,7 @@ public class GameState : MonoBehaviour
             discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "Me? I'm...");
             discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "I don't know... I can't remember.");
             discussion.QueueDialogue(mPeople[1], new Sprite[] { SpriteManager.GetSprite("Victim") }, "Ahhh! A body!!");
-            discussion.QueueDialogue(mPeople[1], new Sprite[] { SpriteManager.GetSprite("CrimeScene") }, "And there's a name written by it: " + mStartingClue.nounB + "!");
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { SpriteManager.GetSprite("CrimeScene") }, "And there's a name written by it in blood: " + Utilities.bold(mStartingClue.nounB.ToString()) + "!");
             discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "Oh my gosh! Which one of you is " + mStartingClue.nounB + "?!");
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Not me! I'm...");
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "I can't remember my name either!");
