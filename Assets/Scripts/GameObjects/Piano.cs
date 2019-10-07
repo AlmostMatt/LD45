@@ -27,6 +27,7 @@ public class Piano : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (UIController.Get().IsVisible()) { return; }
         MusicPlayer.Stop();
         AudioPlayer.PlaySound(AudioClipIndex.PIANO);
         pianoPlaying = true;
@@ -36,6 +37,7 @@ public class Piano : MonoBehaviour
     {
         if(pianoPlaying)
         {
+            AudioPlayer.Stop();
             MusicPlayer.Play();
         }
     }

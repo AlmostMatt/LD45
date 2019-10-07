@@ -20,7 +20,7 @@ public class AudioPlayer : MonoBehaviour
     public static void PlaySound(AudioClipIndex index)
     {
         // Don't play the same clip twice in a row. instead, be silent.
-        if (index == prevClip)
+        if (index == prevClip && index != AudioClipIndex.PIANO)
         {
             return;
         }
@@ -40,6 +40,11 @@ public class AudioPlayer : MonoBehaviour
     public static bool IsPlaying()
     {
         return instance.GetComponent<AudioSource>().isPlaying;
+    }
+
+    public static void Stop()
+    {
+        instance.GetComponent<AudioSource>().Stop();
     }
 
 }

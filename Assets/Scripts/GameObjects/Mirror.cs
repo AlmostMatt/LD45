@@ -18,6 +18,8 @@ public class Mirror : MonoBehaviour
 
     void OnMouseDown()
     {
+        if (UIController.Get().IsVisible()) return;
+
         PersonState player = GameState.Get().Player;
         player.KnowsOwnFace = true;
         DialogBlock dialog = new DialogBlock(new PersonState[] { player });
