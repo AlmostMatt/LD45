@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class MusicPlayer : MonoBehaviour
 {
+    private static MusicPlayer instance;
+
     public bool MusicEnabled = true;
 
     void Start()
     {
+        instance = this;
         GetComponent<AudioSource>().Play();
     }
 
@@ -22,5 +25,15 @@ public class MusicPlayer : MonoBehaviour
             GetComponent<AudioSource>().Pause();
         else
             GetComponent<AudioSource>().UnPause();
+    }
+
+    public static void Stop()
+    {
+        instance.GetComponent<AudioSource>().Stop();
+    }
+
+    public static void Play()
+    {
+        instance.GetComponent<AudioSource>().Play();
     }
 }

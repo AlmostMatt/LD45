@@ -294,12 +294,12 @@ public class UIController : MonoBehaviour
         bool parsedSubject = System.Enum.TryParse(subject, out Noun mySubject);
         if (!parsedSubject)
         {
-            Debug.LogWarning("Invalid noun - " + subject);
+            // Debug.LogWarning("Invalid noun - " + subject);
         }
         bool parsedObject = System.Enum.TryParse(directObject, out Noun myObject);
         if (!parsedObject)
         {
-            Debug.LogWarning("Invalid noun - " + directObject);
+            // Debug.LogWarning("Invalid noun - " + directObject);
         }
         // If something failed to parse, consider the sentence valid anyways rather than breaking the game
         // Don't allow sentences that compare objects of the same type
