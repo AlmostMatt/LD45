@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioClips:
   - {fileID: 8300000, guid: d1684e98f96452a4d849d778ab3b4bc7, type: 3}
-  - {fileID: 8300000, guid: 69b0a6edc7094e24abdbeaa0189a2312, type: 3}
+  - {fileID: 8300000, guid: c2bc9af68c91b684eb2439bfb75ece57, type: 3}
   - {fileID: 8300000, guid: 5df0494a54c3ed34d81a2d0a7d27a87b, type: 3}
 --- !u!82 &1638237564
 AudioSource:

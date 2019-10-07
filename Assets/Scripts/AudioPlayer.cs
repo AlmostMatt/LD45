@@ -17,7 +17,6 @@ public class AudioPlayer : MonoBehaviour
     // call anywhere with code like AudioPlayer.PlaySound(AudioClipIndex.IMPACT);
     public static void PlaySound(AudioClipIndex index)
     {
-        Debug.Log("Playing sound!");
         instance.GetComponent<AudioSource>().PlayOneShot(instance.audioClips[(int)index]);
     }
 }

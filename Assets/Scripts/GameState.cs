@@ -573,6 +573,8 @@ public class GameState : MonoBehaviour
 
     public void PlayerFoundClue(ClueObject clue)
     {
+        // TODO: if isPaper
+        AudioPlayer.PlaySound(AudioClipIndex.PAPER);
         ClueItem item = clue.mItem;
         PersonState player = mPeople[0];
 
