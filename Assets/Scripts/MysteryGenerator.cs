@@ -78,6 +78,12 @@ public class MysteryGenerator
         // Pick a killer
         GameState.Get().KillerId = Random.Range(0,3);
         people[GameState.Get().KillerId].IsKiller = true;
+        // Pick a person to have no motive
+        int innocentId = Random.Range(0, 2); // two possible values
+        if (innocentId >= GameState.Get().KillerId)
+        {
+            innocentId += 1;
+        }
 
         // Generate an additional clue for the killer
         // starting: victim wrote a name in blood
@@ -116,26 +122,40 @@ public class MysteryGenerator
                 Debug.Log("No clue for " + hair + " <-> " + identity + "!");
             }
 
-            // mix and match name/identity to motive/backstory.
-            // do 2 of these
-            for(int j = 0; j < 2; ++j)
+            if (i != innocentId)
             {
-                Noun identityOrName = Random.Range(0, 2) == 0 ? identity : name;
-                Noun motiveOrBackstory = Random.Range(0, 2) == 0 ? motive : backstory;
-
-                ClueItem backstoryClue = ClueManifest.GetClue(identityOrName, motiveOrBackstory);
-                if (backstoryClue != null)
+                // Connect identity to motive (for thematic and mechanical reasons)
+                ClueItem motiveClue = ClueManifest.GetClue(identity, motive);
+                if (motiveClue != null)
                 {
-                    cluesToScatter.Add(backstoryClue);
+                    cluesToScatter.Add(motiveClue);
                 }
                 else
                 {
-                    Debug.Log("No clue for " + identityOrName + " <-> " + motiveOrBackstory + "!");
+                    Debug.Log("No clue for " + identity + " <-> " + motive + "!");
                 }
+            }
+            // Generate a clue connecting something to backstory
+            Noun identityOrName = Random.Range(0, 2) == 0 ? identity : name;
+            ClueItem backstoryClue = ClueManifest.GetClue(identityOrName, backstory);
+            if (backstoryClue != null)
+            {
+                cluesToScatter.Add(backstoryClue);
+            }
+            else
+            {
+                Debug.Log("No clue for " + identityOrName + " <-> " + backstory + "!");
             }
         }
         // Unique clues
         ClueItem potion = ClueManifest.GetClue(Noun.Potion, Noun.MemoryLoss);
-        cluesToScatter.Add(potion);
+        if (potion != null)
+        {
+            cluesToScatter.Add(potion);
+        }
+        else
+        {
+            Debug.Log("No clue for " + Noun.Potion + " <-> " + Noun.MemoryLoss + "!");
+        }
     }
 }
