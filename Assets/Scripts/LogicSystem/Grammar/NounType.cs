@@ -19,7 +19,7 @@ public static class NounTypeExtensions
             case NounType.HairColor:
                 return new Noun[] { Noun.Blonde, Noun.Brunette, Noun.Redhead };
             case NounType.Identity:
-                return new Noun[] { Noun.ExWife, Noun.Daughter, Noun.OrphanageWorker };
+                return new Noun[] { Noun.ExWife, Noun.Daughter, Noun.Mistress };
             case NounType.Role:
                 return new Noun[] { Noun.Killer };
             case NounType.Name:

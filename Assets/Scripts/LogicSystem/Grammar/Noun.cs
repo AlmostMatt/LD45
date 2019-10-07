@@ -18,7 +18,7 @@
     // Identity
     ExWife,
     Daughter,
-    OrphanageWorker,
+    Mistress,
     // HairColor,
     Blonde,
     Brunette,
@@ -58,7 +58,7 @@ public static class NounExtensions
                 return NounType.HairColor;
             case Noun.ExWife:
             case Noun.Daughter:
-            case Noun.OrphanageWorker:
+            case Noun.Mistress:
                 return NounType.Identity;
             case Noun.Killer:
             case Noun.Victim:
@@ -94,8 +94,8 @@ public static class NounExtensions
                 return "the victim's " + bold("ex-wife");
             case Noun.Daughter:
                 return "the victim's " + bold("daughter");
-            case Noun.OrphanageWorker:
-                return "the " + bold("orphanage worker");
+            case Noun.Mistress:
+                return "the victim's " + bold("mistress");
             case Noun.Artist:
                 return "an " + bold(noun.ToString().ToLower());
             case Noun.Scientist:
@@ -118,8 +118,8 @@ public static class NounExtensions
                 return isString + "the victim's " + bold("ex-wife");
             case Noun.Daughter:
                 return isString + "the victim's " + bold("daughter");
-            case Noun.OrphanageWorker:
-                return isString + "the " + bold("orphanage worker");
+            case Noun.Mistress:
+                return isString + "the victim's " + bold("mistress");
             case Noun.OwesDebt:
                 return (positive ? bold("owes") : "does not " + bold("owe")) + " the victim money";
             case Noun.Inheritance:
@@ -160,8 +160,8 @@ public static class NounExtensions
                 return "his " + bold("ex-wife");
             case Noun.Daughter:
                 return "his " + bold("daughter");
-            case Noun.OrphanageWorker:
-                return "an " + bold("orphanage worker");
+            case Noun.Mistress:
+                return "his " + bold("mistress");
             default:
                 return noun.ToString();
         }
@@ -175,7 +175,7 @@ public static class NounExtensions
                 return "...is that supposed to make me feel better about all this?";
             case Noun.Daughter:
                 return "Dad...";
-            case Noun.OrphanageWorker:
+            case Noun.Mistress:
                 return "Oh...";
             default:
                 return "...";
