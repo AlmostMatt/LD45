@@ -9,6 +9,7 @@ public class PersonState
 {
     public int PersonId;
     public bool IsKiller;
+    public bool KnowsOwnFace = false;
     public Dictionary<NounType, Noun> AttributeMap = new Dictionary<NounType, Noun>();
     public Knowledge knowledge;
 
@@ -20,7 +21,11 @@ public class PersonState
     public Sprite HeadSprite
     {
         // Expects a sprite to exist with a name like HeadRed
-        get { return SpriteManager.GetSprite("Head" + AttributeMap[NounType.HairColor].ToString()); }
+        get {
+            return (IsPlayer && !KnowsOwnFace) ?
+                SpriteManager.GetSprite("Faceless" + AttributeMap[NounType.HairColor].ToString()) :
+                SpriteManager.GetSprite("Head" + AttributeMap[NounType.HairColor].ToString());
+        }
     }
     public Sprite PersonSprite
     {
