@@ -246,7 +246,7 @@ public class UIController : MonoBehaviour
         bool useHas = mySubject.UseHas() || myObject.UseHas();
         Verb verb = useHas ? Verb.Has : Verb.Is;
         Sentence sentence = new Sentence(mySubject, verb, myObject, Adverb.True);
-        if (parsedSubject && parsedObject && sentence.Subject == sentence.DirectObject)
+        if (parsedSubject && parsedObject && sentence.Subject.Type() == sentence.DirectObject.Type())
         {
             // Words parsed correctly and the sentence is Invalid!
             // TODO: make the button dynamically gray out when the sentence is invalid
