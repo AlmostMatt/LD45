@@ -67,6 +67,12 @@ public class UIController : MonoBehaviour
         transform.Find("journalButton").gameObject.SetActive(true);
     }
 
+    public void ShowJournal()
+    {
+        transform.Find("journalContent").gameObject.SetActive(false);
+        ToggleJournal();
+    }
+
     public void ToggleJournal()
     {
         GameObject journal = transform.root.gameObject.transform.Find("journalContent").gameObject;
@@ -142,6 +148,9 @@ public class UIController : MonoBehaviour
 
     private void ShowUISentence(Sprite[] sprites, UISentenceCallback callback)
     {
+        // Show the Journal, so that the player can give a good clue
+        ShowJournal();
+
         // Make the UI visible
         transform.Find("dialogView").gameObject.SetActive(true);
         transform.Find("dialogView/V overlay/dialog").gameObject.SetActive(false);
