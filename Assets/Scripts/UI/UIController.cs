@@ -51,9 +51,9 @@ public class UIController : MonoBehaviour
     }
 
     // Displays a message
-    public void ShowMessage(Sprite[] images, string message, string[] buttonTexts, UIButtonCallback[] callbacks)
+    public void ShowMessage(PersonState speaker, Sprite[] images, string message, string[] buttonTexts, UIButtonCallback[] callbacks)
     {
-        ShowUIMessage(images, message, buttonTexts, callbacks);
+        ShowUIMessage(speaker, images, message, buttonTexts, callbacks);
     }
 
     public void HideUI()
@@ -86,7 +86,7 @@ public class UIController : MonoBehaviour
         }
     }
 
-    private void ShowUIMessage(Sprite[] sprites, string dialogText, string[] buttonTexts, UIButtonCallback[] callbacks)
+    private void ShowUIMessage(PersonState speaker, Sprite[] sprites, string dialogText, string[] buttonTexts, UIButtonCallback[] callbacks)
     {
         // Make the UI visible
         transform.Find("dialogView").gameObject.SetActive(true);
@@ -120,6 +120,7 @@ public class UIController : MonoBehaviour
         }
 
         // Display dialog text
+        transform.Find("dialogView/V overlay/dialog/nameplate/text").GetComponent<Text>().text = speaker.PublicName;
         transform.Find("dialogView/V overlay/dialog/text").GetComponent<Text>().text = dialogText;
 
         // Update buttons
