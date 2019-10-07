@@ -76,7 +76,12 @@ public class Knowledge
     public Knowledge(PersonState person)
     {
         mPersonId = person.PersonId;
-        mPersonConfidence[mPersonId] = 1f;
+
+        if(mPersonId < 3)
+        {
+            mPersonConfidence[mPersonId] = 1f;
+        }
+        
         mPerson = person;
     }
     

@@ -60,6 +60,7 @@ public class GameState : MonoBehaviour
     [HideInInspector]
     public int VictimId = 3;
     public PersonState Victim = new PersonState(3);
+    public PersonState Police = new PersonState(4);
 
     enum LoadState { NONE, UNLOADING_SCENE, LOADING_SCENE }
     private LoadState mLoadState = LoadState.NONE;
@@ -349,7 +350,7 @@ public class GameState : MonoBehaviour
         else if(mCurrentStage == GameStage.POLICE)
         {
             DialogBlock discussion = new DialogBlock(mPeople, OnDialogueDismissed);
-            discussion.QueueDialogue(null, new Sprite[] { }, "What happened? Which one of you killed the guy?");
+            discussion.QueueDialogue(Police, new Sprite[] { mPeople[0].HeadSprite, mPeople[1].HeadSprite, mPeople[2].HeadSprite }, "What happened here? How did that man die?");
             // TODO: ask the player for their opinion, either first or last
 
             // get npc evaluations
