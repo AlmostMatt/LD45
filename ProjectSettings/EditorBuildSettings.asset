@@ -23,4 +23,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/EndScene.unity
     guid: f3376a930db7a6548ad4ec522e0f0003
+  - enabled: 1
+    path: Assets/Scenes/SecondFloor.unity
+    guid: f4d7f9b1cafcdf740a44368f745b8749
+  - enabled: 1
+    path: Assets/Scenes/MasterBedroom.unity
+    guid: bb42dbf641b579c4eb039876e01bf403
+  - enabled: 1
+    path: Assets/Scenes/Study.unity
+    guid: 7db97b787d067784280235897cc97ab8
   m_configObjects: {}

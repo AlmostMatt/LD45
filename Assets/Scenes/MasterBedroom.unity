@@ -777,7 +777,7 @@ PrefabInstance:
     - target: {fileID: 5622318541845981926, guid: 36dbf5e6c9fc87e4db5f4c750c833da6,
         type: 3}
       propertyPath: scene
-      value: SecondFloor
+      value: CommonRoom
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 36dbf5e6c9fc87e4db5f4c750c833da6, type: 3}

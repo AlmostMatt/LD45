@@ -14,7 +14,7 @@ public class GameState : MonoBehaviour
 
     public static GameState Get() { return GameObject.FindWithTag("GameRules").GetComponent<GameState>(); }
 
-    private string[] clueRooms = { "Bedroom1", "Bedroom2", "Bedroom3" }; // todo: better way of specifying this? data-drive?
+    private string[] clueRooms = { "Bedroom1", "Bedroom2", "Bedroom3", "MasterBedroom", "Study" }; // todo: better way of specifying this? data-drive?
     Dictionary<string, List<ClueItem>> mCluesInRooms = new Dictionary<string, List<ClueItem>>();
 
     private static int MAX_CLUES_PER_ROUND = 2;
