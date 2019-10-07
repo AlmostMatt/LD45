@@ -137,6 +137,8 @@ public static class NounExtensions
             case Noun.Writer:
             case Noun.Philanthropist:
                 return isString + "a " + bold(noun.ToString().ToLower());
+            case Noun.SuspectedName:
+                return "was written in blood next to the victim's body";
             default:
                 // I dont think this is necessary
                 return isString + bold(noun.ToString());
