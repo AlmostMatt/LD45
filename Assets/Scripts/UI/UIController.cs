@@ -39,7 +39,7 @@ public class UIController : MonoBehaviour
         PersonState otherPerson = GameState.Get().GetPerson(personId);
         DialogBlock discussion = new DialogBlock(new PersonState[] { player, otherPerson  }, null);
         // TODO: make this conditional on the AI having something to share
-        discussion.QueueInfoExchangeRequest(otherPerson, new Sprite[] { otherPerson.HeadSprite }, "Hi! Want to exchange information?");
+        discussion.QueueInfoExchangeRequest(otherPerson, new Sprite[] { otherPerson.HeadSprite }, "Hi! Want to exchange information?", AudioClipIndex.HI);
         discussion.Start();
     }
 
