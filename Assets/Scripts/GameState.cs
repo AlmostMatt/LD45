@@ -144,30 +144,6 @@ public class GameState : MonoBehaviour
                     }
             }
         }
-        
-    
-        // TEMP to advance time
-        if(Input.GetButton("Submit")) // TODO - remove before launch. Otherwise people will click this when using Submit to continue dialog.
-        {
-            if(
-                    mCurrentStage == GameStage.SEARCH_1
-                ||  mCurrentStage == GameStage.SEARCH_2
-                ||  mCurrentStage == GameStage.SEARCH_3
-            )
-            {
-                StartStage(mCurrentStage + 1);
-            }
-        }
-
-        // TEMP to dump journal
-        if(Input.GetButton("Jump"))
-        {
-            List<PlayerJournal.SentenceHistory> sentences = PlayerJournal.GetJournal();
-            foreach(PlayerJournal.SentenceHistory s in sentences)
-            {
-                Debug.Log(s);
-            }
-        }
     }
     
     public void OnDialogueDismissed(int btnIdx)
