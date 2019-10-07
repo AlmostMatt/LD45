@@ -117,7 +117,7 @@ public class Knowledge
         // unique words are not worth talking about, and AI should also not store any beliefs.
         if (sentence.Subject.Type() == NounType.Unique || sentence.DirectObject.Type() == NounType.Unique)
         {
-            int randomReaction2 = Random.Range(0, 2);
+            int randomReaction2 = Random.Range(0, 3);
             string[] possibleSpokenReact2 = new string[] { "Interesting...", "Hmm...", "Oh." };
             AudioClipIndex[] possibleAudio2 = new AudioClipIndex[] { AudioClipIndex.HMM, AudioClipIndex.HMM, AudioClipIndex.OH };
             spokenResponse = new string[] { possibleSpokenReact2[randomReaction2] };
@@ -195,7 +195,7 @@ public class Knowledge
             return;
         }
 
-        int randomReaction = Random.Range(0, 2);
+        int randomReaction = Random.Range(0, 3);
         string[] possibleSpokenReact = new string[] { "Interesting...", "Hmm...", "Oh." };
         AudioClipIndex[] possibleAudio = new AudioClipIndex[] { AudioClipIndex.HMM, AudioClipIndex.HMM, AudioClipIndex.OH};
         spokenResponse = new string[] { possibleSpokenReact[randomReaction] };
