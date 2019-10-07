@@ -208,11 +208,11 @@ public class Knowledge
         {
             if (b.mSourceId == mPersonId)
             {
-                explanation.Add("I found out that " + b.mSentence);
+                explanation.Add((explanation.Count > 0 ? "And " : "") + b.mSentence);
             }
             else
             {
-                explanation.Add(GameState.Get().mPeople[b.mSourceId].AttributeMap[NounType.HairColor] + " said that " + b.mSentence);
+                explanation.Add((explanation.Count > 0 ? "And " : "") + GameState.Get().mPeople[b.mSourceId].AttributeMap[NounType.HairColor] + " said that " + b.mSentence);
             }
 
             return;
