@@ -95,7 +95,13 @@ public static class NounExtensions
             case Noun.Daughter:
                 return "the victim's " + bold("daughter");
             case Noun.OrphanageWorker:
-                return "the " + bold("orphanage worker");           
+                return "the " + bold("orphanage worker");
+            case Noun.Artist:
+                return "an " + bold(noun.ToString().ToLower());
+            case Noun.Scientist:
+            case Noun.Writer:
+            case Noun.Philanthropist:
+                return "a " + bold(noun.ToString().ToLower());
             default:
                 // This will happen for names
                 return bold(noun.ToString());
@@ -132,8 +138,9 @@ public static class NounExtensions
                 return isString + "named " + bold(noun.ToString());
             case Noun.Killer:
                 return isString + "the " + bold("murderer");
-            case Noun.Scientist:
             case Noun.Artist:
+                return isString + "an " + bold(noun.ToString().ToLower());
+            case Noun.Scientist:
             case Noun.Writer:
             case Noun.Philanthropist:
                 return isString + "a " + bold(noun.ToString().ToLower());

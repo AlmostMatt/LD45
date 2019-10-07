@@ -601,6 +601,7 @@ public class GameState : MonoBehaviour
         // Go to next stage after dismissing the Nth clue
         if (mCluesFoundThisRound >= MAX_CLUES_PER_ROUND)
         {
+            mCluesFoundThisRound = 0;
             StartStage(mCurrentStage + 1);
         }
     }
