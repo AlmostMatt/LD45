@@ -102,8 +102,8 @@ public class MysteryGenerator
             }
 
             // mix and match name/identity to motive/backstory
-            Noun identityOrName = Random.Range(0, 1) == 0 ? identity : name;
-            Noun motiveOrBackstory = Random.Range(0, 1) == 0 ? motive : backstory;
+            Noun identityOrName = Random.Range(0, 2) == 0 ? identity : name;
+            Noun motiveOrBackstory = Random.Range(0, 2) == 0 ? motive : backstory;
 
             ClueItem backstoryClue = ClueManifest.GetClue(motive, identity);
             if(backstoryClue != null)
