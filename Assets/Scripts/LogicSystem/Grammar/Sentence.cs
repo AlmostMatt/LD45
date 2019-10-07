@@ -26,7 +26,6 @@ public class Sentence
     {
         if(subj.Type() > obj.Type())
         {
-            Debug.Log("Swapping order of nouns " + subj + " and " + obj);
             Noun tmp = subj;
             subj = obj;
             obj = tmp;
