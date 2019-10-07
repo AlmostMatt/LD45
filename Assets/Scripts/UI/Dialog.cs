@@ -16,22 +16,26 @@ public class DialogBlock
         public string message;
         public bool isInfoExchange;
         public bool isInfoExchangeRequest;
-        public bool isCustomSentence;
         
+        public AudioClipIndex audio;
+        
+        public bool isCustomSentence;
         public UISentenceCallback customSentenceCallback;
         public List<string> subjectOverrides;
         public List<string> objectOverrides;
 
-        public DialogEntry(PersonState spkr, Sprite[] sprs, string msg, bool isInfo, bool isInfoRequest, bool isCustom = false, UISentenceCallback callback = null, List<string> subjects = null, List<string> objects = null)
+        public DialogEntry(PersonState spkr, Sprite[] sprs, string msg, bool isInfo, bool isInfoRequest, AudioClipIndex audioClip, bool isCustom = false, UISentenceCallback callback = null, List<string> subjects = null, List<string> objects = null)
         {
             speaker = spkr;
             sprites = sprs;
             message = msg;
             isInfoExchange = isInfo;
             isInfoExchangeRequest = isInfoRequest;
+            
+            this.audio = audioClip;
+            
             isCustomSentence = isCustom;
             customSentenceCallback = callback;
-
             subjectOverrides = subjects;
             objectOverrides = objects;
         }
@@ -48,19 +52,19 @@ public class DialogBlock
     }
 
     // Speaker can be null or the player.
-    public void QueueDialogue(PersonState speaker, Sprite[] sprites, string msg)
+    public void QueueDialogue(PersonState speaker, Sprite[] sprites, string msg, AudioClipIndex audio = AudioClipIndex.NONE)
     {
-        InsertDialogue(mDialogEntries.Count, speaker, sprites, msg);
+        InsertDialogue(mDialogEntries.Count, speaker, sprites, msg, audio);
     }
 
-    private void InsertDialogue(int index, PersonState speaker, Sprite[] sprites, string msg)
+    private void InsertDialogue(int index, PersonState speaker, Sprite[] sprites, string msg, AudioClipIndex audio = AudioClipIndex.NONE)
     {
-        mDialogEntries.Insert(index, new DialogEntry(speaker, sprites, msg, false, false));
+        mDialogEntries.Insert(index, new DialogEntry(speaker, sprites, msg, false, false, audio));
     }
 
-    public void QueueInfoExchangeRequest(PersonState speaker, Sprite[] sprites, string msg)
+    public void QueueInfoExchangeRequest(PersonState speaker, Sprite[] sprites, string msg, AudioClipIndex audio = AudioClipIndex.NONE)
     {
-        mDialogEntries.Add(new DialogEntry(speaker, sprites, msg, false, true));
+        mDialogEntries.Add(new DialogEntry(speaker, sprites, msg, false, true, audio));
     }
 
     public void QueueInformationExchange()
@@ -84,7 +88,7 @@ public class DialogBlock
             {
                 sprites = GetNonPlayerParticipantSprites();
             }
-            mDialogEntries.Insert(index, new DialogEntry(Participants[i], sprites, "", true, false));
+            mDialogEntries.Insert(index, new DialogEntry(Participants[i], sprites, "", true, false, AudioClipIndex.NONE));
         }
     }
 
@@ -107,6 +111,7 @@ public class DialogBlock
 
         DialogEntry entry = mDialogEntries[0];
         mDialogEntries.RemoveAt(0);
+        AudioPlayer.PlaySound(entry.audio);
         if (entry.isInfoExchangeRequest)
         {
             UIController.Get().ShowMessage(

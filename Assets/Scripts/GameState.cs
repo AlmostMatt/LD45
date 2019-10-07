@@ -366,19 +366,19 @@ public class GameState : MonoBehaviour
 
             DialogBlock discussion = new DialogBlock(mPeople, OnDialogueDismissed);
             discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "Ow...");
-            discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Ugh... where am I?");
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Ugh... where am I?", AudioClipIndex.HMM);
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Who are you two?");
             discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "I don't know... I can't remember!");
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "What about you, " + Player.AttributeMap[NounType.HairColor] + "? What's your name?");
-            discussion.QueueDialogue(Player, new Sprite[] { Player.HeadSprite }, "Me? I'm...");
+            discussion.QueueDialogue(Player, new Sprite[] { Player.HeadSprite }, "Me? I'm...", AudioClipIndex.HMM);
             discussion.QueueCustomSentence(Player, new Sprite[] { Player.HeadSprite }, new string[] { "Me" }, new string[] { "???" }, delegate { Debug.Log("YEAH WE GOT THE CALLBACK"); });
             discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "See, I'm not the only one!");
-            discussion.QueueDialogue(mPeople[1], new Sprite[] { SpriteManager.GetSprite("Victim") }, "Ahhh! A body!!");
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { SpriteManager.GetSprite("Victim") }, "Ahhh! A body!!", AudioClipIndex.SURPRISE);
             discussion.QueueDialogue(mPeople[1], new Sprite[] { SpriteManager.GetSprite("CrimeScene") }, "And there's a name written by it in blood: " + Utilities.bold(mStartingClue.nounB.ToString()) + "!");
-            discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "Oh my gosh! Which one of you is " + mStartingClue.nounB + "?!");
+            discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "Oh my gosh! Which one of you is " + mStartingClue.nounB + "?!", AudioClipIndex.OH);
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Not me! I'm...");
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "I can't remember my name either!");
-            discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "Oh sure! You're probably " + mStartingClue.nounB + ", and you killed this guy!");
+            discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "Oh sure! You're probably " + mStartingClue.nounB + ", and you killed this guy!", AudioClipIndex.PFFT);
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Calm down, " + mPeople[2].AttributeMap[NounType.HairColor] + "!");
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "We don't know anything for sure.");
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Let's look around and see if we can figure out what happened here.");
@@ -645,6 +645,8 @@ public class GameState : MonoBehaviour
 
     public void PlayerFoundClue(ClueObject clue)
     {
+        // TODO: check if the object is the not-paper photo. If so, play PICKUP
+        AudioPlayer.PlaySound(AudioClipIndex.PAPER);
         ClueItem item = clue.mItem;
         PersonState player = mPeople[0];
 
