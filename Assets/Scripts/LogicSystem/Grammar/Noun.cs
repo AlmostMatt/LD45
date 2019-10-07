@@ -14,6 +14,7 @@
     Alice, // Anna, Amanda, Alex
     Brianna, // Beth, Belle, 
     Catherine, // Carol,
+    Victor, // The victim!
     // Identity
     Exwife,
     Daughter,
@@ -69,6 +70,7 @@ public static class NounExtensions
             case Noun.Alice:
             case Noun.Brianna:
             case Noun.Catherine:
+            case Noun.Victor:
             default:
                 return NounType.Name;
         }

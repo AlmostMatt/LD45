@@ -48,10 +48,14 @@ public class GameState : MonoBehaviour
     private string mPendingRoom;
 
     [HideInInspector]
-    public int PlayerId;
-    public PersonState Player {
+    public int PlayerId = 0;
+    public PersonState Player
+    {
         get { return mPeople[PlayerId]; }
     }
+    [HideInInspector]
+    public int VictimId = 3;
+    public PersonState Victim = new PersonState(3);
 
     enum LoadState { NONE, UNLOADING_SCENE, LOADING_SCENE }
     private LoadState mLoadState = LoadState.NONE;
@@ -80,6 +84,7 @@ public class GameState : MonoBehaviour
         mCurrentStage = GameStage.MENU;
         
         PlayerId = 0; // todo: randomize?
+        Victim.AttributeMap[NounType.Name] = Noun.Victor;
         List<ClueItem> cluesToScatter;
         MysteryGenerator.Generate(out mPeople, out mStartingClue, out cluesToScatter);
 
