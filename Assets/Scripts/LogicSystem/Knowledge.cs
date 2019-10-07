@@ -294,6 +294,7 @@ public class Knowledge
 
                     Sentence newSentence = null;
                     float confidence = b1.mConfidence * b2.mConfidence;
+                    if(confidence <= 0.2) { continue; }
 
                     if (s2.Adverb == Adverb.True || s2.Adverb == Adverb.False)
                     {
@@ -334,6 +335,7 @@ public class Knowledge
 
                     Sentence newSentence = null;
                     float confidence = b1.mConfidence * b2.mConfidence;
+                    if(confidence <= 0.2) { continue; }
 
                     if (s1.DirectObject == s2.Subject)
                     {
@@ -364,10 +366,11 @@ public class Knowledge
 
         // rule 2: mutual exclusion
         // if [A is X] and [X, Y] are mutually exclusive, then [A is not Y]
+        // but this only applies if A <-> X is an IS relationship (i.e. nothing else can be X)
         foreach (SentenceBelief b1 in newBeliefs)
         {
             Sentence s1 = b1.mSentence;
-            if (!(s1.Verb == Verb.Is && s1.Adverb == Adverb.True)) return;
+            if (!(s1.Verb == Verb.Is && s1.Adverb == Adverb.True)) continue;
 
             NounType t = s1.DirectObject.Type();
             Noun[] nouns = t.GetMutuallyExclusiveNouns();
@@ -412,13 +415,13 @@ public class Knowledge
             NounType objectType = s1.DirectObject.Type();
             if(subjectType == NounType.Motive)
             {
-                Sentence newSentence = new Sentence(s1.DirectObject, Verb.Is, Noun.Motivated, Adverb.True);
+                Sentence newSentence = new Sentence(s1.DirectObject, Verb.Has, Noun.Motive, Adverb.True);
                 SentenceBelief belief = new SentenceBelief(newSentence, b1, null, b1.mConfidence);
                 beliefDeductions.Add(belief);
             }
             else if(objectType == NounType.Motive)
             {
-                Sentence newSentence = new Sentence(s1.Subject, Verb.Is, Noun.Motivated, Adverb.True);
+                Sentence newSentence = new Sentence(s1.Subject, Verb.Has, Noun.Motive, Adverb.True);
                 SentenceBelief belief = new SentenceBelief(newSentence, b1, null, b1.mConfidence);
                 beliefDeductions.Add(belief);
             }

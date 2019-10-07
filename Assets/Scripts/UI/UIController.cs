@@ -233,7 +233,10 @@ public class UIController : MonoBehaviour
         {
             Debug.LogWarning("Invalid noun - " + directObject);
         }
-        Sentence sentence = new Sentence(mySubject, Verb.Is, myObject, Adverb.True);
+
+        bool useHas = mySubject.UseHas() || myObject.UseHas();
+        Verb verb = useHas ? Verb.Has : Verb.Is;
+        Sentence sentence = new Sentence(mySubject, verb, myObject, Adverb.True);
         if (parsedSubject && parsedObject && sentence.Subject == sentence.DirectObject)
         {
             // Words parsed correctly and the sentence is Invalid!

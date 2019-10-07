@@ -39,7 +39,7 @@
     Scientist,
     Artist,
     // Special flag for generalizing motive
-    Motivated
+    Motive
 
 
     // When adding new values to this enum, also update the switch statement below.
@@ -73,7 +73,7 @@ public static class NounExtensions
             case Noun.Scientist:
             case Noun.Artist:
                 return NounType.Backstory;
-            case Noun.Motivated:
+            case Noun.Motive:
                 return NounType.HasMotive;
             case Noun.SuspectedName:
                 return NounType.SuspectedName;
@@ -165,6 +165,21 @@ public static class NounExtensions
                 return "Oh...";
             default:
                 return "...";
+        }
+    }
+
+    public static bool UseHas(this Noun noun)
+    {
+        switch(noun)
+        {
+            case Noun.HasGrudge:
+            case Noun.OwesDebt:
+            case Noun.Motive:
+            case Noun.Inheritance:
+            case Noun.Abused:
+                return true;
+            default:
+                return false;
         }
     }
 
