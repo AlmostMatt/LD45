@@ -19,12 +19,17 @@ public class UIController : MonoBehaviour
     private UIButtonCallback[] mButtonCallbacks;
     private UISentenceCallback mSentenceCallback;
 
+    private static string UNSELECTED_DROPDOWN_VALUE = "?";
+
     void Start()
     {
     }
 
     void Update()
     {
+        // Enable or disable the speak button based on whether or not the current sentence is valid.
+        Button speakButton = transform.Find("dialogView/V overlay/H sentenceBuilder/Button").GetComponent<Button>();
+        speakButton.interactable = IsValidSentence();
     }
 
     public bool IsVisible()
@@ -221,7 +226,9 @@ public class UIController : MonoBehaviour
         }
         else
         {
-
+            List<string> tmp = new List<string>();
+            tmp.Add(UNSELECTED_DROPDOWN_VALUE);
+            objectDropdown.AddOptions(tmp);
             objectDropdown.AddOptions(knownWordStrings);
         }
         objectDropdown.RefreshShownValue();
@@ -244,6 +251,17 @@ public class UIController : MonoBehaviour
 
     public void OnSentenceClick(Button button)
     {
+        if (IsValidSentence())
+        {
+            Sentence sentence = GetInputSentence();
+            HideUI();
+            mSentenceCallback(sentence);
+        }
+        // Otherwise, keep the UI open
+    }
+
+    private Sentence GetInputSentence()
+    {
         Transform sentenceBuilder = transform.Find("dialogView/V overlay/H sentenceBuilder");
         string subject = sentenceBuilder.Find("Subject/Label").GetComponent<Text>().text;
         string directObject = sentenceBuilder.Find("DirectObject/Label").GetComponent<Text>().text;
@@ -261,15 +279,30 @@ public class UIController : MonoBehaviour
         bool useHas = mySubject.UseHas() || myObject.UseHas();
         Verb verb = useHas ? Verb.Has : Verb.Is;
         Sentence sentence = new Sentence(mySubject, verb, myObject, Adverb.True);
-        if (parsedSubject && parsedObject && sentence.Subject.Type() == sentence.DirectObject.Type())
+        return sentence;
+    }
+
+    private bool IsValidSentence()
+    {
+        Transform sentenceBuilder = transform.Find("dialogView/V overlay/H sentenceBuilder");
+        string subject = sentenceBuilder.Find("Subject/Label").GetComponent<Text>().text;
+        string directObject = sentenceBuilder.Find("DirectObject/Label").GetComponent<Text>().text;
+        if (directObject.Equals(UNSELECTED_DROPDOWN_VALUE))
         {
-            // Words parsed correctly and the sentence is Invalid!
-            // TODO: make the button dynamically gray out when the sentence is invalid
-            // This should be doable in Update()
-        } else
-        {
-            HideUI();
-            mSentenceCallback(sentence);
+            return false;
         }
+        bool parsedSubject = System.Enum.TryParse(subject, out Noun mySubject);
+        if (!parsedSubject)
+        {
+            Debug.LogWarning("Invalid noun - " + subject);
+        }
+        bool parsedObject = System.Enum.TryParse(directObject, out Noun myObject);
+        if (!parsedObject)
+        {
+            Debug.LogWarning("Invalid noun - " + directObject);
+        }
+        // If something failed to parse, consider the sentence valid anyways rather than breaking the game
+        // Don't allow sentences that compare objects of the same type
+        return (parsedSubject == false || parsedObject == false || mySubject.Type() != myObject.Type());
     }
 }
