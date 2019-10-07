@@ -572,7 +572,7 @@ GameObject:
   - component: {fileID: 1937231186}
   - component: {fileID: 1937231185}
   m_Layer: 5
-  m_Name: Button
+  m_Name: MusicButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -592,10 +592,10 @@ RectTransform:
   m_Father: {fileID: 1818591865}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 871, y: 293}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -90, y: -270}
+  m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1937231185
 MonoBehaviour:
@@ -740,7 +740,7 @@ PrefabInstance:
     - target: {fileID: 3022728796044332548, guid: b69c05599dacb71498b1589d78f2f5a2,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3022728796044332548, guid: b69c05599dacb71498b1589d78f2f5a2,
         type: 3}
@@ -1030,6 +1030,16 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5974442667867342406, guid: 4e4915cd95e6c3141aa462a07dd850c8,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1818591866}
+    - target: {fileID: 5974442667105145819, guid: 4e4915cd95e6c3141aa462a07dd850c8,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1818591866}
     - target: {fileID: 5974442667060591415, guid: 4e4915cd95e6c3141aa462a07dd850c8,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -1060,15 +1070,5 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5974442667867342406, guid: 4e4915cd95e6c3141aa462a07dd850c8,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1818591866}
-    - target: {fileID: 5974442667105145819, guid: 4e4915cd95e6c3141aa462a07dd850c8,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1818591866}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4e4915cd95e6c3141aa462a07dd850c8, type: 3}
