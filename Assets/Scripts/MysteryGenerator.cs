@@ -120,5 +120,8 @@ public class MysteryGenerator
                 }
             }
         }
+        // Unique clues
+        ClueItem potion = ClueManifest.GetClue(Noun.Potion, Noun.MemoryLoss);
+        cluesToScatter.Add(potion);
     }
 }

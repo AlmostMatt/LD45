@@ -7,7 +7,8 @@
     Backstory,
     Motive,
     SuspectedName,
-    HasMotive
+    HasMotive,
+    Unique, // for objects that tell the backstory, but are otherwise irrelevant
 }
 
 public static class NounTypeExtensions

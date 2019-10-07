@@ -725,11 +725,38 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3147824153748512597, guid: ccf3a6bac9daac447bdabdaa961eae76,
+        type: 3}
+      propertyPath: namedImages2.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3147824153748512597, guid: ccf3a6bac9daac447bdabdaa961eae76,
+        type: 3}
+      propertyPath: namedImages2.Array.data[7].name
+      value: Potion
+      objectReference: {fileID: 0}
+    - target: {fileID: 3147824153748512597, guid: ccf3a6bac9daac447bdabdaa961eae76,
+        type: 3}
+      propertyPath: namedImages2.Array.data[7].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: df9a740f2b4530744be76114357813c0,
+        type: 3}
     - target: {fileID: 3147824153032234258, guid: ccf3a6bac9daac447bdabdaa961eae76,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3147824153748512594, guid: ccf3a6bac9daac447bdabdaa961eae76,
+        type: 3}
+      propertyPath: clues.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3147824153748512594, guid: ccf3a6bac9daac447bdabdaa961eae76,
+        type: 3}
+      propertyPath: clues.Array.data[3]
+      value: 
+      objectReference: {fileID: 6754045357845614553, guid: df87625082155f74b8d773cb527f04dd,
+        type: 3}
     - target: {fileID: 1638237565, guid: ccf3a6bac9daac447bdabdaa961eae76, type: 3}
       propertyPath: audioClips.Array.size
       value: 12

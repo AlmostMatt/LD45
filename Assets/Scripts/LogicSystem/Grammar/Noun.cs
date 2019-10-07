@@ -39,8 +39,10 @@
     Scientist,
     Artist,
     // Special flag for generalizing motive
-    Motive
-
+    Motive,
+    // Special nouns for unique objects related to the lore
+    Potion,
+    MemoryLoss,
 
     // When adding new values to this enum, also update the switch statement below.
 }
@@ -77,12 +79,16 @@ public static class NounExtensions
                 return NounType.HasMotive;
             case Noun.SuspectedName:
                 return NounType.SuspectedName;
+            case Noun.Potion:
+            case Noun.MemoryLoss:
+                return NounType.Unique;
             case Noun.Alice:
             case Noun.Brianna:
             case Noun.Catherine:
             case Noun.Victor:
             default:
                 return NounType.Name;
+
         }
     }
 
@@ -90,6 +96,9 @@ public static class NounExtensions
     {
         switch(noun)
         {
+            case Noun.Potion:
+            case Noun.MemoryLoss:
+                return "the potion that";
             case Noun.ExWife:
                 return "the victim's " + bold("ex-wife");
             case Noun.Daughter:
@@ -114,6 +123,9 @@ public static class NounExtensions
         string hasString = (positive ? "has " : "does not have ");
         switch(noun)
         {
+            case Noun.Potion:
+            case Noun.MemoryLoss:
+                return "caused our memory loss";
             case Noun.ExWife:
                 return isString + "the victim's " + bold("ex-wife");
             case Noun.Daughter:

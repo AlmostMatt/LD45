@@ -114,14 +114,23 @@ public class Knowledge
     public void Listen(PersonState person, Sentence sentence, out string[] spokenResponse, out AudioClipIndex[] audioResponse)
     {
         // Allow the player to use these words for sentences later
-
+        // unique words are not worth talking about, and AI should also not store any beliefs.
+        if (sentence.Subject.Type() == NounType.Unique || sentence.DirectObject.Type() == NounType.Unique)
+        {
+            int randomReaction2 = Random.Range(0, 2);
+            string[] possibleSpokenReact2 = new string[] { "Interesting...", "Hmm...", "Oh." };
+            AudioClipIndex[] possibleAudio2 = new AudioClipIndex[] { AudioClipIndex.HMM, AudioClipIndex.HMM, AudioClipIndex.OH };
+            spokenResponse = new string[] { possibleSpokenReact2[randomReaction2] };
+            audioResponse = new AudioClipIndex[] { possibleAudio2[randomReaction2] };
+            return;
+        }
         // special case hax: SuspectedName is not worth talking about
         if (sentence.Subject != Noun.SuspectedName)
         {
             KnownWords.Add(sentence.Subject);
         }
 
-        if(sentence.DirectObject != Noun.SuspectedName)
+        if (sentence.DirectObject != Noun.SuspectedName)
         {
             KnownWords.Add(sentence.DirectObject);
         }
@@ -254,15 +263,19 @@ public class Knowledge
 
     public void AddKnowledge(Sentence sentence) // implied source is yourself, 100% confidence
     {
+        if (sentence.Subject.Type() == NounType.Unique || sentence.DirectObject.Type() == NounType.Unique)
+        {
+            return; // dont store any AI beliefs about things like the potion. Dont allow sentences about it.
+        }
         // Allow the player to use these words for sentences later
-        if(sentence.Subject != Noun.SuspectedName)
+        if (sentence.Subject != Noun.SuspectedName)
             KnownWords.Add(sentence.Subject);
 
         if(sentence.DirectObject != Noun.SuspectedName)
             KnownWords.Add(sentence.DirectObject);
 
-        // is it ok to have multiple beliefs about the same sentence? maybe it gets resolved later
-        SentenceBelief belief = new SentenceBelief(sentence, mPersonId, mPersonConfidence[mPersonId]);
+            // is it ok to have multiple beliefs about the same sentence? maybe it gets resolved later
+            SentenceBelief belief = new SentenceBelief(sentence, mPersonId, mPersonConfidence[mPersonId]);
         if(!mBeliefs.Contains(belief))
         {
             Debug.Log(mPersonId + " believes " + sentence);

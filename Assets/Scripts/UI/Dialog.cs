@@ -135,6 +135,10 @@ public class DialogBlock
                 if (clueInfo != null) {
                     Sentence newInfo = clueInfo.GetSentence();
                     message = "I found out " + entry.speaker.Speak(newInfo); // TODO: Announce the room where it was found
+                    if (newInfo.Subject.Type() == NounType.Unique)
+                    {
+                        message = "I found " + entry.speaker.Speak(newInfo); // TODO: Announce the room where it was found
+                    }
                     ShareInfo(entry.speaker, newInfo);
                     PlayerJournal.AddListen(entry.speaker.PersonId, newInfo);
                 }

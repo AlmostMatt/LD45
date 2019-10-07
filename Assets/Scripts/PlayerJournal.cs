@@ -19,6 +19,10 @@ public static class PlayerJournal
         {
             if (mSource == -1)
             {
+                if (mSentence.Subject.Type() == NounType.Unique)
+                {
+                    return "I found " + mSentence;
+                }
                 return "I found out " + mSentence;
             } else if (mSource == GameState.Get().VictimId) {
                 return "The name " + Utilities.bold(mSentence.Subject.ToString()) + " was written in blood next to the victim.";
@@ -26,6 +30,10 @@ public static class PlayerJournal
             else
             {
                 Noun hairColor = GameState.Get().mPeople[mSource].AttributeMap[NounType.HairColor];
+                if (mSentence.Subject.Type() == NounType.Unique)
+                {
+                    return hairColor + " found " + mSentence;
+                }
                 return hairColor + " said that " + mSentence;
             }
         }
