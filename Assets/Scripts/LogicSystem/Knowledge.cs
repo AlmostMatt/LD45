@@ -114,8 +114,17 @@ public class Knowledge
     public void Listen(PersonState person, Sentence sentence, out string[] spokenResponse, out AudioClipIndex[] audioResponse)
     {
         // Allow the player to use these words for sentences later
-        KnownWords.Add(sentence.Subject);
-        KnownWords.Add(sentence.DirectObject);
+
+        // special case hax: SuspectedName is not worth talking about
+        if (sentence.Subject != Noun.SuspectedName)
+        {
+            KnownWords.Add(sentence.Subject);
+        }
+
+        if(sentence.DirectObject != Noun.SuspectedName)
+        {
+            KnownWords.Add(sentence.DirectObject);
+        }
 
         // preemptively reject sentences that contradict something we are sure of
         Sentence opposite = new Sentence(sentence.Subject, sentence.Verb, sentence.DirectObject, sentence.Adverb == Adverb.True ? Adverb.False : Adverb.True);
@@ -246,8 +255,11 @@ public class Knowledge
     public void AddKnowledge(Sentence sentence) // implied source is yourself, 100% confidence
     {
         // Allow the player to use these words for sentences later
-        KnownWords.Add(sentence.Subject);
-        KnownWords.Add(sentence.DirectObject);
+        if(sentence.Subject != Noun.SuspectedName)
+            KnownWords.Add(sentence.Subject);
+
+        if(sentence.DirectObject != Noun.SuspectedName)
+            KnownWords.Add(sentence.DirectObject);
 
         // is it ok to have multiple beliefs about the same sentence? maybe it gets resolved later
         SentenceBelief belief = new SentenceBelief(sentence, mPersonId, mPersonConfidence[mPersonId]);
