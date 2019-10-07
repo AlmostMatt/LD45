@@ -21,7 +21,7 @@ public static class PlayerJournal
             {
                 return "I found out " + mSentence;
             } else if (mSource == GameState.Get().VictimId) {
-                return "The name " + mSentence.Subject + " was written in blood next to the victim.";
+                return "The name " + Utilities.bold(mSentence.Subject.ToString()) + " was written in blood next to the victim.";
             }
             else
             {

@@ -91,13 +91,14 @@ public static class NounExtensions
         switch(noun)
         {
             case Noun.ExWife:
-                return "the victim's ex-wife";
+                return "the victim's " + bold("ex-wife");
             case Noun.Daughter:
-                return "the victim's daughter";
+                return "the victim's " + bold("daughter");
             case Noun.OrphanageWorker:
-                return "the orphanage worker";           
+                return "the " + bold("orphanage worker");           
             default:
-                return noun.ToString();
+                // This will happen for names
+                return bold(noun.ToString());
         }
     }
 
@@ -108,31 +109,32 @@ public static class NounExtensions
         switch(noun)
         {
             case Noun.ExWife:
-                return isString + "the victim's ex-wife";
+                return isString + "the victim's " + bold("ex-wife");
             case Noun.Daughter:
-                return isString + "the victim's daughter";
+                return isString + "the victim's " + bold("daughter");
             case Noun.OrphanageWorker:
-                return isString + "the orphanage worker";
+                return isString + "the " + bold("orphanage worker");
             case Noun.OwesDebt:
-                return (positive ? "owes " : "does not owe ") + "the victim money";
+                return (positive ? bold("owes") : "does not " + bold("owe")) + " the victim money";
             case Noun.Inheritance:
-                return (positive ? "will " : "will not ") + "receive an inheritance from the victim";
+                return (positive ? "will " : "will not ") + "receive an " + bold("inheritance") + " from the victim";
             case Noun.HasGrudge:
-                return (positive ? "held " : "did not hold ") + "a grudge against the victim";
+                return (positive ? "held " : "did not hold ") + "a " + bold("grudge") + " against the victim";
             case Noun.Abused:
-                return (positive ? "was  " : "was not ") + "abused by the victim";
+                return (positive ? "was  " : "was not ") + "" + bold("abused") + " by the victim";
             case Noun.Redhead:
             case Noun.Brunette:
             case Noun.Blonde:
-                return hasString + noun.ToString().ToLower() + " hair";
+                return hasString + bold(noun.ToString().ToLower() + " hair");
             case Noun.Alice:
             case Noun.Brianna:
             case Noun.Catherine:
-                return isString + "named " + noun.ToString();
+                return isString + "named " + bold(noun.ToString());
             case Noun.Killer:
-                return isString + "the murderer";
+                return isString + "the " + bold("murderer");
             default:
-                return isString + noun.ToString();
+                // I dont think this is necessary
+                return isString + bold(noun.ToString());
         }
     }
 
@@ -141,11 +143,11 @@ public static class NounExtensions
         switch(noun)
         {
             case Noun.ExWife:
-                return "his ex-wife";
+                return "his " + bold("ex-wife");
             case Noun.Daughter:
-                return "his daughter";
+                return "his " + bold("daughter");
             case Noun.OrphanageWorker:
-                return "an orphanage worker";
+                return "an " + bold("orphanage worker");
             default:
                 return noun.ToString();
         }
@@ -164,5 +166,10 @@ public static class NounExtensions
             default:
                 return "...";
         }
+    }
+
+    private static string bold(string str)
+    {
+        return Utilities.bold(str);
     }
 }

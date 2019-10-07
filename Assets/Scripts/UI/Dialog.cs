@@ -96,11 +96,11 @@ public class DialogBlock
                 {
                     message = "I found nothing.";
                 }
-                UIController.Get().ShowMessage(entry.sprites, message, new string[] { "Continue" }, new UIButtonCallback[] { buttonIndex => Continue() });
+                UIController.Get().ShowMessage(entry.speaker, entry.sprites, message, new string[] { "Continue" }, new UIButtonCallback[] { buttonIndex => Continue() });
             }
         } else // Not sharing info, just show the message
         {
-            UIController.Get().ShowMessage(entry.sprites, entry.message, new string[] { "Continue" }, new UIButtonCallback[] { buttonIndex => Continue() });
+            UIController.Get().ShowMessage(entry.speaker, entry.sprites, entry.message, new string[] { "Continue" }, new UIButtonCallback[] { buttonIndex => Continue() });
         }
     }
 
