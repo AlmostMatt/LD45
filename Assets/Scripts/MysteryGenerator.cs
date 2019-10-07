@@ -102,18 +102,22 @@ public class MysteryGenerator
                 Debug.Log("No clue for " + hair + " <-> " + identity + "!");
             }
 
-            // mix and match name/identity to motive/backstory
-            Noun identityOrName = Random.Range(0, 2) == 0 ? identity : name;
-            Noun motiveOrBackstory = Random.Range(0, 2) == 0 ? motive : backstory;
+            // mix and match name/identity to motive/backstory.
+            // do 2 of these
+            for(int j = 0; j < 2; ++j)
+            {
+                Noun identityOrName = Random.Range(0, 2) == 0 ? identity : name;
+                Noun motiveOrBackstory = Random.Range(0, 2) == 0 ? motive : backstory;
 
-            ClueItem backstoryClue = ClueManifest.GetClue(identityOrName, motiveOrBackstory);
-            if(backstoryClue != null)
-            {
-                cluesToScatter.Add(backstoryClue);
-            }
-            else
-            {
-                Debug.Log("No clue for " + hair + " <-> " + identity + "!");
+                ClueItem backstoryClue = ClueManifest.GetClue(identityOrName, motiveOrBackstory);
+                if (backstoryClue != null)
+                {
+                    cluesToScatter.Add(backstoryClue);
+                }
+                else
+                {
+                    Debug.Log("No clue for " + identityOrName + " <-> " + motiveOrBackstory + "!");
+                }
             }
         }
     }
