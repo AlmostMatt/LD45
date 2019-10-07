@@ -124,6 +124,7 @@ public class UIController : MonoBehaviour
         {
             transform.Find("dialogView/V overlay/dialog/nameplate/text").GetComponent<Text>().text = speaker.PublicName;
         }
+        transform.Find("dialogView/V overlay/dialog/nameplate/text").gameObject.SetActive(speaker != null);
         transform.Find("dialogView/V overlay/dialog/text").GetComponent<Text>().text = dialogText;
 
         // Update buttons

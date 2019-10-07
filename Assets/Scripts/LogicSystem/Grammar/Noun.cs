@@ -125,7 +125,7 @@ public static class NounExtensions
             case Noun.Redhead:
             case Noun.Brunette:
             case Noun.Blonde:
-                return hasString + bold(noun.ToString().ToLower() + " hair");
+                return isString + " a " + bold(noun.ToString().ToLower());
             case Noun.Alice:
             case Noun.Brianna:
             case Noun.Catherine:

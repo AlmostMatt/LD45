@@ -115,7 +115,7 @@ public class DialogBlock
                 {
                     for(int responseIdx = response.Length-1; responseIdx >= 0; --responseIdx)
                     {
-                        mDialogEntries.Insert(0, new DialogEntry(speaker, new Sprite[] { Participants[j].HeadSprite }, response[responseIdx], false));
+                        mDialogEntries.Insert(0, new DialogEntry(Participants[j], new Sprite[] { Participants[j].HeadSprite }, response[responseIdx], false));
                     }
                 }
             }
