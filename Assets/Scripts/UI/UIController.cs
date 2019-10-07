@@ -44,9 +44,9 @@ public class UIController : MonoBehaviour
     }
 
     // Displays the sentence-construction UI.
-    public void AskForSentence(Sprite[] images, UISentenceCallback sentenceCallback)
+    public void AskForSentence(Sprite[] images, UISentenceCallback sentenceCallback, List<string> subjectOverrides = null, List<string> objectOverrides = null)
     {
-        ShowUISentence(images, sentenceCallback);
+        ShowUISentence(images, sentenceCallback, subjectOverrides, objectOverrides);
     }
 
     // Displays a message
@@ -158,7 +158,7 @@ public class UIController : MonoBehaviour
         }
     }
 
-    private void ShowUISentence(Sprite[] sprites, UISentenceCallback callback)
+    private void ShowUISentence(Sprite[] sprites, UISentenceCallback callback, List<string> subjectOverrides = null, List<string> objectOverrides = null)
     {
         // Show the Journal, so that the player can give a good clue
         ShowJournal();
@@ -199,14 +199,31 @@ public class UIController : MonoBehaviour
         List<Noun> knownWords = GameState.Get().Player.knowledge.KnownWords.ToList();
         knownWords.Sort();
         List<string> knownWordStrings = knownWords.ConvertAll<string>(noun => noun.ToString());
+
         Transform sentenceBuilder = transform.Find("dialogView/V overlay/H sentenceBuilder");
         Dropdown subjectDropdown = sentenceBuilder.Find("Subject").GetComponent<Dropdown>();
         subjectDropdown.ClearOptions();
-        subjectDropdown.AddOptions(knownWordStrings);
+        if (subjectOverrides != null)
+        {
+            subjectDropdown.AddOptions(subjectOverrides);
+        }
+        else
+        {
+            subjectDropdown.AddOptions(knownWordStrings);
+        }
         subjectDropdown.RefreshShownValue();
+
         Dropdown objectDropdown = sentenceBuilder.Find("DirectObject").GetComponent<Dropdown>();
         objectDropdown.ClearOptions();
-        objectDropdown.AddOptions(knownWordStrings);
+        if(objectOverrides != null)
+        {
+            objectDropdown.AddOptions(objectOverrides);
+        }
+        else
+        {
+
+            objectDropdown.AddOptions(knownWordStrings);
+        }
         objectDropdown.RefreshShownValue();
 
         mSentenceCallback = callback;

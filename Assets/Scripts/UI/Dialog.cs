@@ -16,14 +16,24 @@ public class DialogBlock
         public string message;
         public bool isInfoExchange;
         public bool isInfoExchangeRequest;
+        public bool isCustomSentence;
+        
+        public UISentenceCallback customSentenceCallback;
+        public List<string> subjectOverrides;
+        public List<string> objectOverrides;
 
-        public DialogEntry(PersonState spkr, Sprite[] sprs, string msg, bool isInfo, bool isInfoRequest)
+        public DialogEntry(PersonState spkr, Sprite[] sprs, string msg, bool isInfo, bool isInfoRequest, bool isCustom = false, UISentenceCallback callback = null, List<string> subjects = null, List<string> objects = null)
         {
             speaker = spkr;
             sprites = sprs;
             message = msg;
             isInfoExchange = isInfo;
             isInfoExchangeRequest = isInfoRequest;
+            isCustomSentence = isCustom;
+            customSentenceCallback = callback;
+
+            subjectOverrides = subjects;
+            objectOverrides = objects;
         }
     }
 
@@ -56,6 +66,11 @@ public class DialogBlock
     public void QueueInformationExchange()
     {
         InsertInformationExchange(mDialogEntries.Count);
+    }
+
+    public void QueueCustomSentence(PersonState speaker, Sprite[] sprites, string[] optionsA, string[] optionsB, UISentenceCallback callback)
+    {
+        mDialogEntries.Add(new DialogEntry(speaker, sprites, "", false, false, true, callback, new List<string>(optionsA), new List<string>(optionsB)));
     }
 
     private void InsertInformationExchange(int index)
@@ -106,7 +121,7 @@ public class DialogBlock
             if (entry.speaker.IsPlayer)
             {
                 // Show prompt, and share the result with other participants of this dialog
-                UIController.Get().AskForSentence(entry.sprites, sentence => {ShareInfo(GameState.Get().Player, sentence);  Continue(); });
+                UIController.Get().AskForSentence(entry.sprites, sentence => { ShareInfo(GameState.Get().Player, sentence); Continue(); });
             } else
             {
                 // The GameState round-clues is guaranteed to be a recent clue that is not the result of combining multiple clues
@@ -124,6 +139,9 @@ public class DialogBlock
                 }
                 UIController.Get().ShowMessage(entry.speaker, entry.sprites, message, new string[] { "Continue" }, new UIButtonCallback[] { buttonIndex => Continue() });
             }
+        } else if (entry.isCustomSentence)
+        {
+            UIController.Get().AskForSentence(new Sprite[] { }, sentence => { if (entry.customSentenceCallback != null) { entry.customSentenceCallback(sentence); } Continue(); }, entry.subjectOverrides, entry.objectOverrides);
         } else // a regular message, just show it
         {
             UIController.Get().ShowMessage(entry.speaker, entry.sprites, entry.message, new string[] { "Continue" }, new UIButtonCallback[] { buttonIndex => Continue() });
