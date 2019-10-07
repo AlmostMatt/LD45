@@ -104,7 +104,7 @@ public class Knowledge
         }
     }
 
-    public void Listen(PersonState person, Sentence sentence)
+    public string Listen(PersonState person, Sentence sentence)
     {
         // Allow the player to use these words for sentences later
         KnownWords.Add(sentence.Subject);
@@ -117,7 +117,13 @@ public class Knowledge
         {
             Debug.Log(person.PersonId + " told a lie: " + sentence);
             ConfidenceLost(person.PersonId);
-            return;
+            return "What? That's not true.";
+        }
+
+        float confidence = VerifyBelief(sentence);
+        if(confidence >= 1f)
+        {
+            return "Sure, I already knew that.";
         }
 
         // Add this to beliefs with some confidence number
@@ -126,6 +132,8 @@ public class Knowledge
         List<SentenceBelief> beliefs = new List<SentenceBelief>();
         beliefs.Add(belief);
         AddBeliefs(beliefs);
+
+        return "Interesting...";
     }
 
     public float VerifyBelief(Sentence sentence)

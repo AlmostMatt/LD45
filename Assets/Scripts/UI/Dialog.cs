@@ -109,7 +109,12 @@ public class DialogBlock
         {
             if (Participants[j].PersonId != speaker.PersonId)
             {
-                Participants[j].knowledge.Listen(speaker, newInfo);
+                string response = Participants[j].knowledge.Listen(speaker, newInfo);
+
+                if(j != 0)
+                {
+                    mDialogEntries.Insert(0, new DialogEntry(speaker, new Sprite[] { Participants[j].HeadSprite }, response, false));
+                }
             }
         }
     }
