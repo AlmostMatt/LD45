@@ -370,10 +370,10 @@ public class GameState : MonoBehaviour
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Who are you two?");
             discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "I don't know... I can't remember!");
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "What about you, " + Player.AttributeMap[NounType.HairColor] + "? What's your name?");
-            discussion.QueueDialogue(Player, new Sprite[] { Player.HeadSprite }, "Me? I'm...", AudioClipIndex.HMM);
+            discussion.QueueDialogue(Player, new Sprite[] { Player.HeadSprite }, "Me? I'm...", AudioClipIndex.SURPRISE_EH);
             discussion.QueueCustomSentence(Player, new Sprite[] { Player.HeadSprite }, new string[] { "Me" }, new string[] { "???" }, delegate { Debug.Log("YEAH WE GOT THE CALLBACK"); });
             discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "See, I'm not the only one!");
-            discussion.QueueDialogue(mPeople[1], new Sprite[] { SpriteManager.GetSprite("Victim") }, "Ahhh! A body!!", AudioClipIndex.SURPRISE);
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { SpriteManager.GetSprite("Victim") }, "Ahhh! A body!!", AudioClipIndex.SURPRISE_AH);
             discussion.QueueDialogue(mPeople[1], new Sprite[] { SpriteManager.GetSprite("CrimeScene") }, "And there's a name written by it in blood: " + Utilities.bold(mStartingClue.nounB.ToString()) + "!");
             discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "Oh my gosh! Which one of you is " + mStartingClue.nounB + "?!");
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Not me! I'm...");
