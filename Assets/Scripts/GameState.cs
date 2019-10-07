@@ -339,7 +339,7 @@ public class GameState : MonoBehaviour
         else if (mCurrentStage == GameStage.COMMUNAL_3)
         {
             DialogBlock discussion = new DialogBlock(mPeople, OnDialogueDismissed);
-            discussion.QueueDialogue(mPeople[1], NonPlayersHeads, "The police are almost here. Lets do a final round of information exchange.");
+            discussion.QueueDialogue(mPeople[1], NonPlayersHeads, "The police are almost here. Let's do a final round of information exchange.");
             discussion.QueueInformationExchange();
             discussion.QueueDialogue(mPeople[2], NonPlayersHeads, "Well, the police are here now.");
             discussion.Start();
