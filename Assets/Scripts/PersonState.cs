@@ -31,6 +31,18 @@ public class PersonState
     public PersonState(int personId)
     {
         PersonId = personId;
-        knowledge = new Knowledge(personId);
+        knowledge = new Knowledge(this);
+    }
+    
+    public string Speak(Sentence s)
+    {
+        Noun myHair = AttributeMap[NounType.HairColor];
+        if(s.Subject == myHair)        
+            return "I'm " + s.DirectObject.AsSubject() + ".";
+
+        if (s.DirectObject == myHair)
+            return "I'm " + s.Subject.AsSubject() + ".";
+
+        return s.ToString();
     }
 }

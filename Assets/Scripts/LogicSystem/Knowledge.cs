@@ -65,6 +65,7 @@ public class Knowledge
     // verify the sentence "I am the killer". If they verify it, then we choose to withhold the information.
     private float[] mPersonConfidence = { 0.5f, 0.5f, 0.5f };
     private int mPersonId;
+    private PersonState mPerson;
 
     public HashSet<Noun> KnownWords = new HashSet<Noun>();
 
@@ -72,10 +73,11 @@ public class Knowledge
 
     private List<List<SentenceBelief>> mSuspiciousBeliefs = new List<List<SentenceBelief>>();
 
-    public Knowledge(int personId)
+    public Knowledge(PersonState person)
     {
-        mPersonId = personId;
+        mPersonId = person.PersonId;
         mPersonConfidence[mPersonId] = 1f;
+        mPerson = person;
     }
     
     private void RecursiveUpdateConfidence(SentenceBelief b, float amt)
@@ -132,6 +134,16 @@ public class Knowledge
         List<SentenceBelief> beliefs = new List<SentenceBelief>();
         beliefs.Add(belief);
         AddBeliefs(beliefs);
+
+        Noun myHairColor = mPerson.AttributeMap[NounType.HairColor];
+        if(sentence.Subject == myHairColor)
+        {
+            return "So I'm " + sentence.DirectObject.AsSubject() + "...?";
+        }
+        else if(sentence.DirectObject == myHairColor)
+        {
+            return "So I'm " + sentence.Subject.AsSubject() + "...?";
+        }
 
         return "Interesting...";
     }

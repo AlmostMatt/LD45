@@ -88,7 +88,7 @@ public class DialogBlock
                 string message;
                 if (clueInfo != null) {
                     Sentence newInfo = clueInfo.GetSentence();
-                    message = "I found " + newInfo; // TODO: Announce the room where it was found
+                    message = "I found out " + entry.speaker.Speak(newInfo); // TODO: Announce the room where it was found
                     ShareInfo(entry.speaker, newInfo);
                     PlayerJournal.AddListen(entry.speaker.PersonId, newInfo);
                 }
