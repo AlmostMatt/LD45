@@ -17,6 +17,8 @@ public class GameState : MonoBehaviour
     private string[] clueRooms = { "Bedroom1", "Bedroom2", "Bedroom3" }; // todo: better way of specifying this? data-drive?
     Dictionary<string, List<ClueItem>> mCluesInRooms = new Dictionary<string, List<ClueItem>>();
 
+    private static int MAX_CLUES_PER_ROUND = 2;
+    private int mCluesFoundThisRound = 0;
     public ClueInfo[] mRoundClues = new ClueInfo[3]; // the clue that each person found that round
     public PersonState[] mPeople;
     private Sprite[] mNonPlayerHeads;
@@ -586,12 +588,20 @@ public class GameState : MonoBehaviour
         Sprite relevantImage = SpriteManager.GetSprite(item.spriteName);
         DialogBlock discussion = new DialogBlock(new PersonState[] { player }, OnClueDismissed);
         discussion.QueueDialogue(player, new Sprite[] { relevantImage }, item.description);
-        discussion.QueueDialogue(player, new Sprite[] { }, "I'd better get back to the common area now.");
+        mCluesFoundThisRound++;
+        if (mCluesFoundThisRound >= MAX_CLUES_PER_ROUND)
+        {
+            discussion.QueueDialogue(player, new Sprite[] { }, "I'd better get back to the common area now.");
+        }
         discussion.Start();
     }
 
     public void OnClueDismissed(int i)
     {
-        // StartStage(mCurrentStage + 1); // go to next stage after reading a clue
+        // Go to next stage after dismissing the Nth clue
+        if (mCluesFoundThisRound >= MAX_CLUES_PER_ROUND)
+        {
+            StartStage(mCurrentStage + 1);
+        }
     }
 }
