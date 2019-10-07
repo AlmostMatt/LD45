@@ -120,7 +120,10 @@ public class UIController : MonoBehaviour
         }
 
         // Display dialog text
-        transform.Find("dialogView/V overlay/dialog/nameplate/text").GetComponent<Text>().text = speaker.PublicName;
+        if (speaker != null)
+        {
+            transform.Find("dialogView/V overlay/dialog/nameplate/text").GetComponent<Text>().text = speaker.PublicName;
+        }
         transform.Find("dialogView/V overlay/dialog/text").GetComponent<Text>().text = dialogText;
 
         // Update buttons
