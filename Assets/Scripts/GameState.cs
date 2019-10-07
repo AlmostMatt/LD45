@@ -98,19 +98,21 @@ public class GameState : MonoBehaviour
             mPeople[i].knowledge.AddKnowledge(mStartingClue.GetSentence());
         }
 
-        // scatter clues
-        foreach (ClueItem clue in cluesToScatter)
+        // scatter clues evenly across rooms
+        int[] clueShuffle = Utilities.RandomList(cluesToScatter.Count, cluesToScatter.Count);
+        int roomIdx = 0;
+        for(int i = 0; i < cluesToScatter.Count; ++i)
         {
-            int room = (int)Random.Range(0, clueRooms.Length);
-            string roomName = clueRooms[room];
-            if(!mCluesInRooms.ContainsKey(roomName))
+            string roomName = clueRooms[roomIdx];
+            if (!mCluesInRooms.ContainsKey(roomName))
             {
                 mCluesInRooms.Add(roomName, new List<ClueItem>());
             }
 
-            mCluesInRooms[roomName].Add(clue);
+            mCluesInRooms[roomName].Add(cluesToScatter[clueShuffle[i]]);
+            roomIdx = (roomIdx + 1) % clueRooms.Length;
         }
-
+        
         mPersonRooms[0] = openingScene;
         mPersonRooms[1] = openingScene;
         mPersonRooms[2] = openingScene;
