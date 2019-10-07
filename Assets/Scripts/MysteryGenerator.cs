@@ -5,7 +5,7 @@ using UnityEngine;
 public class MysteryGenerator
 {
     static Noun[] appearances = { Noun.Blonde, Noun.Brunette, Noun.Redhead };
-    static Noun[] identities = { Noun.ExWife, Noun.Daughter, Noun.OrphanageWorker };
+    static Noun[] identities = { Noun.ExWife, Noun.Daughter, Noun.Mistress };
     static Noun[] names = { Noun.Alice, Noun.Brianna, Noun.Catherine };
     static Noun[] backstories = { Noun.Philanthropist, Noun.Writer, Noun.Scientist, Noun.Artist };
     static Noun[] motives = { Noun.OwesDebt, Noun.Inheritance, Noun.HasGrudge };
