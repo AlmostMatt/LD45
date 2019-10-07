@@ -19,7 +19,7 @@ public class AppearanceIdentityClue : ClueGenerator
             n2 = temp;
         }
 
-        string spriteName = "Photo";
+        string spriteName = Random.Range(0,2) == 0 ? "Photo" : "Photo2"; //int range is max exclusive
         string description = "A photo of the victim and " + n2.WithVictim() + ", who " + n1.AsObject() + ".";
         ClueItem item = new ClueItem(n1, n2, spriteName, description);
         return (item);
