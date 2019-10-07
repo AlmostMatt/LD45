@@ -163,7 +163,8 @@ public class GameState : MonoBehaviour
                 PlayerJournal.AddListen(VictimId, mStartingClue.GetSentence()); // wait until after the dialogue is over to add this to the player journal
             }
 
-            UIController.Get().ShowJournalButton();            
+            UIController.Get().ShowJournalButton();
+            UIController.Get().ShowMusicButton();
 
             // assign npcs to rooms (for now, ensure they go to different rooms)
             int[] roomChoices = Utilities.RandomList(clueRooms.Length, 2);

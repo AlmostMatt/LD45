@@ -71,6 +71,11 @@ public class UIController : MonoBehaviour
         transform.Find("journalButton").gameObject.SetActive(true);
     }
 
+    public void ShowMusicButton()
+    {
+        transform.Find("MusicButton").gameObject.SetActive(true);
+    }
+
     public void ShowJournal()
     {
         transform.Find("journalContent").gameObject.SetActive(false);
