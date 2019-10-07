@@ -295,11 +295,18 @@ public class GameState : MonoBehaviour
                 }
                 else if (mArrestedPerson.IsKiller && !mArrestedPerson.IsPlayer)
                 {
-                    mEpilogueLines.Add("You were the killer, and you escaped because " + mArrestedPerson.AttributeMap[NounType.HairColor].AsSubject() + " was arrested instead.");
+                    mEpilogueLines.Add(mPeople[KillerId].AttributeMap[NounType.HairColor].AsSubject() + " was the killer, and was correctly arrested.");
                 }
                 else if (!mArrestedPerson.IsKiller && !mArrestedPerson.IsPlayer)
                 {
                     mEpilogueLines.Add(mPeople[KillerId].AttributeMap[NounType.HairColor].AsSubject() + " was the killer, but " + mArrestedPerson.AttributeMap[NounType.HairColor].AsSubject() + " was arrested instead.");
+                }
+                else if (!mArrestedPerson.IsKiller && Player.IsKiller)
+                {
+                    mEpilogueLines.Add("You were the killer, and you escaped because " + mArrestedPerson.AttributeMap[NounType.HairColor].AsSubject() + " was arrested instead.");
+                } else
+                {
+                    // I dont think this is possible...
                 }
             }
             mEpilogueLines.Add("The killer " + mPeople[KillerId].AttributeMap[NounType.Identity].AsObject());
