@@ -66,6 +66,8 @@ public class GameState : MonoBehaviour
     private LoadState mLoadState = LoadState.NONE;
     private AsyncOperation mLoadSceneOperation;
 
+    int[] mAccusations = new int[3];
+
     enum GameStage
     {
         MENU,
@@ -77,7 +79,8 @@ public class GameState : MonoBehaviour
         SEARCH_3,
         COMMUNAL_3,
         POLICE,
-        REVEAL
+        REVEAL,
+        CLOSURE
     }
     private GameStage mCurrentStage;
     private ClueInfo mStartingClue;
@@ -225,6 +228,49 @@ public class GameState : MonoBehaviour
             MoveToRoom(PlayerId, "EndScene");
         } else if (stage == GameStage.REVEAL)
         {
+            DialogBlock discussion = new DialogBlock(mPeople, OnDialogueDismissed);
+
+            // check each accusation
+            int[] votes = { 0, 0, 0 };
+            int highestVoteIdx = -1;
+            int majority = -1;
+            int mostVotes = 0;
+            int totalVotes = 0;
+            for (int i = 0; i < 3; ++i)
+            {
+                if (mAccusations[i] >= 0 && mAccusations[i] < 3)
+                {
+                    votes[mAccusations[i]]++;
+                    totalVotes++;
+                    if(votes[mAccusations[i]] > mostVotes)
+                    {
+                        mostVotes = votes[mAccusations[i]];
+                        highestVoteIdx = mAccusations[i];
+                    }
+
+                    if (votes[mAccusations[i]] >= 2)
+                    {
+                        majority = mAccusations[i];
+                    }
+                }
+            }
+
+            if(majority >= 0)
+            {
+                discussion.QueueDialogue(Police, new Sprite[] { }, "So it was the " + mPeople[majority].AttributeMap[NounType.HairColor] + "?");
+                discussion.QueueDialogue(Police, new Sprite[] { mPeople[majority].HeadSprite }, "You're under arrest, ma'am.");
+                discussion.QueueDialogue(Police, new Sprite[] { mPeople[(majority+1)%3].HeadSprite, mPeople[(majority+2)%3].HeadSprite }, "You two, come along and we'll get official statements.");
+            }
+            else
+            {
+                // no one got a majority
+                Sprite[] allThree = new Sprite[] { mPeople[0].HeadSprite, mPeople[1].HeadSprite, mPeople[2].HeadSprite };
+                discussion.QueueDialogue(Police, allThree, "You can't agree on what happened?");
+                discussion.QueueDialogue(Police, allThree, "I'm going to have to take you all in to the station.");
+            }
+
+            discussion.Start();
+
             // Give me closure please!
             Debug.Log("The actual killer was " + mPeople[KillerId].AttributeMap[NounType.HairColor]);
             for (int j = 0; j < 3; j++)
@@ -232,6 +278,10 @@ public class GameState : MonoBehaviour
                 Debug.Log(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Name]);
                 Debug.Log(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Identity]);
             }
+        }
+        else if(stage == GameStage.CLOSURE)
+        {
+            blackFade.SetTrigger("FadeOut");
         }
     }
 
@@ -262,6 +312,8 @@ public class GameState : MonoBehaviour
 
     private void LoadPendingRoom()
     {
+        if (mPendingRoom == null || mPendingRoom.Equals("")) return;
+
         mLoadState = LoadState.LOADING_SCENE;
 
         mCurrentRoom = mPendingRoom; // do this now, because the objects in the room Start during the load (i.e. before we get to OnRoomLoaded)
@@ -316,8 +368,11 @@ public class GameState : MonoBehaviour
             discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "Ow...");
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Ugh... where am I?", AudioClipIndex.HMM);
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Who are you two?");
+            discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "I don't know... I can't remember!");
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "What about you, " + Player.AttributeMap[NounType.HairColor] + "? What's your name?");
             discussion.QueueDialogue(Player, new Sprite[] { Player.HeadSprite }, "Me? I'm...", AudioClipIndex.HMM);
-            discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "I don't know... I can't remember.");
+            discussion.QueueCustomSentence(Player, new Sprite[] { Player.HeadSprite }, new string[] { "Me" }, new string[] { "???" }, delegate { Debug.Log("YEAH WE GOT THE CALLBACK"); });
+            discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "See, I'm not the only one!");
             discussion.QueueDialogue(mPeople[1], new Sprite[] { SpriteManager.GetSprite("Victim") }, "Ahhh! A body!!", AudioClipIndex.SURPRISE);
             discussion.QueueDialogue(mPeople[1], new Sprite[] { SpriteManager.GetSprite("CrimeScene") }, "And there's a name written by it in blood: " + Utilities.bold(mStartingClue.nounB.ToString()) + "!");
             discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "Oh my gosh! Which one of you is " + mStartingClue.nounB + "?!", AudioClipIndex.OH);
@@ -351,7 +406,19 @@ public class GameState : MonoBehaviour
         {
             DialogBlock discussion = new DialogBlock(mPeople, OnDialogueDismissed);
             discussion.QueueDialogue(Police, new Sprite[] { mPeople[0].HeadSprite, mPeople[1].HeadSprite, mPeople[2].HeadSprite }, "What happened here? How did that man die?");
+
             // TODO: ask the player for their opinion, either first or last
+            discussion.QueueCustomSentence(mPeople[0], new Sprite[] { }, new string[] { "Killer" }, new string[] { "Blonde", "Brunette", "Redhead" }, sentence => {
+                for(int personIdx = 0; personIdx < 3; ++personIdx)
+                {
+                    if(mPeople[personIdx].AttributeMap[NounType.HairColor] == sentence.Subject) // subject + direct object are sorted, so hair colour comes first
+                    {
+                        mAccusations[0] = personIdx;
+                        Debug.Log("Player accused " + mAccusations[0]);
+                        break;
+                    }
+                }
+            });
 
             // get npc evaluations
 
@@ -408,6 +475,7 @@ public class GameState : MonoBehaviour
                 {
                     // TODO: check innocence
                     discussion.QueueDialogue(mPeople[i], sprite, "I have no idea.");
+                    mAccusations[i] = -1;
                 }
                 else
                 {
@@ -418,6 +486,7 @@ public class GameState : MonoBehaviour
                         {
                             discussion.QueueDialogue(p, sprite, "Well I think I did it, but I'm not going to say that out loud.");
                             discussion.QueueDialogue(p, sprite, "...Oh wait.");
+                            mAccusations[i] = bestSuspect;
                             continue;
                         }
                         else
@@ -441,6 +510,7 @@ public class GameState : MonoBehaviour
                                 int randomAccusation = Random.Range(0, 3);
                                 if (randomAccusation == i) randomAccusation = (randomAccusation + 1) % 3;
                                 discussion.QueueDialogue(p, sprite, hairColors[randomAccusation] + " did it!");
+                                mAccusations[i] = randomAccusation;
                                 continue;
                             }
                         }
@@ -481,6 +551,8 @@ public class GameState : MonoBehaviour
                     
                 }
             }
+
+            // discussion.QueueCustomSentence();
             /*
             Sentence killer0 = new Sentence(Noun.Blonde, Verb.Is, Noun.Killer, Adverb.True);
             Sentence killer1 = new Sentence(Noun.Brunette, Verb.Is, Noun.Killer, Adverb.True);
