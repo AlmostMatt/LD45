@@ -19,7 +19,7 @@ public static class PlayerJournal
         {
             if(mSource == -1)
             {
-                return "You discovered that " + mSentence;
+                return "I found out " + mSentence;
             }
             else
             {
