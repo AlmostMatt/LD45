@@ -35,7 +35,12 @@ public class PersonState
     public string PublicName
     {
         get {
-            return IsPlayer ? "Me" : AttributeMap[NounType.HairColor].ToString();
+            if (IsPlayer)
+                return "Me";
+            if (PersonId == 4)
+                return "Police Officer";
+
+            return AttributeMap[NounType.HairColor].ToString();
         }
     }
 
