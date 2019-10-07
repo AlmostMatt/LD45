@@ -521,6 +521,7 @@ public class GameState : MonoBehaviour
                     }
 
                     // explain the accusation
+                    mAccusations[i] = bestSuspect;
                     string confidenceQualifier = "";
                     if (bestScore >= 1)
                     {
