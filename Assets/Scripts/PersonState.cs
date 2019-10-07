@@ -17,7 +17,7 @@ public class PersonState
     {
         get { return PersonId == GameState.Get().PlayerId; }
     }
-
+    
     public Sprite HeadSprite
     {
         // Expects a sprite to exist with a name like HeadRed
