@@ -350,6 +350,11 @@ PrefabInstance:
       propertyPath: scene
       value: Study
       objectReference: {fileID: 0}
+    - target: {fileID: 5917617831386696132, guid: 36dbf5e6c9fc87e4db5f4c750c833da6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 36dbf5e6c9fc87e4db5f4c750c833da6, type: 3}
 --- !u!4 &821769018 stripped
@@ -633,6 +638,11 @@ PrefabInstance:
         type: 3}
       propertyPath: scene
       value: SecondFloor
+      objectReference: {fileID: 0}
+    - target: {fileID: 5917617831386696132, guid: 36dbf5e6c9fc87e4db5f4c750c833da6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 36dbf5e6c9fc87e4db5f4c750c833da6, type: 3}
