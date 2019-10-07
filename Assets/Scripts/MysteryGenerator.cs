@@ -10,6 +10,14 @@ public class MysteryGenerator
     static Noun[] backstories = { Noun.Philanthropist, Noun.Writer, Noun.Scientist, Noun.Artist };
     static Noun[] motives = { Noun.OwesDebt, Noun.Inheritance, Noun.HasGrudge };
 
+    // These attributes should be dependent, and not random
+    private static readonly Dictionary<Noun, Noun[]> mDependentNouns = new Dictionary<Noun, Noun[]>
+    {
+        { Noun.ExWife, new Noun[] {Noun.Scientist, Noun.Inheritance } },
+        { Noun.Daughter, new Noun[] {Noun.Writer, Noun.OwesDebt } },
+        { Noun.Mistress, new Noun[] {Noun.Artist, Noun.HasGrudge } }
+    };
+
     public static void Generate(out PersonState[] people, out ClueInfo startingClue, out List<ClueItem> cluesToScatter)
     {
         cluesToScatter = new List<ClueItem>();
@@ -30,13 +38,14 @@ public class MysteryGenerator
         // TODO - have predermined pairings between backstory / motive / identity
 
         // Generate people by shuffling a list of indexes for each attribute type.
-        Noun[][] attributeLists = { appearances, identities, names, backstories, motives };
+        Noun[][] attributeLists = { appearances, identities, names};
         int[][] shuffledLists = {
             Utilities.RandomList(3, 3),
             Utilities.RandomList(3, 3),
             Utilities.RandomList(3, 3),
-            Utilities.RandomList(backstories.Length, 3),
-            Utilities.RandomList(3, 3),
+            // Don't randomize backstories and motives
+            // Utilities.RandomList(backstories.Length, 3),
+            // Utilities.RandomList(3, 3),
         };
         people = new PersonState[3];
         for (int i = 0; i < names.Length; ++i)
@@ -47,6 +56,11 @@ public class MysteryGenerator
             {
                 Noun playerAttr = attributeLists[attrIndex][shuffledLists[attrIndex][i]];
                 attributes.Add(playerAttr.Type(), playerAttr);
+            }
+            Noun[] depNouns = mDependentNouns[attributes[NounType.Identity]];
+            for (int nounI = 0; nounI < depNouns.Length; nounI++ )
+            {
+                attributes.Add(depNouns[nounI].Type(), depNouns[nounI]);
             }
         }
         // Each player knows the existence of the hair-colors of the other players
