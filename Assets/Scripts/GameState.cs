@@ -159,7 +159,7 @@ public class GameState : MonoBehaviour
         
         if (stage == GameStage.SEARCH_1)
         {
-            stage = GameStage.CLOSURE;
+            // stage = GameStage.CLOSURE; // NEVER COMMIT THIS LINE
         }
         if(stage == GameStage.SEARCH_1 || stage == GameStage.SEARCH_2 || stage == GameStage.SEARCH_3)
         {
