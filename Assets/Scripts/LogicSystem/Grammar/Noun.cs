@@ -136,4 +136,19 @@ public static class NounExtensions
                 return noun.ToString();
         }
     }
+
+    public static string PersonalReaction(this Noun noun)
+    {
+        switch(noun)
+        {
+            case Noun.Exwife:
+                return "...is that supposed to make me feel better about all this?";
+            case Noun.Daughter:
+                return "Dad...";
+            case Noun.Bastard:
+                return "Oh no...";
+            default:
+                return "...";
+        }
+    }
 }

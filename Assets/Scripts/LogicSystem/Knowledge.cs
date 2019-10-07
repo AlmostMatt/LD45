@@ -106,7 +106,7 @@ public class Knowledge
         }
     }
 
-    public string Listen(PersonState person, Sentence sentence)
+    public string[] Listen(PersonState person, Sentence sentence)
     {
         // Allow the player to use these words for sentences later
         KnownWords.Add(sentence.Subject);
@@ -119,13 +119,23 @@ public class Knowledge
         {
             Debug.Log(person.PersonId + " told a lie: " + sentence);
             ConfidenceLost(person.PersonId);
-            return "What? I know that's not true.";
+            return new string[] { "What? I know that's not true." };
         }
 
         float confidence = VerifyBelief(sentence);
-        if(confidence >= 1f)
+        if(confidence > 0)
         {
-            return "Sure, I already knew that.";
+            if (confidence >= 1)
+            {
+                return new string[] { "Sure, I already knew that." };
+            }
+
+            if(confidence >= 0.5)
+            {
+                return new string[] { "I suspected as much." }; // should this actually early return?
+            }
+
+            // increase confidence? maybe this is a way to "hack the system" to gain AI trust: tell them things they already believe
         }
 
         // Add this to beliefs with some confidence number
@@ -138,14 +148,21 @@ public class Knowledge
         Noun myHairColor = mPerson.AttributeMap[NounType.HairColor];
         if(sentence.Subject == myHairColor)
         {
-            return "So I'm " + sentence.DirectObject.AsSubject() + "...?";
+
+            return new string[] {
+                "So I'm " + sentence.DirectObject.AsSubject() + "?",
+                sentence.DirectObject.PersonalReaction()
+            };
         }
         else if(sentence.DirectObject == myHairColor)
         {
-            return "So I'm " + sentence.Subject.AsSubject() + "...?";
+            return new string[] {
+                "So I'm " + sentence.Subject.AsSubject() + "...?",
+                sentence.Subject.PersonalReaction()
+            };
         }
 
-        return "Interesting...";
+        return new string[] { "Interesting..." };
     }
 
     public float VerifyBelief(Sentence sentence)
