@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /**
  * Contains functions for checking or modifying the state of the game
@@ -250,18 +251,26 @@ public class GameState : MonoBehaviour
             }
 
             discussion.Start();
-
-            // Give me closure please!
-            Debug.Log("The actual killer was " + mPeople[KillerId].AttributeMap[NounType.HairColor]);
-            for (int j = 0; j < 3; j++)
-            {
-                Debug.Log(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Name]);
-                Debug.Log(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Identity]);
-            }
         }
         else if(stage == GameStage.CLOSURE)
         {
             blackFade.SetTrigger("FadeOut");
+            // Give me closure please!
+            List<string> epilogue = new List<string>();
+            // TODO - tell more of the story.
+            // TODO - typing sound
+            epilogue.Add("The police arrested the Redhead"); // TODO - store the arrested person.
+            epilogue.Add("The actual killer was " + mPeople[KillerId].AttributeMap[NounType.HairColor]);
+            for (int j = 0; j < 3; j++)
+            {
+                epilogue.Add(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Name]);
+                epilogue.Add(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Identity]);
+                // Debug.Log(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Name]);
+                // Debug.Log(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Identity]);
+            }
+            Text epilogueText = blackFade.transform.GetComponentInChildren<Text>();
+            epilogueText.gameObject.SetActive(true);
+            epilogueText.text = string.Join("\n", epilogue);
         }
     }
 

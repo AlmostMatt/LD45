@@ -540,25 +540,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4aeba99c49f19c459e7ff7d56ac8882, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1909750776 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1909750776, guid: ccf3a6bac9daac447bdabdaa961eae76,
+--- !u!114 &1909750778 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1909750778, guid: ccf3a6bac9daac447bdabdaa961eae76,
     type: 3}
   m_PrefabInstance: {fileID: 3147824153123003678}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1909750778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1909750776}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b4a61f4e751b02478246db036e807e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MusicEnabled: 1
 --- !u!1 &1937231183
 GameObject:
   m_ObjectHideFlags: 0
@@ -874,11 +867,6 @@ PrefabInstance:
     - target: {fileID: 3147824153748512598, guid: ccf3a6bac9daac447bdabdaa961eae76,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3147824153032234258, guid: ccf3a6bac9daac447bdabdaa961eae76,
-        type: 3}
-      propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
