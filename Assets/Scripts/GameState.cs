@@ -48,6 +48,8 @@ public class GameState : MonoBehaviour
     private string mPendingRoom;
 
     [HideInInspector]
+    public int KillerId; // Populated by MysteryGenerator
+    [HideInInspector]
     public int PlayerId = 0;
     public PersonState Player
     {
@@ -216,6 +218,15 @@ public class GameState : MonoBehaviour
         else if(stage == GameStage.POLICE)
         {
             MoveToRoom(PlayerId, "EndScene");
+        } else if (stage == GameStage.REVEAL)
+        {
+            // Give me closure please!
+            Debug.Log("The actual killer was " + mPeople[KillerId].AttributeMap[NounType.HairColor]);
+            for (int j = 0; j < 3; j++)
+            {
+                Debug.Log(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Name]);
+                Debug.Log(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Identity]);
+            }
         }
     }
 
@@ -463,7 +474,6 @@ public class GameState : MonoBehaviour
                     
                 }
             }
-
             /*
             Sentence killer0 = new Sentence(Noun.Blonde, Verb.Is, Noun.Killer, Adverb.True);
             Sentence killer1 = new Sentence(Noun.Brunette, Verb.Is, Noun.Killer, Adverb.True);

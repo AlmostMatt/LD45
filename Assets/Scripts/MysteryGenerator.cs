@@ -62,12 +62,12 @@ public class MysteryGenerator
         }
 
         // Pick a killer
-        int killer = Random.Range(0,3);
-        people[killer].IsKiller = true;
+        GameState.Get().KillerId = Random.Range(0,3);
+        people[GameState.Get().KillerId].IsKiller = true;
 
         // Generate an additional clue for the killer
         // starting: victim wrote a name in blood
-        Noun killerName = people[killer].AttributeMap[NounType.Name];
+        Noun killerName = people[GameState.Get().KillerId].AttributeMap[NounType.Name];
         ClueInfo deathClue = new ClueInfo(Noun.SuspectedName, killerName);
         startingClue = deathClue;
 
