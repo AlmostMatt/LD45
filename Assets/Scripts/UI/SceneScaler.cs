@@ -42,5 +42,7 @@ public class SceneScaler : MonoBehaviour
             Debug.Log("Resizing scene.");
             transform.localScale = Vector3.one;
         }
+        prevW = w;
+        prevH = h;
     }
 }

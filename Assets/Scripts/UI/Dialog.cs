@@ -15,13 +15,15 @@ public class DialogBlock
         public Sprite[] sprites;
         public string message;
         public bool isInfoExchange;
+        public bool isInfoExchangeRequest;
 
-        public DialogEntry(PersonState spkr, Sprite[] sprs, string msg, bool isInfo)
+        public DialogEntry(PersonState spkr, Sprite[] sprs, string msg, bool isInfo, bool isInfoRequest)
         {
             speaker = spkr;
             sprites = sprs;
             message = msg;
             isInfoExchange = isInfo;
+            isInfoExchangeRequest = isInfoRequest;
         }
     }
 
@@ -38,21 +40,36 @@ public class DialogBlock
     // Speaker can be null or the player.
     public void QueueDialogue(PersonState speaker, Sprite[] sprites, string msg)
     {
-        mDialogEntries.Add(new DialogEntry(speaker, sprites, msg, false));
+        InsertDialogue(mDialogEntries.Count, speaker, sprites, msg);
+    }
+
+    private void InsertDialogue(int index, PersonState speaker, Sprite[] sprites, string msg)
+    {
+        mDialogEntries.Insert(index, new DialogEntry(speaker, sprites, msg, false, false));
+    }
+
+    public void QueueInfoExchangeRequest(PersonState speaker, Sprite[] sprites, string msg)
+    {
+        mDialogEntries.Add(new DialogEntry(speaker, sprites, msg, false, true));
     }
 
     public void QueueInformationExchange()
     {
+        InsertInformationExchange(mDialogEntries.Count);
+    }
+
+    private void InsertInformationExchange(int index)
+    {
         // TODO: have an order to revealing info? maybe an AI decides not to reveal info
         // if someone else reveals information that would incriminate them
-        for (int i=0; i < Participants.Length; i++)
+        for (int i = 0; i < Participants.Length; i++)
         {
             Sprite[] sprites = new Sprite[] { Participants[i].HeadSprite };
             if (Participants[i].IsPlayer)
             {
                 sprites = GetNonPlayerParticipantSprites();
             }
-            mDialogEntries.Add(new DialogEntry(Participants[i], sprites, "", true));
+            mDialogEntries.Insert(index, new DialogEntry(Participants[i], sprites, "", true, false));
         }
     }
 
@@ -75,7 +92,16 @@ public class DialogBlock
 
         DialogEntry entry = mDialogEntries[0];
         mDialogEntries.RemoveAt(0);
-        if (entry.isInfoExchange)
+        if (entry.isInfoExchangeRequest)
+        {
+            UIController.Get().ShowMessage(
+                entry.speaker, entry.sprites, entry.message,
+                new string[] { "Yes", "No" },
+                new UIButtonCallback[] {
+                    buttonIndex => { InsertInformationExchange(0);  Continue(); },
+                    buttonIndex => { InsertDialogue(0,entry.speaker,entry.sprites,"Alright. Let's talk more later."); Continue(); },
+                });
+        } else if (entry.isInfoExchange)
         {
             if (entry.speaker.IsPlayer)
             {
@@ -98,7 +124,7 @@ public class DialogBlock
                 }
                 UIController.Get().ShowMessage(entry.speaker, entry.sprites, message, new string[] { "Continue" }, new UIButtonCallback[] { buttonIndex => Continue() });
             }
-        } else // Not sharing info, just show the message
+        } else // a regular message, just show it
         {
             UIController.Get().ShowMessage(entry.speaker, entry.sprites, entry.message, new string[] { "Continue" }, new UIButtonCallback[] { buttonIndex => Continue() });
         }
@@ -115,7 +141,7 @@ public class DialogBlock
                 {
                     for(int responseIdx = response.Length-1; responseIdx >= 0; --responseIdx)
                     {
-                        mDialogEntries.Insert(0, new DialogEntry(Participants[j], new Sprite[] { Participants[j].HeadSprite }, response[responseIdx], false));
+                        InsertDialogue(0, Participants[j], new Sprite[] { Participants[j].HeadSprite }, response[responseIdx]);
                     }
                 }
             }
