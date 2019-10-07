@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class MysteryGenerator
 {
-    static Noun[] appearances = { Noun.Blonde, Noun.Brown, Noun.Red };
-    static Noun[] identities = { Noun.Exwife, Noun.Daughter, Noun.Bastard };
+    static Noun[] appearances = { Noun.Blonde, Noun.Brunette, Noun.Redhead };
+    static Noun[] identities = { Noun.ExWife, Noun.Daughter, Noun.OrphanageWorker };
     static Noun[] names = { Noun.Alice, Noun.Brianna, Noun.Catherine };
     static Noun[] backstories = { Noun.Philanthropist, Noun.Writer, Noun.Scientist, Noun.Artist };
-    static Noun[] motives = { Noun.Debt, Noun.Inheritance, Noun.Grudge };
+    static Noun[] motives = { Noun.OwesDebt, Noun.Inheritance, Noun.HasGrudge };
 
     public static void Generate(out PersonState[] people, out ClueInfo startingClue, out List<ClueItem> cluesToScatter)
     {
@@ -26,6 +26,8 @@ public class MysteryGenerator
         // who is each person?
         // why are we here?
         // what's the story? what events led to where we are now?
+
+        // TODO - have predermined pairings between backstory / motive / identity
 
         // Generate people by shuffling a list of indexes for each attribute type.
         Noun[][] attributeLists = { appearances, identities, names, backstories, motives };

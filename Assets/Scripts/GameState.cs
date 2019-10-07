@@ -308,7 +308,7 @@ public class GameState : MonoBehaviour
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Not me! I'm...");
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "I can't remember my name either!");
             discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "Oh sure! You're probably " + mStartingClue.nounB + ", and you killed this guy!");
-            discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Calm down, " + mPeople[2].AttributeMap[NounType.HairColor] + "-hair!");
+            discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Calm down, " + mPeople[2].AttributeMap[NounType.HairColor] + "!");
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "We don't know anything for sure.");
             discussion.QueueDialogue(mPeople[1], new Sprite[] { mPeople[1].HeadSprite }, "Let's look around and see if we can figure out what happened here.");
             discussion.QueueDialogue(mPeople[2], new Sprite[] { mPeople[2].HeadSprite }, "Ok, ok... sorry. We can search the place, but let's not stay separated for long.");
@@ -339,8 +339,8 @@ public class GameState : MonoBehaviour
 
             // get npc evaluations
             Sentence killer0 = new Sentence(Noun.Blonde, Verb.Is, Noun.Killer, Adverb.True);
-            Sentence killer1 = new Sentence(Noun.Brown, Verb.Is, Noun.Killer, Adverb.True);
-            Sentence killer2 = new Sentence(Noun.Red, Verb.Is, Noun.Killer, Adverb.True);
+            Sentence killer1 = new Sentence(Noun.Brunette, Verb.Is, Noun.Killer, Adverb.True);
+            Sentence killer2 = new Sentence(Noun.Redhead, Verb.Is, Noun.Killer, Adverb.True);
             for (int i = 0; i < 3; ++i)
             {
                 if(i != PlayerId)
@@ -355,15 +355,15 @@ public class GameState : MonoBehaviour
 
                     if (confidence0 > 0 && myHair != Noun.Blonde)
                         discussion.QueueDialogue(mPeople[i], sprite, "I think BLONDE did it (confidence " + confidence0 + ")");
-                    else if (confidence1 > 0 && myHair != Noun.Brown)
+                    else if (confidence1 > 0 && myHair != Noun.Brunette)
                         discussion.QueueDialogue(mPeople[i], sprite, "I think BROWN did it (confidence " + confidence1 + ")");
-                    else if (confidence2 > 0 && myHair != Noun.Red)
+                    else if (confidence2 > 0 && myHair != Noun.Redhead)
                         discussion.QueueDialogue(mPeople[i], sprite, "I think RED did it (confidence " + confidence2 + ")");
                     else
                     {
                         float innocenceBlonde = personKnowledge.VerifyBelief(new Sentence(Noun.Blonde, Verb.Is, Noun.Killer, Adverb.False));
-                        float innocenceBrown = personKnowledge.VerifyBelief(new Sentence(Noun.Brown, Verb.Is, Noun.Killer, Adverb.False));
-                        float innocenceRed = personKnowledge.VerifyBelief(new Sentence(Noun.Red, Verb.Is, Noun.Killer, Adverb.False));
+                        float innocenceBrown = personKnowledge.VerifyBelief(new Sentence(Noun.Brunette, Verb.Is, Noun.Killer, Adverb.False));
+                        float innocenceRed = personKnowledge.VerifyBelief(new Sentence(Noun.Redhead, Verb.Is, Noun.Killer, Adverb.False));
 
                         if (myHair == Noun.Blonde)
                         {
@@ -378,7 +378,7 @@ public class GameState : MonoBehaviour
                                 discussion.QueueDialogue(mPeople[i], sprite, "I have no idea.");
                             }
                         }
-                        else if (myHair == Noun.Brown)
+                        else if (myHair == Noun.Brunette)
                         {
                             if (innocenceBlonde > 0f || innocenceRed > 0f)
                             {
@@ -392,7 +392,7 @@ public class GameState : MonoBehaviour
                             }
 
                         }
-                        else if (myHair == Noun.Red)
+                        else if (myHair == Noun.Redhead)
                         {
                             if (innocenceBrown > 0f || innocenceBlonde > 0f)
                             {

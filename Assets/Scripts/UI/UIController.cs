@@ -82,7 +82,7 @@ public class UIController : MonoBehaviour
         {
             List<PlayerJournal.SentenceHistory> strings = PlayerJournal.GetJournal();
             if(strings.Count > 0)
-                journal.GetComponentInChildren<Text>().text = "I remember nothing...\n" + string.Join("\n", strings);
+                journal.GetComponentInChildren<Text>().text = "• I remember nothing...\n• " + string.Join("\n• ", strings);
         }
     }
 

@@ -220,6 +220,7 @@ MonoBehaviour:
     type: 3}
   blackFade: {fileID: 3147824153748512596}
   PlayerId: 0
+  VictimId: 3
 --- !u!95 &3147824153748512596
 Animator:
   serializedVersion: 3
@@ -252,15 +253,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   namedImages1:
-  - name: HeadBrown
+  - name: HeadBrunette
     sprite: {fileID: 21300000, guid: 01a76a60650be1c4eac4439a79e8a035, type: 3}
-  - name: HeadRed
+  - name: HeadRedhead
     sprite: {fileID: 21300000, guid: 3501f911a904a354084f0fba7710f7e7, type: 3}
   - name: HeadBlonde
     sprite: {fileID: 21300000, guid: afd28bd167ef6134ba563dccb46a1d75, type: 3}
-  - name: PersonBrown
+  - name: PersonBrunette
     sprite: {fileID: 21300000, guid: de609b93d9d93734c8db253a69c0b30f, type: 3}
-  - name: PersonRed
+  - name: PersonRedhead
     sprite: {fileID: 21300000, guid: d0486b71872866245a5666866a8065de, type: 3}
   - name: PersonBlonde
     sprite: {fileID: 21300000, guid: c7513fe53797a5e4fbcf7425331b6e1a, type: 3}
