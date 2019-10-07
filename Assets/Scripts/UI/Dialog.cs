@@ -74,7 +74,7 @@ public class DialogBlock
 
     public void QueueCustomSentence(PersonState speaker, Sprite[] sprites, string[] optionsA, string[] optionsB, UISentenceCallback callback)
     {
-        mDialogEntries.Add(new DialogEntry(speaker, sprites, "", false, false, true, callback, new List<string>(optionsA), new List<string>(optionsB)));
+        mDialogEntries.Add(new DialogEntry(speaker, sprites, "", false, false, AudioClipIndex.NONE, true, callback, new List<string>(optionsA), new List<string>(optionsB)));
     }
 
     private void InsertInformationExchange(int index)
