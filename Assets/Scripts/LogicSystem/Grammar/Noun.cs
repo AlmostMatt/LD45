@@ -132,6 +132,11 @@ public static class NounExtensions
                 return isString + "named " + bold(noun.ToString());
             case Noun.Killer:
                 return isString + "the " + bold("murderer");
+            case Noun.Scientist:
+            case Noun.Artist:
+            case Noun.Writer:
+            case Noun.Philanthropist:
+                return isString + "a " + bold(noun.ToString().ToLower());
             default:
                 // I dont think this is necessary
                 return isString + bold(noun.ToString());
