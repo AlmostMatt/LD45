@@ -59,7 +59,7 @@ public class UIController : MonoBehaviour
     public void HideUI()
     {
         transform.Find("dialogView").gameObject.SetActive(false);
-        transform.Find("journalText").gameObject.SetActive(false);
+        transform.Find("journalContent").gameObject.SetActive(false);
     }
 
     public void ShowJournalButton()
@@ -69,13 +69,13 @@ public class UIController : MonoBehaviour
 
     public void ToggleJournal()
     {
-        GameObject journal = transform.root.gameObject.transform.Find("journalText").gameObject;
+        GameObject journal = transform.root.gameObject.transform.Find("journalContent").gameObject;
         journal.SetActive(!journal.activeSelf);
 
         if(journal.activeSelf)
         {
             List<PlayerJournal.SentenceHistory> strings = PlayerJournal.GetJournal();
-            journal.GetComponent<Text>().text = string.Join("\n", strings);
+            journal.GetComponentInChildren<Text>().text = string.Join("\n", strings);
         }
     }
 
