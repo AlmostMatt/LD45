@@ -454,7 +454,9 @@ public class GameState : MonoBehaviour
                     List<string> motiveExplanation = p.knowledge.ExplainBelief(motive[bestSuspect]);
                     if (motiveExplanation.Count > 0)
                     {
-                        discussion.QueueDialogue(p, sprite, "Also...");
+                        if(namedExplanation.Count > 0)
+                            discussion.QueueDialogue(p, sprite, "Also...");
+
                         foreach (string s in motiveExplanation)
                         {
                             discussion.QueueDialogue(p, sprite, s);

@@ -370,7 +370,7 @@ public class Knowledge
         foreach (SentenceBelief b1 in newBeliefs)
         {
             Sentence s1 = b1.mSentence;
-            if (!(s1.Verb == Verb.Is && s1.Adverb == Adverb.True)) return;
+            if (!(s1.Verb == Verb.Is && s1.Adverb == Adverb.True)) continue;
 
             NounType t = s1.DirectObject.Type();
             Noun[] nouns = t.GetMutuallyExclusiveNouns();

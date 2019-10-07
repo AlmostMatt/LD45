@@ -168,6 +168,21 @@ public static class NounExtensions
         }
     }
 
+    public static bool UseHas(this Noun noun)
+    {
+        switch(noun)
+        {
+            case Noun.HasGrudge:
+            case Noun.OwesDebt:
+            case Noun.Motive:
+            case Noun.Inheritance:
+            case Noun.Abused:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     private static string bold(string str)
     {
         return Utilities.bold(str);
