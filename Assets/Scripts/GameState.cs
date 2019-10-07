@@ -164,8 +164,8 @@ public class GameState : MonoBehaviour
         if (stage == GameStage.SEARCH_1)
         {
             // NEVER COMMIT THESE LINES
-            //mArrestedPerson = Player;
-            //stage = GameStage.CLOSURE;
+            // mArrestedPerson = Player;
+            // stage = GameStage.CLOSURE;
         }
         if(stage == GameStage.SEARCH_1 || stage == GameStage.SEARCH_2 || stage == GameStage.SEARCH_3)
         {
@@ -274,36 +274,43 @@ public class GameState : MonoBehaviour
             // TODO - typing sound
             if (mWasAllArrested)
             {
-
+                mEpilogueLines.Add("Because you could not come to a decision as a group, all three of you were arrested.");
+                if (Player.IsKiller)
+                {
+                    mEpilogueLines.Add("You were the killer.");
+                }
+                else
+                {
+                    mEpilogueLines.Add(mPeople[KillerId].AttributeMap[NounType.HairColor].AsSubject() + " was the killer.");
+                }
             } else
             {
                 if (mArrestedPerson.IsKiller && mArrestedPerson.IsPlayer)
                 {
-
-                } else if (!mArrestedPerson.IsKiller && mArrestedPerson.IsPlayer)
+                    mEpilogueLines.Add("You were the killer, and you were caught.");
+                }
+                else if (!mArrestedPerson.IsKiller && mArrestedPerson.IsPlayer)
                 {
-
+                    mEpilogueLines.Add(mPeople[KillerId].AttributeMap[NounType.HairColor].AsSubject() + " was the killer, but you were the one arrested.");
                 }
                 else if (mArrestedPerson.IsKiller && !mArrestedPerson.IsPlayer)
                 {
-
+                    mEpilogueLines.Add("You were the killer, and you escaped because " + mArrestedPerson.AttributeMap[NounType.HairColor].AsSubject() + " was arrested instead.");
                 }
                 else if (!mArrestedPerson.IsKiller && !mArrestedPerson.IsPlayer)
                 {
-
+                    mEpilogueLines.Add(mPeople[KillerId].AttributeMap[NounType.HairColor].AsSubject() + " was the killer, but " + mArrestedPerson.AttributeMap[NounType.HairColor].AsSubject() + " was arrested instead.");
                 }
             }
-            mEpilogueLines.Add("The police arrested the Redhead"); // TODO - store the arrested person.
-            mEpilogueLines.Add("The actual killer was " + mPeople[KillerId].AttributeMap[NounType.HairColor]);
+            mEpilogueLines.Add("The killer " + mPeople[KillerId].AttributeMap[NounType.Identity].AsObject());
+            mEpilogueLines.Add("The killer " + mPeople[KillerId].AttributeMap[NounType.Motive].AsObject());
             for (int j = 0; j < 3; j++)
             {
-                mEpilogueLines.Add(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Name]);
-                mEpilogueLines.Add(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Identity]);
-                // Debug.Log(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Name]);
-                // Debug.Log(mPeople[j].AttributeMap[NounType.HairColor] + " is " + mPeople[j].AttributeMap[NounType.Identity]);
+                mEpilogueLines.Add(mPeople[j].AttributeMap[NounType.HairColor].AsSubject() + " " + mPeople[j].AttributeMap[NounType.Name].AsObject());
+                mEpilogueLines.Add(mPeople[j].AttributeMap[NounType.HairColor].AsSubject() + " " + mPeople[j].AttributeMap[NounType.Identity].AsObject());
             }
 
-            InvokeRepeating("UpdateEpilogueText", 1.0f, 0.3f); // after 1 seconds start the epilogue text, and do a new line every 0.3 seconds
+            InvokeRepeating("UpdateEpilogueText", 1.5f, 0.5f); // after 1 seconds start the epilogue text, and do a new line every 0.3 seconds
         }
     }
 
