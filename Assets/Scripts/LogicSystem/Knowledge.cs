@@ -274,179 +274,34 @@ public class Knowledge
         // go through all knowledge, and see if we can synthesize anything new from the new beliefs
         Debug.Log(mPersonId + " updating beliefs ");
 
-        List<SentenceBelief> beliefDeductions = new List<SentenceBelief>(); // defer adding new knowledge until the end, so we aren't modifying knowledge while we read it
-
-        // rule 1: transitivity
-        // [A is B] and [B is C] => [A is C] (including valid permutations)
-        // also, the negative version (rule 1.5): [A is B] and [B is not C] => [A is not C]
-        foreach (SentenceBelief b1 in newBeliefs)
-        {
-            Sentence s1 = b1.mSentence;
-            if (s1.Verb != Verb.Is) continue;
-            if (s1.Adverb == Adverb.True)
-            {
-                foreach (SentenceBelief b2 in mBeliefs)
-                {
-                    if (b1.Equals(b2)) continue;
-
-                    Sentence s2 = b2.mSentence;
-                    if (s2.Verb != Verb.Is) continue;
-
-                    Sentence newSentence = null;
-                    float confidence = b1.mConfidence * b2.mConfidence;
-                    if(confidence <= 0.2) { continue; }
-
-                    if (s2.Adverb == Adverb.True || s2.Adverb == Adverb.False)
-                    {
-                        if (s1.DirectObject == s2.Subject)
-                        {
-                            newSentence = new Sentence(s1.Subject, Verb.Is, s2.DirectObject, s2.Adverb);
-                        }
-                        else if (s1.Subject == s2.Subject)
-                        {
-                            newSentence = new Sentence(s1.DirectObject, Verb.Is, s2.DirectObject, s2.Adverb);
-                        }
-                        else if (s1.DirectObject == s2.DirectObject)
-                        {
-                            newSentence = new Sentence(s1.Subject, Verb.Is, s2.Subject, s2.Adverb);
-                        }
-                        else if (s1.Subject == s2.DirectObject)
-                        {
-                            newSentence = new Sentence(s1.DirectObject, Verb.Is, s2.Subject, s2.Adverb);
-                        }
-                    }
-
-                    if (newSentence != null)
-                    {
-                        SentenceBelief newBelief = new SentenceBelief(newSentence, b1, b2, confidence);
-                        beliefDeductions.Add(newBelief);
-                        Debug.Log("New belief: " + newBelief.mSentence + " (confidence: " + confidence + ") | Since " + s1 + " (confidence: " + b1.mConfidence + ") and " + s2 + " (confidence: " + b2.mConfidence + ")");
-                    }
-                }
-            }
-            else if (s1.Adverb == Adverb.False)
-            {
-                foreach (SentenceBelief b2 in mBeliefs)
-                {
-                    if (b1.Equals(b2)) continue;
-
-                    Sentence s2 = b2.mSentence;
-                    if(!(s2.Verb == Verb.Is && s2.Adverb == Adverb.True)) continue;
-
-                    Sentence newSentence = null;
-                    float confidence = b1.mConfidence * b2.mConfidence;
-                    if(confidence <= 0.2) { continue; }
-
-                    if (s1.DirectObject == s2.Subject)
-                    {
-                        newSentence = new Sentence(s1.Subject, Verb.Is, s2.DirectObject, Adverb.False);
-                    }
-                    else if (s1.Subject == s2.Subject)
-                    {
-                        newSentence = new Sentence(s1.DirectObject, Verb.Is, s2.DirectObject, Adverb.False);
-                    }
-                    else if (s1.DirectObject == s2.DirectObject)
-                    {
-                        newSentence = new Sentence(s1.Subject, Verb.Is, s2.Subject, Adverb.False);
-                    }
-                    else if (s1.Subject == s2.DirectObject)
-                    {
-                        newSentence = new Sentence(s1.DirectObject, Verb.Is, s2.Subject, Adverb.False);
-                    }
-
-                    if (newSentence != null)
-                    {
-                        SentenceBelief newBelief = new SentenceBelief(newSentence, b1, b2, confidence);
-                        beliefDeductions.Add(newBelief);
-                        Debug.Log("New belief: " + newBelief.mSentence + " (confidence: " + confidence + ") | Since " + s1 + " (confidence: " + b1.mConfidence + ") and " + s2 + " (confidence: " + b2.mConfidence + ")");
-                    }
-                }
-            }
-        }
-
-        // rule 2: mutual exclusion
-        // if [A is X] and [X, Y] are mutually exclusive, then [A is not Y]
-        // but this only applies if A <-> X is an IS relationship (i.e. nothing else can be X)
-        foreach (SentenceBelief b1 in newBeliefs)
-        {
-            Sentence s1 = b1.mSentence;
-            if (!(s1.Verb == Verb.Is && s1.Adverb == Adverb.True)) continue;
-
-            NounType t = s1.DirectObject.Type();
-            Noun[] nouns = t.GetMutuallyExclusiveNouns();
-            if(nouns != null)
-            {
-                foreach(Noun n in nouns)
-                {
-                    if (s1.DirectObject != n)
-                    {
-                        Sentence newSentence = new Sentence(s1.Subject, Verb.Is, n, Adverb.False);
-                        SentenceBelief belief = new SentenceBelief(newSentence, b1, null, b1.mConfidence);
-                        beliefDeductions.Add(belief);
-
-                        Debug.Log("New belief: " + belief.mSentence + " (confidence: " + b1.mConfidence + ") | Since " + s1 + " (confidence: " + b1.mConfidence + ")");
-                    }
-                }
-            }
-
-            t = s1.Subject.Type();
-            nouns = t.GetMutuallyExclusiveNouns();
-            if (nouns != null)
-            {
-                foreach (Noun n in nouns)
-                {
-                    if (s1.Subject != n)
-                    {
-                        Sentence newSentence = new Sentence(s1.DirectObject, Verb.Is, n, Adverb.False);
-                        SentenceBelief belief = new SentenceBelief(newSentence, b1, null, b1.mConfidence);
-                        beliefDeductions.Add(belief);
-
-                        Debug.Log("New belief: " + belief.mSentence + " (confidence: " + b1.mConfidence + ") | Since " + s1 + " (confidence: " + b1.mConfidence + ")");
-                    }
-                }
-            }
-        }
-
-        // special rule: determining motive
-        foreach (SentenceBelief b1 in newBeliefs)
-        {
-            Sentence s1 = b1.mSentence;
-            NounType subjectType = s1.Subject.Type();
-            NounType objectType = s1.DirectObject.Type();
-            if(subjectType == NounType.Motive)
-            {
-                Sentence newSentence = new Sentence(s1.DirectObject, Verb.Has, Noun.Motive, Adverb.True);
-                SentenceBelief belief = new SentenceBelief(newSentence, b1, null, b1.mConfidence);
-                beliefDeductions.Add(belief);
-            }
-            else if(objectType == NounType.Motive)
-            {
-                Sentence newSentence = new Sentence(s1.Subject, Verb.Has, Noun.Motive, Adverb.True);
-                SentenceBelief belief = new SentenceBelief(newSentence, b1, null, b1.mConfidence);
-                beliefDeductions.Add(belief);
-            }
-        }
-
-        // check for contradictions
+        // defer adding/removing knowledge until the end, so we aren't modifying knowledge while we read it
+        List<SentenceBelief> beliefDeductions = new List<SentenceBelief>();
         List<SentenceBelief> refutedBeliefs = new List<SentenceBelief>();
+
         foreach (SentenceBelief b1 in newBeliefs)
         {
             Sentence s1 = b1.mSentence;
-            
-            foreach(SentenceBelief b2 in mBeliefs)
+
+            // before making any inferences, check for contradictions
+            bool contradictory = false;
+            foreach (SentenceBelief b2 in mBeliefs)
             {
                 Sentence s2 = b2.mSentence;
-                if(s1.SameIdea(s2) && s1.Adverb != s2.Adverb)
+                if (s1.SameIdea(s2) && s1.Adverb != s2.Adverb)
                 {
-                    if(b2.mConfidence >= 1) {
-                        Debug.Log("BAD: accepting info that contradicts something known");
+                    contradictory = true;
+                    if (b2.mConfidence >= 1)
+                    {
+                        Debug.Log(mPersonId + " accepted info that contradicts something known: " + s1 + " vs. " + s2);
+                        refutedBeliefs.Add(b1);
                         continue;
                     }
 
-                    if(b1.mConfidence >= 1)
+                    if (b1.mConfidence >= 1)
                     {
                         Debug.Log(mPersonId + " found information contradicting previous beliefs: " + s1 + " vs. " + s2);
                         refutedBeliefs.Add(b2);
+                        beliefDeductions.Add(b1); // queue up this belief for re-thinking, after removing the belief it contradicts
                     }
                     else
                     {
@@ -454,6 +309,156 @@ public class Knowledge
                         // TODO: what to do here? set up some kind of contradictory info set that the AI active seeks to resolve?
                     }
                 }
+            }
+
+            if(contradictory)
+            {
+                Debug.Log(mPersonId + " thinks " + b1.mSentence + " is contradictory, and will not make inferences with it");
+                continue;
+            }
+
+            // rule 1: transitivity
+            // [A is B] and [B is C] => [A is C] (including valid permutations)
+            // also, the negative version (rule 1.5): [A is B] and [B is not C] => [A is not C]
+            if (s1.Verb == Verb.Is)
+            {
+                if (s1.Adverb == Adverb.True)
+                {
+                    foreach (SentenceBelief b2 in mBeliefs)
+                    {
+                        if (b1.Equals(b2)) continue;
+
+                        Sentence s2 = b2.mSentence;
+                        if (s2.Verb != Verb.Is) continue;
+
+                        Sentence newSentence = null;
+                        float confidence = b1.mConfidence * b2.mConfidence;
+                        if (confidence <= 0.2) { continue; }
+
+                        if (s2.Adverb == Adverb.True || s2.Adverb == Adverb.False)
+                        {
+                            if (s1.DirectObject == s2.Subject)
+                            {
+                                newSentence = new Sentence(s1.Subject, Verb.Is, s2.DirectObject, s2.Adverb);
+                            }
+                            else if (s1.Subject == s2.Subject)
+                            {
+                                newSentence = new Sentence(s1.DirectObject, Verb.Is, s2.DirectObject, s2.Adverb);
+                            }
+                            else if (s1.DirectObject == s2.DirectObject)
+                            {
+                                newSentence = new Sentence(s1.Subject, Verb.Is, s2.Subject, s2.Adverb);
+                            }
+                            else if (s1.Subject == s2.DirectObject)
+                            {
+                                newSentence = new Sentence(s1.DirectObject, Verb.Is, s2.Subject, s2.Adverb);
+                            }
+                        }
+
+                        if (newSentence != null)
+                        {
+                            SentenceBelief newBelief = new SentenceBelief(newSentence, b1, b2, confidence);
+                            beliefDeductions.Add(newBelief);
+                            Debug.Log("New belief: " + newBelief.mSentence + " (confidence: " + confidence + ") | Since " + s1 + " (confidence: " + b1.mConfidence + ") and " + s2 + " (confidence: " + b2.mConfidence + ")");
+                        }
+                    }
+                }
+                else if (s1.Adverb == Adverb.False)
+                {
+                    foreach (SentenceBelief b2 in mBeliefs)
+                    {
+                        if (b1.Equals(b2)) continue;
+
+                        Sentence s2 = b2.mSentence;
+                        if (!(s2.Verb == Verb.Is && s2.Adverb == Adverb.True)) continue;
+
+                        Sentence newSentence = null;
+                        float confidence = b1.mConfidence * b2.mConfidence;
+                        if (confidence <= 0.2) { continue; }
+
+                        if (s1.DirectObject == s2.Subject)
+                        {
+                            newSentence = new Sentence(s1.Subject, Verb.Is, s2.DirectObject, Adverb.False);
+                        }
+                        else if (s1.Subject == s2.Subject)
+                        {
+                            newSentence = new Sentence(s1.DirectObject, Verb.Is, s2.DirectObject, Adverb.False);
+                        }
+                        else if (s1.DirectObject == s2.DirectObject)
+                        {
+                            newSentence = new Sentence(s1.Subject, Verb.Is, s2.Subject, Adverb.False);
+                        }
+                        else if (s1.Subject == s2.DirectObject)
+                        {
+                            newSentence = new Sentence(s1.DirectObject, Verb.Is, s2.Subject, Adverb.False);
+                        }
+
+                        if (newSentence != null)
+                        {
+                            SentenceBelief newBelief = new SentenceBelief(newSentence, b1, b2, confidence);
+                            beliefDeductions.Add(newBelief);
+                            Debug.Log("New belief: " + newBelief.mSentence + " (confidence: " + confidence + ") | Since " + s1 + " (confidence: " + b1.mConfidence + ") and " + s2 + " (confidence: " + b2.mConfidence + ")");
+                        }
+                    }
+                }
+            } // END TRANSITIVITY
+
+
+            // rule 2: mutual exclusion
+            // if [A is X] and [X, Y] are mutually exclusive, then [A is not Y]
+            // but this only applies if A <-> X is an IS relationship (i.e. nothing else can be X)
+            if ((s1.Verb == Verb.Is && s1.Adverb == Adverb.True))
+            {
+                NounType t = s1.DirectObject.Type();
+                Noun[] nouns = t.GetMutuallyExclusiveNouns();
+                if (nouns != null)
+                {
+                    foreach (Noun n in nouns)
+                    {
+                        if (s1.DirectObject != n)
+                        {
+                            Sentence newSentence = new Sentence(s1.Subject, Verb.Is, n, Adverb.False);
+                            SentenceBelief belief = new SentenceBelief(newSentence, b1, null, b1.mConfidence);
+                            beliefDeductions.Add(belief);
+
+                            Debug.Log("New belief: " + belief.mSentence + " (confidence: " + b1.mConfidence + ") | Since " + s1 + " (confidence: " + b1.mConfidence + ")");
+                        }
+                    }
+                }
+
+                t = s1.Subject.Type();
+                nouns = t.GetMutuallyExclusiveNouns();
+                if (nouns != null)
+                {
+                    foreach (Noun n in nouns)
+                    {
+                        if (s1.Subject != n)
+                        {
+                            Sentence newSentence = new Sentence(s1.DirectObject, Verb.Is, n, Adverb.False);
+                            SentenceBelief belief = new SentenceBelief(newSentence, b1, null, b1.mConfidence);
+                            beliefDeductions.Add(belief);
+
+                            Debug.Log("New belief: " + belief.mSentence + " (confidence: " + b1.mConfidence + ") | Since " + s1 + " (confidence: " + b1.mConfidence + ")");
+                        }
+                    }
+                }
+            } // END MUTUAL EXCLUSIVITY
+
+
+            // special rule: determining motive
+            NounType subjectType = s1.Subject.Type();
+            NounType objectType = s1.DirectObject.Type();
+            if (subjectType == NounType.Motive)
+            {
+                Sentence newSentence = new Sentence(s1.DirectObject, Verb.Has, Noun.Motive, Adverb.True);
+                SentenceBelief belief = new SentenceBelief(newSentence, b1, null, b1.mConfidence);
+                beliefDeductions.Add(belief);
+            }
+            else if (objectType == NounType.Motive)
+            {
+                Sentence newSentence = new Sentence(s1.Subject, Verb.Has, Noun.Motive, Adverb.True);
+                SentenceBelief belief = new SentenceBelief(newSentence, b1, null, b1.mConfidence);
+                beliefDeductions.Add(belief);
             }
         }
 
@@ -488,5 +493,8 @@ public class Knowledge
         GetRootBeliefs(b, rootBeliefs, true);
 
         mSuspiciousBeliefs.Add(rootBeliefs);
+
+        Debug.Log(mPersonId + " no longer believes " + b.mSentence);
+        mBeliefs.Remove(b); // TODO: this is probably too naive
     }
 }
