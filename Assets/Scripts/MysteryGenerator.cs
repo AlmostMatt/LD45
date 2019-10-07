@@ -106,7 +106,7 @@ public class MysteryGenerator
             Noun identityOrName = Random.Range(0, 2) == 0 ? identity : name;
             Noun motiveOrBackstory = Random.Range(0, 2) == 0 ? motive : backstory;
 
-            ClueItem backstoryClue = ClueManifest.GetClue(motive, identity);
+            ClueItem backstoryClue = ClueManifest.GetClue(identityOrName, motiveOrBackstory);
             if(backstoryClue != null)
             {
                 cluesToScatter.Add(backstoryClue);
