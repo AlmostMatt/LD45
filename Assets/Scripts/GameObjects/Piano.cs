@@ -28,17 +28,32 @@ public class Piano : MonoBehaviour
     private void OnMouseDown()
     {
         if (UIController.Get().IsVisible()) { return; }
-        MusicPlayer.Stop();
-        AudioPlayer.PlaySound(AudioClipIndex.PIANO);
-        pianoPlaying = true;
+
+        if (!pianoPlaying)
+        {
+            MusicPlayer.Stop();
+            AudioPlayer.PlaySound(AudioClipIndex.PIANO);
+            pianoPlaying = true;
+        }
+        else
+        {
+            StopPiano();
+        }
+
+    }
+
+    private void StopPiano()
+    {
+        AudioPlayer.Stop();
+        MusicPlayer.Play();
+        pianoPlaying = false;
     }
 
     void OnDestroy()
     {
         if(pianoPlaying)
         {
-            AudioPlayer.Stop();
-            MusicPlayer.Play();
+            StopPiano();
         }
     }
 
