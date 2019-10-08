@@ -179,7 +179,7 @@ public class Knowledge
         {
 
             spokenResponse = new string[] {
-                "So I'm " + sentence.DirectObject.AsSubject() + "?",
+                "So " + sentence.DirectObject.AsPersonal() + "?",
                 sentence.DirectObject.PersonalReaction()
             };
             audioResponse = new AudioClipIndex[] { AudioClipIndex.SURPRISE_EH, AudioClipIndex.NONE };

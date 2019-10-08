@@ -92,6 +92,21 @@ public static class NounExtensions
         }
     }
 
+    public static string AsPersonal(this Noun noun)
+    {
+        switch(noun)
+        {
+            case Noun.Inheritance:
+                return "I'm getting an inheritance from the victim";
+            case Noun.HasGrudge:
+                return "I held a grudge against the victim";
+            case Noun.OwesDebt:
+                return "I owed the vitcim money";
+            default:
+                return "I'm " + noun.AsSubject();
+        }
+    }
+
     public static string AsSubject(this Noun noun)
     {
         switch(noun)
@@ -111,6 +126,8 @@ public static class NounExtensions
             case Noun.Writer:
             case Noun.Philanthropist:
                 return "a " + bold(noun.ToString().ToLower());
+            case Noun.OwesDebt:
+                return "the debt";
             default:
                 // This will happen for names
                 return bold(noun.ToString());
