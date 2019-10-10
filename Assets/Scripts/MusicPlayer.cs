@@ -22,9 +22,9 @@ public class MusicPlayer : MonoBehaviour
     {
         MusicEnabled = !MusicEnabled;
         if (MusicEnabled)
-            GetComponent<AudioSource>().Pause();
-        else
             GetComponent<AudioSource>().UnPause();
+        else
+            GetComponent<AudioSource>().Pause();
     }
 
     public static void Stop()
